@@ -646,7 +646,7 @@ export default function ResultContent() {
             ホーム
           </button>
           <span className="text-xs font-medium" >
-            {isAbyssMode ? "深淵の記録（救済なし）" : "あなたの取り扱い説明書（閲覧注意）"}
+            {isAbyssMode ? "深淵の記録（救済なし）" : "あなたの取り扱い説明書"}
           </span>
           <button
             onClick={() => router.push("/test")}
