@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+
+# GPTBots block
+User-agent: GPTBot
+Disallow: /
+User-agent: ChatGPT-User
+Disallow: /
+
+Sitemap: https://cognitive-lens.com/sitemap.xml
