@@ -4,6 +4,7 @@ import { useState, useRef } from "react";
 import Link from "next/link";
 import { ArrowLeft, Sparkles, AlertCircle, ChevronDown } from "lucide-react";
 import AnalyzingLoader from "@/app/components/AnalyzingLoader";
+import AdSenseUnit from "@/app/components/ads/AdSenseUnit";
 
 const ALL_TYPES = [
   "INTJ", "INTP", "ENTJ", "ENTP",
@@ -238,11 +239,31 @@ export default function TranslatePage() {
               color=""
               content={result.trueRequest}
             />
+            
+            <div className="my-6 glass-card rounded-3xl p-4 min-h-[250px] w-full flex flex-col items-center justify-center border border-white/40 shadow-sm relative overflow-hidden transition-all hover:shadow-md">
+              <div className="w-full text-left mb-2">
+                <span className="text-[10px] text-slate-400 font-bold tracking-[0.2em] uppercase">Sponsored</span>
+              </div>
+              <div className="relative z-10 w-full flex-1 flex items-center justify-center overflow-hidden">
+                <AdSenseUnit id="translate-adsense-1" slotId="8888888888" />
+              </div>
+            </div>
+
             <ResultCard
               label="やってはいけない返し方"
               color=""
               content={result.mineWords}
             />
+
+            <div className="my-6 glass-card rounded-3xl p-4 min-h-[250px] w-full flex flex-col items-center justify-center border border-white/40 shadow-sm relative overflow-hidden transition-all hover:shadow-md">
+              <div className="w-full text-left mb-2">
+                <span className="text-[10px] text-slate-400 font-bold tracking-[0.2em] uppercase">Sponsored</span>
+              </div>
+              <div className="relative z-10 w-full flex-1 flex items-center justify-center overflow-hidden">
+                <AdSenseUnit id="translate-adsense-2" slotId="9999999999" />
+              </div>
+            </div>
+
             <ResultCard
               label="魔法の言葉"
               color=""
