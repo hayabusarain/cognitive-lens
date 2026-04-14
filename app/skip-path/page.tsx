@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Zap, Sparkles, ChevronRight } from "lucide-react";
 import { TYPE_INFO } from "@/lib/type-info";
+import AdSenseUnit from "@/app/components/ads/AdSenseUnit";
 
 const TYPES_GRID = [
   ["INTJ", "INTP", "ENTJ", "ENTP"],
@@ -386,6 +387,16 @@ export default function SkipPathPage() {
                   styleIndex={i}
                   isCurrent={isStreaming && i === sections.length - 1}
                 />
+                {(i < sections.length - 1 || (!isStreaming && isGenerated && i < 3)) && (
+                  <div className="my-6 glass-card rounded-3xl p-4 min-h-[250px] w-full flex flex-col items-center justify-center border border-white/40 shadow-sm relative overflow-hidden transition-all hover:shadow-md">
+                    <div className="w-full text-left mb-2">
+                      <span className="text-[10px] text-slate-400 font-bold tracking-[0.2em] uppercase">Sponsored</span>
+                    </div>
+                    <div className="relative z-10 w-full flex-1 flex items-center justify-center overflow-hidden">
+                      <AdSenseUnit id={`skip-adsense-slot-${i}`} slotId="7777777777" />
+                    </div>
+                  </div>
+                )}
               </Fragment>
             ))}
 
