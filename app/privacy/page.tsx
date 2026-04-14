@@ -38,7 +38,7 @@ export default function PrivacyPage() {
               1. 診断結果の免責事項
             </h2>
             <p>
-              当サービス「CognitiveLens」が提供するMBTI診断・認知機能分析・対人関係アドバイスは、
+              当サービス「CognitiveLens」が提供する16タイプ診断・認知機能分析・対人関係アドバイスは、
               <strong>エンターテインメント・自己理解のための参考情報</strong>として提供されるものです。
               診断結果の正確性・完全性・科学的根拠を保証するものではなく、
               医療的診断・心理的診断・法的アドバイスの代替として使用することはできません。
@@ -59,7 +59,7 @@ export default function PrivacyPage() {
             <ul className="mt-3 space-y-2 list-disc list-inside" >
               <li>
                 <strong>診断回答データ：</strong>
-                MBTIタイプ判定のための設問への回答（E/I, S/N, T/F, J/P の選択結果）。
+                16タイプ判定のための設問への回答（E/I, S/N, T/F, J/P の選択結果）。
                 個人を特定する情報は含まれません。
               </li>
               <li>

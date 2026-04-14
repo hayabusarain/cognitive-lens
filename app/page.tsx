@@ -113,7 +113,7 @@ export default function HomePage() {
                     <Sparkles size={20} />
                   </div>
                   <h3 className="font-extrabold text-lg mb-2 tracking-tighter text-white drop-shadow-[0_0_5px_rgba(192,132,252,0.5)]">
-                    あの人のMBTI、勝手に丸裸にする
+                    あの人の16タイプ、勝手に丸裸にする
                   </h3>
                   <p className="text-sm leading-relaxed text-slate-300 mb-3">
                     「LINEの返信ペースは？」「フッカル？」— 20の質問に答えるだけで、

@@ -248,7 +248,7 @@ function AnalyzingScreen() {
 function ShareButton({ typeKey, typeName }: { typeKey: string; typeName: string }) {
   const handleShare = () => {
     const url = typeof window !== "undefined" ? window.location.href : "";
-    const text = `深層心理の解析が完了しました。診断結果：${typeKey}（${typeName}） #性格診断 #MBTI #CognitiveLens`;
+    const text = `深層心理の解析が完了しました。診断結果：${typeKey}（${typeName}） #16タイプ診断 #性格診断 #CognitiveLens`;
     const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
     window.open(twitterUrl, "_blank", "noopener,noreferrer");
   };

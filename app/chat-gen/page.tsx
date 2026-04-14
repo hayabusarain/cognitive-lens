@@ -148,7 +148,7 @@ export default function ChatGenPage() {
             認知機能の断絶を、可視化する。
           </h1>
           <p className="text-sm leading-relaxed max-w-sm mx-auto text-slate-500">
-            2つのMBTIタイプの「最悪な噛み合わなさ」を
+            2つの16タイプの「最悪な噛み合わなさ」を
             シェア可能なチャット画像として生成します。
           </p>
         </div>

@@ -74,8 +74,8 @@ export default function TargetDiagnosisPage() {
             <h2 className="text-2xl font-bold text-white mb-2 tracking-wide">
               解析中...
             </h2>
-            <p className="text-sm text-slate-400 text-center">
-              ターゲットの行動パターンから<br/>MBTIプロファイルを抽出しています
+            <p className="text-slate-500 font-medium text-sm leading-relaxed mt-4 animate-pulse">
+              ターゲットの行動パターンから<br/>16タイププロファイルを抽出しています
             </p>
           </div>
         ) : (

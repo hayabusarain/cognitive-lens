@@ -211,7 +211,7 @@ export default function SkipPathPage() {
               1
             </span>
             <h2 className="text-sm font-bold" >
-              あなたのMBTIタイプを選択
+              あなたの16タイプを選択
             </h2>
           </div>
 
