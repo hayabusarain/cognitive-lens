@@ -48,9 +48,9 @@ export default function AdSenseUnit({
     <div id={id} className="w-full my-6 text-center mx-auto overflow-hidden">
       <ins
         ref={adRef}
-        className="adsbygoogle"
+        className="adsbygoogle text-center"
         style={{ display: "block" }}
-        data-ad-client="ca-pub-0000000000000000" // 審査後または申請時に書き換える
+        data-ad-client="ca-pub-7201202773518258" // 審査後または申請時に書き換える
         data-ad-slot={slotId}
         data-ad-format={format}
         data-full-width-responsive={fullWidth ? "true" : "false"}
