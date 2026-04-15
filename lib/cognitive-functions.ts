@@ -58,8 +58,6 @@ export function getDomInf(typeKey: string): {
   if (!scores) return { dom: null, inf: null };
   let dom: CognitiveFunction | null = null;
   let inf: CognitiveFunction | null = null;
-  let maxVal = -1;
-  let minPrimaryVal = 999;
   // Primary stack is the 4 functions with the 4 highest scores
   const sorted = (Object.entries(scores) as [CognitiveFunction, number][])
     .sort((a, b) => b[1] - a[1]);

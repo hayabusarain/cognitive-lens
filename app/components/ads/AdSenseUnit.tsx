@@ -26,7 +26,7 @@ export default function AdSenseUnit({
     // ReactのStrictMode等による重複Pushを防止
     if (adRef.current && adRef.current.getAttribute("data-adsbygoogle-status") !== "done") {
       try {
-        ((window as any).adsbygoogle = (window as any).adsbygoogle || []).push({});
+        ((window as unknown as { adsbygoogle: unknown[] }).adsbygoogle = (window as unknown as { adsbygoogle: unknown[] }).adsbygoogle || []).push({});
       } catch (error) {
         console.error("AdSense push error:", error);
       }

@@ -13,7 +13,7 @@ export default function CookieConsentBanner() {
     // localStorage は SSR では使えないため useEffect 内で確認
     try {
       if (!localStorage.getItem(STORAGE_KEY)) {
-        setVisible(true);
+        setTimeout(() => setVisible(true), 0);
       }
     } catch {
       // プライベートモード等で localStorage が使えない場合は表示しない

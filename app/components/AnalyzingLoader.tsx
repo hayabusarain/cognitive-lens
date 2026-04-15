@@ -30,7 +30,7 @@ export default function AnalyzingLoader({
   const [progress, setProgress] = useState(0);
   const [msgIndex, setMsgIndex] = useState(0);
   const [fadingOut, setFadingOut] = useState(false);
-  const startRef = useRef(Date.now());
+  const startRef = useRef<number | null>(null);
   const finishedRef = useRef(false);
   const onFinishRef = useRef(onFinish);
   useEffect(() => { onFinishRef.current = onFinish; });
@@ -39,6 +39,7 @@ export default function AnalyzingLoader({
   useEffect(() => {
     const id = setInterval(() => {
       if (finishedRef.current) return;
+      if (startRef.current === null) startRef.current = Date.now();
       const elapsed = Date.now() - startRef.current;
       setProgress(Math.min(Math.floor((elapsed / DURATION) * 100), 99));
     }, 80);
@@ -59,6 +60,7 @@ export default function AnalyzingLoader({
     if (!isApiDone) return;
     const id = setInterval(() => {
       if (finishedRef.current) { clearInterval(id); return; }
+      if (startRef.current === null) startRef.current = Date.now();
       const elapsed = Date.now() - startRef.current;
       if (elapsed >= DURATION) {
         clearInterval(id);
