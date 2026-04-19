@@ -54,7 +54,7 @@ export default function DownloadsPage() {
                 <strong>クレジット表記・リンクが必須</strong>です。<br />
                 使用する際は、プロフィールやキャプション等に必ず<br />
                 <code className="bg-white px-2 py-1 rounded border border-rose-100 text-xs mt-1 inline-block select-all">
-                  画像引用元：CognitiveLens（https://{/* 実際のドメインに差し替えてください */}）
+                  画像引用元：CognitiveLens（https://cognitive-lens.com）
                 </code>
                 <br />を明記してください。
               </span>
