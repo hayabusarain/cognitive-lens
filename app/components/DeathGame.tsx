@@ -2,6 +2,7 @@
 
 import { useState, useRef } from "react";
 import { Skull, Loader2, ChevronDown, Zap } from "lucide-react";
+import Image from "next/image";
 
 interface Phase {
   name: string;
@@ -211,13 +212,28 @@ export default function DeathGame({ typeKey }: { typeKey: string }) {
                         {phase.event}
                       </p>
 
-                      <div className="flex flex-col gap-1 text-[11px]">
-                        <p className="text-blue-600 italic">
-                          💭 {typeKey}: 「{phase.inner1}」
-                        </p>
-                        <p className="text-rose-600 italic">
-                          💭 {resultType}: 「{phase.inner2}」
-                        </p>
+                      <div className="flex flex-col gap-4 mt-4 mb-2 text-xs">
+                        {/* Player 1 Chat Bubble */}
+                        <div className="flex gap-2.5 items-start">
+                          <div className="w-9 h-9 relative flex-shrink-0 bg-white rounded-full shadow-sm border border-slate-200 overflow-hidden">
+                            <Image src={`/characters/${typeKey}.png`} alt={typeKey} fill className="object-cover" />
+                          </div>
+                          <div className="flex-1 bg-blue-50/80 border border-blue-100/50 rounded-2xl p-3 rounded-tl-sm text-slate-700 shadow-sm relative">
+                            <p className="text-[10px] font-bold text-blue-500 mb-0.5">{typeKey}</p>
+                            「{phase.inner1}」
+                          </div>
+                        </div>
+
+                        {/* Player 2 Chat Bubble */}
+                        <div className="flex gap-2.5 items-start flex-row-reverse">
+                          <div className="w-9 h-9 relative flex-shrink-0 bg-white rounded-full shadow-sm border border-slate-200 overflow-hidden">
+                            <Image src={`/characters/${resultType}.png`} alt={resultType} fill className="object-cover" />
+                          </div>
+                          <div className="flex-1 bg-rose-50/80 border border-rose-100/50 rounded-2xl p-3 rounded-tr-sm text-slate-700 shadow-sm relative text-right">
+                            <p className="text-[10px] font-bold text-rose-500 mb-0.5">{resultType}</p>
+                            「{phase.inner2}」
+                          </div>
+                        </div>
                       </div>
 
                       {/* Ad slot after phase 2 */}

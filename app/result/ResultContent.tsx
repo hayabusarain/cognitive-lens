@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, Fragment } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import Image from "next/image";
 import Link from "next/link";
 import {
   Clock,
@@ -50,7 +51,7 @@ interface Section {
 const SECTIONS: Section[] = [
   {
     key: "短期",
-    label: "とりあえず今すぐやるべきこと",
+    label: "ガチで今すぐ試すべきこと",
     icon: <Clock size={16} />,
     color: "text-teal-400",
     bg: "bg-teal-400/10",
@@ -59,7 +60,7 @@ const SECTIONS: Section[] = [
   },
   {
     key: "長期",
-    label: "一生モノの生存戦略",
+    label: "死ぬまで役立つ生存ルート",
     icon: <TrendingUp size={16} />,
     color: "text-violet-400",
     bg: "bg-violet-400/10",
@@ -68,7 +69,7 @@ const SECTIONS: Section[] = [
   },
   {
     key: "教育",
-    label: "脳の効率化ハック",
+    label: "メンタル＆才能のチート技",
     icon: <BookOpen size={16} />,
     color: "text-amber-400",
     bg: "bg-amber-400/10",
@@ -245,10 +246,20 @@ function AnalyzingScreen() {
 
 // ── シェアボタン ──────────────────────────────────────────────
 
-function ShareButton({ typeKey, typeName }: { typeKey: string; typeName: string }) {
+function ShareButton({
+  typeKey,
+  typeName,
+  bestPartnerType,
+  hardestMatchType
+}: {
+  typeKey: string;
+  typeName: string;
+  bestPartnerType: string;
+  hardestMatchType: string;
+}) {
   const handleShare = () => {
     const url = typeof window !== "undefined" ? window.location.href : "";
-    const text = `診断結果は【${typeKey}（${typeName}）】でした！✨\n私と一番深く噛み合う『最強の相性』の人、フォロワーの中に誰かいませんか？🙋‍♀️🙋‍♂️\n#16タイプ診断 #相性診断 #CognitiveLens`;
+    const text = `性格の裏側まで暴かれる診断をやったら【${typeKey}（${typeName}）】でした😇🔪\n\n私と最強に噛み合う運命の相手は『${bestPartnerType}』の人で、逆に関わると確実にお互いメンタル削られる最悪の相手は『${hardestMatchType}』らしいです⚠️\n\nフォロワーの中に私を回収してくれる人いませんか...🙋‍♀️🙋‍♂️\n#16タイプ診断 #相性丸裸 #CognitiveLens`;
     const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
     window.open(twitterUrl, "_blank", "noopener,noreferrer");
   };
@@ -258,7 +269,7 @@ function ShareButton({ typeKey, typeName }: { typeKey: string; typeName: string 
       className="btn-primary w-full flex items-center justify-center gap-2.5 px-6 py-4 text-sm font-bold active:scale-[0.98] transition-all duration-150 inline-flex rounded-full"
     >
       <Share2 size={16} />
-      このプロファイリング結果を共有する
+      ヤバすぎる診断結果をXで共有する
     </button>
   );
 }
@@ -531,7 +542,13 @@ function CompatibilitySection({ typeKey }: { typeKey: string }) {
             onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(20,184,166,0.14)")}
             onMouseLeave={(e) => (e.currentTarget.style.background = "rgba(20,184,166,0.08)")}
           >
-            <span className="text-lg">{bestInfo.emoji}</span>
+            {bestInfo.imageUrl ? (
+              <div className="w-12 h-12 relative flex-shrink-0 bg-white shadow-sm border border-teal-100 rounded-full overflow-hidden">
+                <Image src={bestInfo.imageUrl} alt={bestInfo.name} fill className="object-cover" />
+              </div>
+            ) : (
+              <span className="text-lg">{bestInfo.emoji}</span>
+            )}
             <div className="flex-1 min-w-0">
               <p className="text-xs font-bold tracking-wider" >論理的に噛み合う最強の相手</p>
               <p className="text-sm font-bold" >{compat.bestPartner.type} — {bestInfo.name}</p>
@@ -552,7 +569,13 @@ function CompatibilitySection({ typeKey }: { typeKey: string }) {
             onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(244,63,94,0.14)")}
             onMouseLeave={(e) => (e.currentTarget.style.background = "rgba(244,63,94,0.08)")}
           >
-            <span className="text-lg">{hardInfo.emoji}</span>
+            {hardInfo.imageUrl ? (
+              <div className="w-12 h-12 relative flex-shrink-0 bg-white shadow-sm border border-rose-100 rounded-full overflow-hidden">
+                <Image src={hardInfo.imageUrl} alt={hardInfo.name} fill className="object-cover" />
+              </div>
+            ) : (
+              <span className="text-lg">{hardInfo.emoji}</span>
+            )}
             <div className="flex-1 min-w-0">
               <p className="text-xs font-bold tracking-wider" >機能不全に陥りやすい相手</p>
               <p className="text-sm font-bold" >{compat.hardestMatch.type} — {hardInfo.name}</p>
@@ -575,6 +598,7 @@ export default function ResultContent() {
   const typeKey = (searchParams.get("type") ?? "INTP").toUpperCase().slice(0, 4);
   const rawAnswers = searchParams.get("a") ?? "";
   const info = TYPE_INFO[typeKey] ?? DEFAULT_TYPE;
+  const compat = COMPATIBILITY[typeKey as keyof typeof COMPATIBILITY] ?? COMPATIBILITY["INTP"];
 
   const [protocols, setProtocols] = useState<Protocol[]>([]);
   const [loading, setLoading] = useState(true);
@@ -659,8 +683,14 @@ export default function ResultContent() {
 
       <div className="flex-1 max-w-lg mx-auto w-full px-5 py-8 flex flex-col gap-5">
         {/* Type card */}
-        <div className={`rounded-3xl bg-gradient-to-br ${info.gradient} p-6 text-white shadow-xl text-center`}>
-          <div className="text-4xl mb-2">{info.emoji}</div>
+        <div className={`rounded-3xl bg-gradient-to-br ${info.gradient} p-6 text-white shadow-xl text-center relative overflow-hidden`}>
+          {info.imageUrl ? (
+            <div className="mx-auto mt-2 mb-4 w-32 h-32 sm:w-40 sm:h-40 relative drop-shadow-xl z-10 transition-transform duration-500 hover:scale-105">
+              <Image src={info.imageUrl} alt={info.name} fill className="object-contain" sizes="(max-width: 640px) 128px, 160px" priority />
+            </div>
+          ) : (
+            <div className="text-4xl mb-2 relative z-10">{info.emoji}</div>
+          )}
           <p className="text-xs font-medium opacity-70 mb-1 tracking-widest uppercase">Cognitive Type</p>
           <h1 className="text-5xl font-black tracking-widest mb-1">{typeKey}</h1>
           <p className="font-bold text-lg opacity-90">{info.name}</p>
@@ -701,7 +731,12 @@ export default function ResultContent() {
         </div>
 
         {/* Share */}
-        <ShareButton typeKey={typeKey} typeName={info.name} />
+        <ShareButton
+          typeKey={typeKey}
+          typeName={info.name}
+          bestPartnerType={compat.bestPartner.type}
+          hardestMatchType={compat.hardestMatch.type}
+        />
 
         {/* 広告枠1 */}
         <AdSenseUnit id="adsense-slot-1" slotId="6666666666" />

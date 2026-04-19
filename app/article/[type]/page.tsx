@@ -1,5 +1,6 @@
 import { ARTICLE_DATA } from "@/lib/article-data";
 import { notFound } from "next/navigation";
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, Heart, Zap, ShieldAlert, BookOpen } from "lucide-react";
 import AdSenseUnit from "@/app/components/ads/AdSenseUnit";
@@ -44,9 +45,18 @@ export default async function ArticlePage({ params }: { params: Promise<{ type: 
         <article className="glass-card rounded-3xl p-6 sm:p-10 border border-white/50 shadow-sm relative overflow-hidden bg-white/60 backdrop-blur-xl">
           <div className="absolute top-0 right-0 w-32 h-32 bg-rose-400/10 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
           
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-800 mb-8 leading-relaxed tracking-tight">
-            {article.title}
-          </h1>
+          <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 mb-8">
+            <div className="flex-1 w-full text-center sm:text-left">
+              <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-800 leading-relaxed tracking-tight">
+                {article.title}
+              </h1>
+            </div>
+            {ARTICLE_DATA[typeKey] && (
+              <div className="w-32 h-32 sm:w-40 sm:h-40 relative flex-shrink-0 drop-shadow-lg">
+                <Image src={`/characters/${typeKey}.png`} alt={typeKey} fill className="object-contain" sizes="(max-width: 640px) 128px, 160px" priority />
+              </div>
+            )}
+          </div>
 
           <div className="space-y-10 text-slate-700 leading-8">
             <section>

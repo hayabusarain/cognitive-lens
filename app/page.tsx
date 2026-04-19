@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight, Sparkles, Languages, FlaskConical, Zap, Shield, BarChart2 } from "lucide-react";
 import AdSenseUnit from "@/app/components/ads/AdSenseUnit";
 
@@ -83,6 +84,9 @@ export default function HomePage() {
                 className="col-span-2 glass-card rounded-3xl p-6 text-left group relative overflow-hidden transition-all hover:-translate-y-1 hover:shadow-xl border border-cyan-200 bg-gradient-to-br from-cyan-50 to-blue-50"
               >
                 <div className="absolute top-0 right-0 w-32 h-32 bg-cyan-400/10 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 group-hover:scale-150 transition-transform duration-500" />
+                <div className="absolute -right-2 -bottom-6 w-32 h-32 transition-transform duration-500 group-hover:scale-110 pointer-events-none drop-shadow-xl z-0">
+                  <Image src="/characters/INFJ.png" alt="INFJ" fill className="object-contain" priority />
+                </div>
                 <div className="relative z-10">
                   <div className="inline-flex items-center justify-center w-11 h-11 rounded-2xl mb-4 shadow-md bg-gradient-to-br from-cyan-400 to-blue-500 text-white">
                     <Languages size={20} />
@@ -108,6 +112,19 @@ export default function HomePage() {
               >
                 <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-violet-900/40 via-fuchsia-900/20 to-transparent pointer-events-none" />
                 <div className="absolute top-0 right-0 w-32 h-32 bg-fuchsia-500/20 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 group-hover:scale-150 transition-transform duration-500 pointer-events-none" />
+                
+                {/* Character Mosaics Background */}
+                <div className="absolute top-0 right-0 w-full h-full pointer-events-none overflow-hidden">
+                  <div className="absolute -right-6 -bottom-4 w-32 h-32 transform rotate-12 drop-shadow-2xl transition-transform duration-700 group-hover:scale-110">
+                    <Image src="/characters/ENTJ.png" alt="ENTJ" fill className="object-contain" sizes="128px" priority />
+                  </div>
+                  <div className="absolute right-12 top-4 w-24 h-24 transform -rotate-12 drop-shadow-xl transition-transform duration-1000 group-hover:scale-110">
+                    <Image src="/characters/ENFP.png" alt="ENFP" fill className="object-contain" sizes="96px" priority />
+                  </div>
+                  <div className="absolute right-32 -bottom-2 w-20 h-20 transform rotate-6 drop-shadow-md transition-transform duration-500 group-hover:-translate-y-2">
+                    <Image src="/characters/ESTP.png" alt="ESTP" fill className="object-contain" sizes="80px" />
+                  </div>
+                </div>
                 <div className="relative z-10">
                   <div className="inline-flex items-center justify-center w-11 h-11 rounded-2xl mb-4 shadow-[0_0_15px_rgba(192,132,252,0.5)] bg-slate-800 text-fuchsia-400 border border-fuchsia-500/50">
                     <Sparkles size={20} />
@@ -128,16 +145,21 @@ export default function HomePage() {
               </Link>
 
               {/* サブカード1: 認知クセの可視化 */}
-              <div className="glass-card rounded-3xl p-5 text-left border bg-amber-50 border-amber-200">
-                <div className="inline-flex items-center justify-center w-9 h-9 rounded-2xl mb-3 shadow-sm border bg-amber-50 border-amber-200">
-                  <Zap size={17} className="text-amber-500" />
+              <div className="glass-card rounded-3xl p-5 text-left border bg-amber-50 border-amber-200 relative overflow-hidden group">
+                <div className="absolute -right-4 -bottom-4 w-24 h-24 transform -rotate-12 transition-transform duration-500 group-hover:-translate-y-1 pointer-events-none drop-shadow-lg z-0">
+                  <Image src="/characters/INTP.png" alt="INTP" fill className="object-contain" />
                 </div>
-                <h3 className="font-extrabold text-sm mb-1.5 tracking-tighter text-slate-800">
-                  認知のクセを可視化
-                </h3>
-                <p className="text-xs leading-relaxed text-slate-500">
-                  なんで分かり合えないのか、もう言い訳できないくらいハッキリ見える。
-                </p>
+                <div className="relative z-10">
+                  <div className="inline-flex items-center justify-center w-9 h-9 rounded-2xl mb-3 shadow-sm border bg-amber-50 border-amber-200">
+                    <Zap size={17} className="text-amber-500" />
+                  </div>
+                  <h3 className="font-extrabold text-sm mb-1.5 tracking-tighter text-slate-800">
+                    認知のクセを可視化
+                  </h3>
+                  <p className="text-xs leading-relaxed text-slate-500">
+                    なんで分かり合えないのか、もう言い訳できないくらいハッキリ見える。
+                  </p>
+                </div>
               </div>
 
               {/* AdSense: Bento Grid In-feed */}
@@ -151,29 +173,42 @@ export default function HomePage() {
               </div>
 
               {/* サブカード2: 相性マップ */}
-              <div className="glass-card rounded-3xl p-5 text-left border bg-violet-50 border-violet-200">
-                <div className="inline-flex items-center justify-center w-9 h-9 rounded-2xl mb-3 shadow-sm border bg-violet-50 border-violet-200">
-                  <Shield size={17} className="text-violet-500" />
+              <div className="glass-card rounded-3xl p-5 text-left border bg-violet-50 border-violet-200 relative overflow-hidden group">
+                <div className="absolute -right-3 top-2 w-24 h-24 transform rotate-12 transition-transform duration-500 group-hover:scale-110 pointer-events-none drop-shadow-lg z-0">
+                  <Image src="/characters/ESFJ.png" alt="ESFJ" fill className="object-contain" />
                 </div>
-                <h3 className="font-extrabold text-sm mb-1.5 tracking-tighter text-slate-800">
-                  人間関係の相性マップ
-                </h3>
-                <p className="text-xs leading-relaxed text-slate-500">
-                  どのタイプと一緒にいると最強で、どのタイプとは確実に詰むのか。その理由まで全部暴く。
-                </p>
+                <div className="relative z-10">
+                  <div className="inline-flex items-center justify-center w-9 h-9 rounded-2xl mb-3 shadow-sm border bg-violet-50 border-violet-200">
+                    <Shield size={17} className="text-violet-500" />
+                  </div>
+                  <h3 className="font-extrabold text-sm mb-1.5 tracking-tighter text-slate-800">
+                    人間関係の相性マップ
+                  </h3>
+                  <p className="text-xs leading-relaxed text-slate-500">
+                    どのタイプと一緒にいると最強で、どのとは確実に詰むのか。その理由まで全部暴く。
+                  </p>
+                </div>
               </div>
 
               {/* サブカード3: 弱点レーダー＆相性デスゲーム */}
-              <div className="col-span-2 glass-card rounded-3xl p-5 text-left border bg-rose-50 border-rose-200">
-                <div className="inline-flex items-center justify-center w-9 h-9 rounded-2xl mb-3 shadow-sm border bg-rose-50 border-rose-200">
-                  <BarChart2 size={17} className="text-rose-500" />
+              <div className="col-span-2 glass-card rounded-3xl p-5 text-left border bg-rose-50 border-rose-200 relative overflow-hidden group">
+                <div className="absolute right-4 -bottom-6 w-28 h-28 transform -rotate-6 transition-transform duration-500 group-hover:scale-110 pointer-events-none drop-shadow-xl z-0">
+                  <Image src="/characters/ESTJ.png" alt="ESTJ" fill className="object-contain" />
                 </div>
-                <h3 className="font-extrabold text-sm mb-1.5 tracking-tighter text-slate-800">
-                  限界パラメーター＆相性デスゲーム
-                </h3>
-                <p className="text-xs leading-relaxed text-slate-500">
-                  AIが5軸の致命的な欠陥をスコアリング。さらに2タイプの相性から「最悪の未来」をシミュレーション。
-                </p>
+                <div className="absolute right-24 -bottom-4 w-20 h-20 transform rotate-12 transition-transform duration-500 group-hover:-translate-x-2 pointer-events-none drop-shadow-md z-0">
+                  <Image src="/characters/ISTP.png" alt="ISTP" fill className="object-contain" />
+                </div>
+                <div className="relative z-10">
+                  <div className="inline-flex items-center justify-center w-9 h-9 rounded-2xl mb-3 shadow-sm border bg-rose-50 border-rose-200">
+                    <BarChart2 size={17} className="text-rose-500" />
+                  </div>
+                  <h3 className="font-extrabold text-sm mb-1.5 tracking-tighter text-slate-800">
+                    限界パラメーター＆相性デスゲーム
+                  </h3>
+                  <p className="text-xs leading-relaxed text-slate-500">
+                    AIが5軸の致命的な欠陥をスコアリング。<br className="hidden sm:block" />さらに2タイプの相性から「最悪の未来」をシミュレーション。
+                  </p>
+                </div>
               </div>
             </div>
           </div>
@@ -181,6 +216,18 @@ export default function HomePage() {
 
         {/* AdSense: Footer */}
         <AdSenseUnit id="adsense-footer" slotId="3333333333" />
+
+        {/* Global Footer */}
+        <footer className="w-full py-12 text-center flex flex-col items-center justify-center gap-5 bg-transparent mt-8 border-t border-slate-200/50">
+          <div className="flex flex-wrap items-center justify-center gap-6">
+            <Link href="/downloads" className="text-sm font-bold text-slate-500 hover:text-cyan-500 transition-colors">
+              キャラクター画像フリー素材
+            </Link>
+          </div>
+          <p className="text-xs text-slate-400 font-medium tracking-wider">
+            © 2026 CognitiveLens. All Rights Reserved.
+          </p>
+        </footer>
       </main>
     </>
   );
