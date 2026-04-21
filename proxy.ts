@@ -94,6 +94,19 @@ function isBot(ua: string | null): boolean {
 export function proxy(request: NextRequest): NextResponse {
   const { pathname } = request.nextUrl;
 
+  // ⓪ 管理者専用ルート（ジェネレーター画面＆裏API）へのBasic認証
+  if (pathname.startsWith('/video-gen') || pathname.startsWith('/api/render-video') || pathname.startsWith('/api/video-gen')) {
+    const basicAuth = request.headers.get('authorization');
+    if (!basicAuth) {
+      return new NextResponse('Authentication Required.', { status: 401, headers: { 'WWW-Authenticate': 'Basic realm="Secure Area"' } });
+    }
+    const authValue = basicAuth.split(' ')[1];
+    const [user, pwd] = atob(authValue).split(':');
+    if (!(user === 'admin' && pwd === 'mbti2026')) {
+      return new NextResponse('Authentication Required.', { status: 401, headers: { 'WWW-Authenticate': 'Basic realm="Secure Area"' } });
+    }
+  }
+
   // API ルート以外はスルー
   if (!pathname.startsWith("/api/")) {
     return NextResponse.next();
@@ -148,5 +161,5 @@ export function proxy(request: NextRequest): NextResponse {
 
 // Proxy を適用するパスのマッチャー
 export const config = {
-  matcher: ["/api/:path*"],
+  matcher: ["/api/:path*", "/video-gen/:path*"],
 };
