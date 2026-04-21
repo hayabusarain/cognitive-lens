@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import CookieConsentBanner from "@/app/components/CookieConsentBanner";
 import Footer from "@/app/components/layout/Footer";
+import { Analytics } from "@vercel/analytics/react";
 
 import Script from "next/script";
 
@@ -31,6 +32,7 @@ export default function RootLayout({
         {children}
         <CookieConsentBanner />
         <Footer />
+        <Analytics />
       </body>
     </html>
   );

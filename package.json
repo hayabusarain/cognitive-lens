@@ -15,6 +15,7 @@
     "@remotion/renderer": "^4.0.448",
     "@supabase/supabase-js": "^2.102.1",
     "@types/recharts": "^1.8.29",
+    "@vercel/analytics": "^2.0.1",
     "framer-motion": "^12.38.0",
     "lucide-react": "^1.7.0",
     "next": "16.2.2",
