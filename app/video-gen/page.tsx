@@ -186,12 +186,26 @@ export default function VideoGeneratorPage() {
                       MP4をダウンロード
                     </a>
                     
-                    <div className="bg-black/40 rounded-xl p-4 border border-white/5 text-sm max-h-[400px] overflow-y-auto">
+                    <div className="bg-black/60 rounded-xl p-4 border border-cyan-500/30 text-sm">
+                      <p className="font-bold text-cyan-400 mb-2 block flex items-center gap-2">
+                        <Sparkles size={16} />
+                        TikTok投稿用テキスト（コピペ用）
+                      </p>
+                      <textarea
+                        readOnly
+                        value={PRESET_TIER_LISTS.find(p => p.id === selectedPresetId)?.tiktokCaption || ""}
+                        className="w-full bg-black/40 border border-neutral-700 rounded-lg p-3 text-white text-xs outline-none resize-none"
+                        rows={4}
+                        onClick={(e) => (e.target as HTMLTextAreaElement).select()}
+                      />
+                    </div>
+
+                    <div className="bg-black/40 rounded-xl p-4 border border-white/5 text-sm max-h-[250px] overflow-y-auto">
                       <p className="font-bold text-neutral-400 mb-3 block">生成された台本プレビュー</p>
-                      <div className="space-y-2">
+                      <div className="space-y-2 text-xs">
                         {generatedEntries?.map((e, idx) => (
                           <div key={idx} className="flex gap-2">
-                            <span className="font-bold w-12 shrink-0">{e.mbtiType}</span>
+                            <span className="font-bold w-10 shrink-0">{e.mbtiType}</span>
                             <span className="text-neutral-300">{e.comment}</span>
                           </div>
                         ))}
@@ -201,6 +215,7 @@ export default function VideoGeneratorPage() {
                 </div>
               </div>
             )}
+
 
           </div>
         </main>

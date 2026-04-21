@@ -3,6 +3,7 @@ import { TierListEntry } from "../remotion/TierListVideo";
 export type PresetTierList = {
   id: string;
   title: string;
+  tiktokCaption?: string;
   entries: Omit<TierListEntry, "imageUrl" | "ttsUrl">[]; // imageUrlとttsUrlは動的に付与する
 };
 
@@ -10,6 +11,7 @@ export const PRESET_TIER_LISTS: PresetTierList[] = [
   {
     id: "psychopath",
     title: "真のサイコパスランキング",
+    tiktokCaption: "あなたの周りにも絶対いるヤバい奴…😱 当たってたらコメントで教えて！\n\n#MBTI #MBTI診断 #16タイプ診断 #サイコパス #性格診断 #性格テスト",
     entries: [
       { mbtiType: "ESFJ", tier: "D", comment: "他人の痛みに共感しすぎて自分が泣くタイプ" },
       { mbtiType: "ISFJ", tier: "D", comment: "優しすぎてサイコパスの餌食になりがち" },
@@ -32,6 +34,7 @@ export const PRESET_TIER_LISTS: PresetTierList[] = [
   {
     id: "do_not_anger",
     title: "絶対に怒らせてはいけないランキング",
+    tiktokCaption: "普段優しい人ほど怒るとマジでヤバいよね…😨 みんなの周りの人はどう？\n\n#MBTI #MBTI診断 #怒らせてはいけない #16タイプ診断 #性格診断 #ランキング",
     entries: [
       { mbtiType: "INFP", tier: "D", comment: "怒っても泣いちゃうだけで平和そのもの" },
       { mbtiType: "ISFP", tier: "D", comment: "怒る前に面倒くさくなってその場を去る" },
@@ -54,6 +57,7 @@ export const PRESET_TIER_LISTS: PresetTierList[] = [
   {
     id: "rich_potential",
     title: "お金持ちになりやすいランキング",
+    tiktokCaption: "将来お金持ちになりやすいMBTI一覧💸 みんなは何位だった？コメントで教えてね！\n\n#MBTI #MBTI診断 #お金持ち #金運 #16タイプ診断 #社長 #性格診断",
     entries: [
       { mbtiType: "INFP", tier: "D", comment: "お金より心の豊かさを優先するため万年金欠" },
       { mbtiType: "ISFP", tier: "D", comment: "稼いだ分だけ趣味や推し活に全振りして溶かす" },
@@ -76,6 +80,7 @@ export const PRESET_TIER_LISTS: PresetTierList[] = [
   {
     id: "cheating_tendency",
     title: "浮気しやすい（危険度）ランキング",
+    tiktokCaption: "絶対に付き合ってはいけない浮気男・浮気女ランキング💔 恋人のMBTI確認してみて…\n\n#MBTI #MBTI診断 #浮気 #恋愛 #16タイプ診断 #性格診断",
     entries: [
       { mbtiType: "ISFJ", tier: "D", comment: "浮気の概念が存在しない生きた天然保護記念物" },
       { mbtiType: "ISTJ", tier: "D", comment: "契約違反（浮気）を絶対に許さない真面目カンスト" },
@@ -98,6 +103,7 @@ export const PRESET_TIER_LISTS: PresetTierList[] = [
   {
     id: "loner_potential",
     title: "友達が少ないぼっちランキング",
+    tiktokCaption: "友達が少ないのは才能かもしれない…？🤔 ぼっち度ランキング！\n\n#MBTI #MBTI診断 #ぼっち #陰キャ #16タイプ診断 #性格診断",
     entries: [
       { mbtiType: "ESFP", tier: "D", comment: "息をするだけで友達が増える生粋の陽キャ" },
       { mbtiType: "ENFJ", tier: "D", comment: "どこに行っても教祖レベルで人が集まるカリスマ" },
@@ -120,6 +126,7 @@ export const PRESET_TIER_LISTS: PresetTierList[] = [
   {
     id: "villain",
     title: "悪役(ヴィラン)向きな性格ランキング",
+    tiktokCaption: "もしアニメの世界にいたら、一番ヤバい悪役になるのはこのタイプ😈\n\n#MBTI #MBTI診断 #ヴィラン #悪役 #16タイプ診断 #性格診断",
     entries: [
       { mbtiType: "ESFJ", tier: "D", comment: "悪人になりきれず、敵にすらおにぎりを握ってあげる" },
       { mbtiType: "ISFJ", tier: "D", comment: "「こんなことやっちゃダメだよぉ…」と最後まで止める役" },
@@ -142,6 +149,7 @@ export const PRESET_TIER_LISTS: PresetTierList[] = [
   {
     id: "survival",
     title: "無人島サバイバル生き残りランキング",
+    tiktokCaption: "無人島に飛ばされたら最後まで生き残れる最強のタイプは？🌴🥥\n\n#MBTI #MBTI診断 #サバイバル #無人島 #16タイプ診断 #性格診断",
     entries: [
       { mbtiType: "INFP", tier: "D", comment: "虫が無理すぎて開始3秒で泣きながらリタイア" },
       { mbtiType: "ISFJ", tier: "D", comment: "備蓄の食料をみんなに分け与えすぎて餓死する" },
@@ -164,6 +172,7 @@ export const PRESET_TIER_LISTS: PresetTierList[] = [
   {
     id: "dark_empathy",
     title: "人の心を操るのが上手いランキング",
+    tiktokCaption: "気づかないうちに他人を洗脳して操っているヤバいタイプ…🧠👁️\n\n#MBTI #MBTI診断 #心理戦 #メンタル #16タイプ診断 #洗脳 #性格診断",
     entries: [
       { mbtiType: "ISFP", tier: "D", comment: "操るどころかいつも他人にブンブン振り回されている" },
       { mbtiType: "ISFJ", tier: "D", comment: "人を操るという発想自体がない。尽くすことしか知らない" },
