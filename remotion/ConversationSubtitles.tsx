@@ -49,12 +49,13 @@ const ConversationSubtitleWord: React.FC<{ word: ConversationScriptWord }> = ({ 
       <div
         style={{
           transform: `scale(${scale})`,
-          fontSize: "120px",
+          fontSize: "130px",
           fontWeight: 900,
           fontFamily: "'Dela Gothic One', 'Impact', sans-serif",
           color: "white",
-          WebkitTextStroke: `4px ${textColor}`,
-          textShadow: `0px 15px 30px rgba(0,0,0,0.8), 0px 0px 20px ${shadowColor}`,
+          WebkitTextStroke: `6px ${textColor}`,
+          // ソリッドな影エフェクトで2Dステッカー風のポップさを強調
+          textShadow: `8px 8px 0px ${textColor}, 12px 12px 0px rgba(0,0,0,0.2)`,
           textAlign: "center",
           lineHeight: "1.2",
           whiteSpace: "pre-wrap",

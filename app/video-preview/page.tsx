@@ -5,6 +5,7 @@ import { MyVideo } from "../../remotion/MyVideo";
 import { ScriptWord } from "../../remotion/Subtitles";
 import { ConversationVideo } from "../../remotion/ConversationVideo";
 import { ConversationScriptWord } from "../../remotion/ConversationSubtitles";
+import { TierListVideo, TierListEntry } from "../../remotion/TierListVideo";
 import React, { useState } from "react";
 
 // --- 1人用サンプルデータ ---
@@ -91,8 +92,33 @@ const DUMMY_SCRIPT_CONVO: ConversationScriptWord[] = [
   { text: "好きだわw", startFrame: 1250, endFrame: 1290, speaker: "left" },
 ];
 
+// --- ティアリスト用サンプルデータ (実はサイコパスなランキング) ---
+const DUMMY_TIER_LIST: TierListEntry[] = [
+  // D tier (一番まとも)
+  { mbtiType: "ISFJ", imageUrl: "/characters/ISFJ.png", tier: "D", comment: "優しすぎて人を傷つけるなんて絶対に無理" },
+  { mbtiType: "ESFJ", imageUrl: "/characters/ESFJ.png", tier: "D", comment: "共感力が高すぎてサイコに全くなりきれない天使" },
+  { mbtiType: "INFP", imageUrl: "/characters/INFP.png", tier: "D", comment: "虫を殺すだけでも泣いちゃう平和主義者" },
+  // C tier
+  { mbtiType: "ISFP", imageUrl: "/characters/ISFP.png", tier: "C", comment: "ただのマイペース。誰かに害を与える気はない" },
+  { mbtiType: "ENFP", imageUrl: "/characters/ENFP.png", tier: "C", comment: "明るい狂気はあるが、悪意は1ミリもない" },
+  { mbtiType: "ISTJ", imageUrl: "/characters/ISTJ.png", tier: "C", comment: "ルールに厳しすぎるだけで本質はただの常識人" },
+  // B tier
+  { mbtiType: "INTP", imageUrl: "/characters/INTP.png", tier: "B", comment: "サイコパスというかただの社会不適合な変人" },
+  { mbtiType: "ESFP", imageUrl: "/characters/ESFP.png", tier: "B", comment: "空気が読めなくて迷惑かけるだけでサイコではない" },
+  { mbtiType: "ESTJ", imageUrl: "/characters/ESTJ.png", tier: "B", comment: "目的達成のためにたまに他人の感情を完全無視する" },
+  // A tier
+  { mbtiType: "ISTP", imageUrl: "/characters/ISTP.png", tier: "A", comment: "ヤバい状況になるほど無表情で冷静になる一匹狼" },
+  { mbtiType: "ENFJ", imageUrl: "/characters/ENFJ.png", tier: "A", comment: "笑顔で裏工作する教祖系サイコパスの素質あり" },
+  { mbtiType: "ESTP", imageUrl: "/characters/ESTP.png", tier: "A", comment: "スリルを求めて周りを平気でトラブルに巻き込む" },
+  { mbtiType: "ENTJ", imageUrl: "/characters/ENTJ.png", tier: "A", comment: "無能を容赦なく切り捨てる冷徹な独裁者" },
+  // S tier (真のサイコパス)
+  { mbtiType: "INFJ", imageUrl: "/characters/INFJ.png", tier: "S", comment: "相手の一番痛いところを笑顔でえぐる隠れサイコ" },
+  { mbtiType: "INTJ", imageUrl: "/characters/INTJ.png", tier: "S", comment: "効率のためなら他人の感情を一切考慮しない氷の心" },
+  { mbtiType: "ENTP", imageUrl: "/characters/ENTP.png", tier: "S", comment: "息をするように嘘をついて論破してくる真性の狂人" },
+];
+
 export default function VideoPreviewPage() {
-  const [tab, setTab] = useState<"single" | "convo">("convo");
+  const [tab, setTab] = useState<"single" | "convo" | "tier">("tier");
 
   return (
     <div className="min-h-screen bg-neutral-950 flex flex-col items-center justify-center py-10 relative overflow-hidden">
@@ -125,6 +151,16 @@ export default function VideoPreviewPage() {
         >
           2人雑談モード (BGM＆長尺)
         </button>
+        <button
+          onClick={() => setTab("tier")}
+          className={`px-6 py-2 rounded-full font-bold transition-all ${
+            tab === "tier"
+              ? "bg-purple-500 text-white shadow-[0_0_15px_rgba(168,85,247,0.5)]"
+              : "bg-white/10 text-neutral-400 hover:bg-white/20"
+          }`}
+        >
+          ティアリストモード
+        </button>
       </div>
 
       <div className="relative z-10 w-[300px] md:w-[400px] h-[533px] md:h-[711px] shadow-[0_0_50px_rgba(0,255,255,0.15)] rounded-2xl overflow-hidden border border-white/10 bg-black">
@@ -140,11 +176,11 @@ export default function VideoPreviewPage() {
             inputProps={{
               script: DUMMY_SCRIPT_SINGLE,
               bgVideoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
-              mbtiCharacterUrl: "https://placehold.co/400x600/111827/06b6d4.png?text=ENTP+Character&font=impact",
+              mbtiCharacterUrl: "/characters/ENTP.png",
               mbtiType: "ENTP",
             }}
           />
-        ) : (
+        ) : tab === "convo" ? (
           <Player
             component={ConversationVideo}
             durationInFrames={1390} // 1290（台本） + 100（アウトロ）
@@ -156,14 +192,30 @@ export default function VideoPreviewPage() {
             inputProps={{
               script: DUMMY_SCRIPT_CONVO,
               bgVideoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
-              // BGM音声トラックの追加（ダミーのオープン楽曲MP3）
-              audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+              // BGM音声トラックの追加（ダミーのオープン楽曲MP3 - よりアップテンポなポップ曲）
+              audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3",
               // Left: ENTP (Cyan)
-              mbtiLeftUrl: "https://placehold.co/400x600/111827/06b6d4.png?text=ENTP&font=impact",
+              mbtiLeftUrl: "/characters/ENTP.png",
               mbtiLeftType: "ENTP",
               // Right: INFP (Pink)
-              mbtiRightUrl: "https://placehold.co/400x600/111827/ff66cc.png?text=INFP&font=impact",
+              mbtiRightUrl: "/characters/INFP.png",
               mbtiRightType: "INFP",
+            }}
+          />
+        ) : (
+          <Player
+            component={TierListVideo}
+            durationInFrames={DUMMY_TIER_LIST.length * 80 + 150} // 各キャラの秒数 + アウトロ宣伝150フレーム(5秒)
+            compositionWidth={1080}
+            compositionHeight={1920}
+            fps={30}
+            controls
+            style={{ width: "100%", height: "100%" }}
+            inputProps={{
+              title: "実はサイコパス Ranking",
+              entries: DUMMY_TIER_LIST,
+              popDuration: 80, // 約2.6秒ごとに次のキャラが落ちてくる
+              audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3",
             }}
           />
         )}
@@ -172,9 +224,9 @@ export default function VideoPreviewPage() {
       <div className="mt-8 text-neutral-400 text-sm max-w-lg text-center relative z-10 p-6 bg-white/5 rounded-xl border border-white/10 backdrop-blur-sm">
         <p className="font-semibold text-cyan-400 mb-2">💡 プレビュー情報</p>
         <p>
-          {tab === "single"
-            ? "1人のキャラクターがメインで話すスタイルです。"
-            : "動画の長さを約43秒に拡張し、BGM音声トラック（サンプルMp3音源）を追加しています。対話のテンポに合わせて延々と会話が展開されます。"}
+          {tab === "single" && "1人のキャラクターがメインで話すスタイルです。"}
+          {tab === "convo" && "動画の長さを約43秒に拡張し、BGM音声トラック（サンプルMp3音源）を追加しています。対話のテンポに合わせて延々と会話が展開されます。"}
+          {tab === "tier" && "SランクからDランクまでの階級表（Tier List）に、キャラクターが順次落下してくるTikTokで大人気のランキング形式です。"}
         </p>
       </div>
 

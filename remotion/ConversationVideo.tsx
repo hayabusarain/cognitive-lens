@@ -54,18 +54,22 @@ export const ConversationVideo: React.FC<ConversationVideoProps> = ({
         @import url('https://fonts.googleapis.com/css2?family=Dela+Gothic+One&display=swap');
       `}</style>
 
-      {/* Background Layer */}
-      {bgVideoUrl && (
-        <Video
-          src={bgVideoUrl}
-          style={{ width: "100%", height: "100%", objectFit: "cover" }}
-          loop
-          muted
-        />
-      )}
-
-      {/* Middle Layer */}
-      <AbsoluteFill style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }} />
+      {/* Background Layer (Super Bright & Pop Diagonal Stripes) */}
+      <AbsoluteFill style={{ overflow: "hidden" }}>
+        <div style={{
+          position: "absolute",
+          top: "-50%", left: "-50%",
+          width: "300%", height: "300%",
+          background: `repeating-linear-gradient(
+            45deg,
+            #FFF5C3,
+            #FFF5C3 80px,
+            #94E8FF 80px,
+            #94E8FF 160px
+          )`,
+          transform: `translate(-${(frame * 3) % 226}px, ${(frame * 3) % 226}px)`
+        }} />
+      </AbsoluteFill>
 
       {/* Speaker Left */}
       <SpeakerAvatar
@@ -125,18 +129,19 @@ const SpeakerAvatar: React.FC<{
         alignItems: "center",
         transition: "opacity 0.2s, transform 0.2s",
         transform: `scale(${baseScale})`,
-        opacity: isActive ? 1 : 0.4,
-        filter: isActive ? `drop-shadow(0px 0px 30px ${targetColor})` : "none",
+        opacity: isActive ? 1 : 0.8,
+        filter: isActive ? `drop-shadow(0px 10px 20px ${targetColor})` : "grayscale(30%)",
         zIndex: isActive ? 10 : 1,
       }}
     >
       <div
         style={{
-          backgroundColor: "rgba(0,0,0,0.8)",
+          backgroundColor: "#ffffff",
           color: targetColor,
           padding: "10px 40px",
           borderRadius: "50px",
-          border: `3px solid ${targetColor}`,
+          border: `5px solid ${targetColor}`,
+          boxShadow: `0px 10px 0px ${targetColor}`,
           fontSize: "36px",
           fontWeight: "bold",
           fontFamily: "sans-serif",

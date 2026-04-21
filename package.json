@@ -9,8 +9,10 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@remotion/bundler": "^4.0.448",
     "@remotion/cli": "^4.0.448",
     "@remotion/player": "^4.0.448",
+    "@remotion/renderer": "^4.0.448",
     "@supabase/supabase-js": "^2.102.1",
     "@types/recharts": "^1.8.29",
     "framer-motion": "^12.38.0",

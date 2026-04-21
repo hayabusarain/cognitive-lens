@@ -27,7 +27,7 @@ export const Outro: React.FC = () => {
   const opacity = Math.min(frame / 15, 1); // 15フレームかけてフェードイン
 
   return (
-    <AbsoluteFill style={{ backgroundColor: "#000", opacity, justifyContent: "center", alignItems: "center" }}>
+    <AbsoluteFill style={{ backgroundColor: "#000", opacity, justifyContent: "center", alignItems: "center", zIndex: 9999 }}>
       
       {/* サイト宣伝のメインテキスト */}
       <h1
@@ -44,7 +44,7 @@ export const Outro: React.FC = () => {
           lineHeight: "1.4"
         }}
       >
-        続き・相性診断は<br/>Webサイトで！
+        自己診断・相性診断は<br/>WEBサイトで！
       </h1>
 
       {/* 検索エンジンの入力枠風のUI */}

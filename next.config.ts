@@ -1,6 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Remotionなどの重いバイナリやNodeネイティブモジュールをTurbopackビルドから除外
+  serverExternalPackages: ["@remotion/bundler", "@remotion/renderer", "esbuild"],
+
   // Google Cloud Shell のプロキシ経由アクセスを許可
   allowedDevOrigins: [
     "*.cloudshell.dev",

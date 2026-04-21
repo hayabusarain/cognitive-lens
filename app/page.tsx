@@ -52,11 +52,18 @@ export default function HomePage() {
               </span>
             </h1>
 
-            <p className="text-base mb-10 max-w-md mx-auto leading-relaxed tracking-tight text-slate-500">
+            <p className="text-base mb-8 max-w-md mx-auto leading-relaxed tracking-tight text-slate-500">
               見たくなかった自分に、嫌でも気づく。
               <br />
               けど、たぶんそれが一番ラクになる近道。
             </p>
+
+            <div className="mb-10 text-center animate-fade-in-up">
+              <p className="inline-flex flex-col sm:flex-row items-center gap-1.5 text-xs sm:text-sm font-bold text-cyan-700 bg-cyan-50/80 backdrop-blur border border-cyan-200 px-5 py-3 rounded-2xl shadow-sm">
+                <span className="text-cyan-500 shrink-0"><Sparkles size={16} /></span>
+                <span>迷ったら、仕事中ではなく<span className="text-cyan-600 bg-cyan-100/50 px-1 rounded mx-0.5">『完全に自由な休日の自分』</span>を思い浮かべて答えてね</span>
+              </p>
+            </div>
 
             {/* ── 2 Routes ─────────────────────────── */}
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-16">
