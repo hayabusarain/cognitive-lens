@@ -4,8 +4,19 @@ import { renderMedia, selectComposition } from "@remotion/renderer";
 import path from "path";
 import fs from "fs";
 
+let lastRenderTime = 0;
+
 export async function POST(req: Request) {
   try {
+    const now = Date.now();
+    if (now - lastRenderTime < 10000) {
+      return NextResponse.json(
+        { error: "【スパム防止】動画の作成は10秒間に1回までです。少し待機してから再度お試しください。" },
+        { status: 429 }
+      );
+    }
+    lastRenderTime = now;
+
     const body = await req.json();
     const inputProps = body.inputProps;
 
