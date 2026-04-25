@@ -69,31 +69,7 @@ export const TierListVideo: React.FC<TierListVideoProps> = ({
         <div style={{
           position: "absolute", inset: 0,
           background: "radial-gradient(circle at center, transparent 30%, #000 100%)"
-        }} />
       </AbsoluteFill>
-
-      {/* サイト宣伝用ウォーターマーク（常時表示） */}
-      <div style={{
-        position: "absolute",
-        top: "60px",
-        left: "40px",
-        zIndex: 100,
-        display: "flex", alignItems: "center", gap: "15px",
-        backgroundColor: "rgba(0, 0, 0, 0.65)", backdropFilter: "blur(10px)",
-        padding: "20px 30px", borderRadius: "20px",
-        border: "3px solid rgba(0, 255, 255, 0.4)",
-        boxShadow: "0 10px 30px rgba(0,0,0,0.8)"
-      }}>
-        <span style={{ fontSize: "50px" }}>🔎</span>
-        <div style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
-          <span style={{ color: "#fff", fontSize: "28px", fontWeight: "bold", fontFamily: "sans-serif" }}>
-            無料のガチMBTI診断は
-          </span>
-          <span style={{ color: "#00ffff", fontSize: "36px", fontWeight: "900", fontFamily: "sans-serif", textShadow: "0 0 15px rgba(0,255,255,0.6)" }}>
-            「対人課題解決プラットフォーム」で検索
-          </span>
-        </div>
-      </div>
 
       {/* Title */}
       <div style={{
@@ -127,6 +103,29 @@ export const TierListVideo: React.FC<TierListVideoProps> = ({
             entriesList={entries}
           />
         ))}
+      </div>
+
+      {/* サイト宣伝用ウォーターマーク（常時表示：Dランクの下） */}
+      <div style={{
+        display: "flex", justifyContent: "center", width: "100%", zIndex: 10, marginBottom: "20px"
+      }}>
+        <div style={{
+          display: "inline-flex", alignItems: "center", gap: "15px",
+          backgroundColor: "rgba(0, 0, 0, 0.65)", backdropFilter: "blur(10px)",
+          padding: "20px 40px", borderRadius: "100px",
+          border: "3px solid rgba(0, 255, 255, 0.4)",
+          boxShadow: "0 10px 30px rgba(0,0,0,0.8)"
+        }}>
+          <span style={{ fontSize: "50px" }}>🔎</span>
+          <div style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
+            <span style={{ color: "#fff", fontSize: "28px", fontWeight: "bold", fontFamily: "sans-serif" }}>
+              無料のガチMBTI診断は
+            </span>
+            <span style={{ color: "#00ffff", fontSize: "36px", fontWeight: "900", fontFamily: "sans-serif", textShadow: "0 0 15px rgba(0,255,255,0.6)" }}>
+              「対人課題解決プラットフォーム」で検索
+            </span>
+          </div>
+        </div>
       </div>
 
       {/* Bottom Popup Comment */}
