@@ -69,6 +69,7 @@ export const TierListVideo: React.FC<TierListVideoProps> = ({
         <div style={{
           position: "absolute", inset: 0,
           background: "radial-gradient(circle at center, transparent 30%, #000 100%)"
+        }} />
       </AbsoluteFill>
 
       {/* Title */}
