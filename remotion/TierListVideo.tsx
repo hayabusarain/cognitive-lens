@@ -91,7 +91,7 @@ export const TierListVideo: React.FC<TierListVideoProps> = ({
       {/* Tier Board */}
       <div style={{
         display: "flex", flexDirection: "column", gap: "10px",
-        padding: "20px", marginTop: "20px", flex: 1, zIndex: 5
+        padding: "20px", marginTop: "20px", flex: "none", zIndex: 5
       }}>
         {TIERS.map((tier) => (
           <TierRow
@@ -106,9 +106,9 @@ export const TierListVideo: React.FC<TierListVideoProps> = ({
         ))}
       </div>
 
-      {/* サイト宣伝用ウォーターマーク（常時表示：Dランクの下） */}
+      {/* サイト宣伝用ウォーターマーク（常時表示：Dランクの直下） */}
       <div style={{
-        display: "flex", justifyContent: "center", width: "100%", zIndex: 10, marginBottom: "20px"
+        display: "flex", justifyContent: "center", width: "100%", zIndex: 10, marginTop: "10px"
       }}>
         <div style={{
           display: "inline-flex", alignItems: "center", gap: "15px",
