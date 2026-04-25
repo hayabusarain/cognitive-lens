@@ -122,6 +122,52 @@ export default async function ArticlePage({ params }: { params: Promise<{ type: 
                 </ul>
               </section>
             )}
+
+            {/* ── マッチングアプリアフィリエイト誘導用コンポーネント（プレビュー） ── */}
+            <div className="mt-12 overflow-hidden relative rounded-3xl bg-gradient-to-br from-pink-500 to-rose-400 p-[2px] shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
+              <div className="bg-white/95 backdrop-blur-sm rounded-[22px] p-6 sm:p-8 relative overflow-hidden">
+                {/* 装飾用背景 */}
+                <Heart className="absolute -right-8 -bottom-8 w-40 h-40 text-pink-50 -rotate-12 pointer-events-none" />
+                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-pink-400 via-rose-400 to-pink-400" />
+                
+                <div className="relative z-10 flex flex-col items-center text-center">
+                  <div className="inline-flex items-center justify-center bg-pink-50 text-pink-600 border border-pink-200 px-3 py-1 rounded-full text-[10px] font-bold mb-4 tracking-widest uppercase">
+                    Sponsored
+                  </div>
+                  
+                  <h3 className="text-xl sm:text-2xl font-extrabold text-slate-800 mb-4 leading-tight tracking-tight">
+                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-rose-500">
+                      {typeKey}のあなた
+                    </span>
+                    と運命の出会いを果たすには？
+                  </h3>
+                  
+                  <p className="text-[13px] sm:text-[15px] text-slate-600 mb-6 leading-relaxed max-w-md mx-auto">
+                    自分の性格をもっと深く知るほど、<br className="hidden sm:block"/>自分に合った人が見えてきます。
+                    <br />
+                    <span className="font-bold text-slate-800 bg-pink-100/50 px-1 rounded">価値観や相性で相手を探せる</span>国内最大級のアプリで、
+                    次の一歩を踏み出してみませんか？
+                  </p>
+                  
+                  {/* アフィリエイトリンク先（あとで実際のURLに書き換えてください） */}
+                  <a 
+                    href="#" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="group relative inline-flex items-center justify-center w-full sm:w-auto px-8 py-4 font-bold text-white transition-all duration-200 bg-gradient-to-r from-pink-500 to-rose-500 rounded-full shadow-[0_8px_30px_rgb(244,63,94,0.3)] hover:shadow-[0_8px_40px_rgb(244,63,94,0.5)] overflow-hidden"
+                  >
+                    <span className="absolute w-0 h-0 transition-all duration-500 ease-out bg-white rounded-full group-hover:w-64 group-hover:h-64 opacity-20"></span>
+                    <Heart className="w-4 h-4 mr-2 animate-bounce fill-white/90" />
+                    相性ピッタリの相手を探す（登録無料）
+                  </a>
+                  
+                  <p className="text-[10px] sm:text-xs text-slate-400 mt-4 max-w-xs mx-auto">
+                    ※登録無料。女性は完全無料・男性もマッチングまで無料で使えます！
+                  </p>
+                </div>
+              </div>
+            </div>
+            {/* ──────────────────────────────────────────────── */}
           </div>
         </article>
 
