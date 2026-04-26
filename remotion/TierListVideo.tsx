@@ -20,7 +20,7 @@ export type TierListVideoProps = {
   popDuration: number; // 1キャラあたりの表示時間（フレーム）
 };
 
-const TIER_COLORS: Record<Tier, string> = {
+const TIER_COLORS: Record<string, string> = {
   S: "#ff4757", // Red
   A: "#ff7f50", // Coral/Orange
   B: "#eccc68", // Yellow
