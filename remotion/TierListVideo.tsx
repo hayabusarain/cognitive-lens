@@ -7,9 +7,10 @@ export type Tier = "S" | "A" | "B" | "C" | "D";
 export type TierListEntry = {
   mbtiType: string;
   imageUrl: string;
-  tier: Tier;
+  tier: Tier | string;
   comment: string;
   ttsUrl?: string; // AIによる音声読み上げURL
+  webAnswer?: string; // ウェブサイト上で表示する回答の理由
 };
 
 export type TierListVideoProps = {

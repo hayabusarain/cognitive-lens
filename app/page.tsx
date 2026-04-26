@@ -46,7 +46,7 @@ export default function HomePage() {
             <div className="absolute inset-0 bg-[url('/noise.png')] opacity-20 mix-blend-overlay pointer-events-none"></div>
             <div className="max-w-4xl mx-auto p-4 md:p-6 text-center text-white relative z-10 flex flex-col md:flex-row items-center gap-6 justify-center">
               
-              <div className="flex-1 text-left">
+              <div className="flex-1 text-left w-full">
                 <div className="inline-flex items-center gap-2 bg-black/30 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-2">
                   <Video size={14} className="text-rose-200" />
                   TikTok最新動画の答え合わせ！
@@ -56,17 +56,15 @@ export default function HomePage() {
                   圧倒的第1位は...
                   <span className="text-yellow-300 ml-2 text-4xl">{latestRank.rank1Type}</span> !!
                 </h2>
-                <p className="text-rose-100 text-sm font-medium mt-2">
-                  自分と同じタイプと出会うなら、国内最大級の相性マッチングアプリで。
-                </p>
-              </div>
-
-              <div className="shrink-0 w-full md:w-auto">
-                {/* ここがアフィリエイト用ボタン（現状はWIPPY想定のダミーリンク） */}
-                <a href="#" className="block w-full text-center bg-yellow-400 hover:bg-yellow-300 text-slate-900 font-black text-lg py-4 px-8 rounded-full shadow-[0_0_20px_rgba(250,204,21,0.5)] transition-all hover:scale-105 active:scale-95 border-2 border-yellow-200">
-                  相性の良い人を探す
-                  <span className="block text-xs font-semibold opacity-70 mt-0.5">※無料登録・心理テスト付き</span>
-                </a>
+                
+                {latestRank.rank1Reason && (
+                  <div className="mt-4 bg-black/20 p-4 rounded-xl border border-rose-400/30 backdrop-blur-sm w-full md:w-4/5">
+                    <p className="text-rose-50 text-sm font-bold leading-relaxed">
+                      <span className="text-yellow-300 mb-1 block text-xs">【選ばれた理由】</span>
+                      {latestRank.rank1Reason}
+                    </p>
+                  </div>
+                )}
               </div>
 
             </div>

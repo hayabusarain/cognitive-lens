@@ -42,7 +42,7 @@ export const PRESET_TIER_LISTS: PresetTierList[] = [
       { mbtiType: "ESTP", tier: "4", comment: "第4位 ESTP。物理的に手が出るか、一生残るトラウマ級の暴言を吐く" },
       { mbtiType: "ENFJ", tier: "3", comment: "第3位 ENFJ。正義の御旗を掲げ、逃げ場のない正論で社会的に抹殺する" },
       { mbtiType: "ISFJ", tier: "2", comment: "第2位 ISFJ。あなたの罪を一生忘れず、無言の圧力で精神を削り取る" },
-      { mbtiType: "INFJ", tier: "1", comment: "第1位は、ヤバすぎて運営に動画を消されるかもしれないので、私の制作したウェブサイトで公開しています。プロフィールのリンクから確認してください。" },
+      { mbtiType: "INFJ", tier: "1", comment: "第1位は、ヤバすぎて運営に動画を消されるかもしれないので、私の制作したウェブサイトで公開しています。プロフィールのリンクから確認してください。", webAnswer: "相手の弱点を完璧に見抜き、一番えぐられる言葉で精神を完全に破壊する本物のサイコパスだから。" },
     ],
   },
   {

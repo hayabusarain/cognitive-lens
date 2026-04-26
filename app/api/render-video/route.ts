@@ -43,6 +43,7 @@ export async function POST(req: Request) {
         title: inputProps.title,
         isTop5,
         rank1Type: rank1Entry ? rank1Entry.mbtiType : null,
+        rank1Reason: rank1Entry ? rank1Entry.webAnswer : null,
         updatedAt: new Date().toISOString()
       };
       const jsonPath = path.resolve(process.cwd(), "public", "latest-rank.json");
