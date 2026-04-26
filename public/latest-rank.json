@@ -1,8 +1,7 @@
 {
-  "presetId": "psychopath",
-  "title": "真のサイコパスランキング",
-  "isTop5": false,
-  "rank1Type": null,
-  "rank1Reason": null,
-  "updatedAt": "2026-04-26T14:56:59.643Z"
+  "presetId": "do_not_anger",
+  "title": "Test",
+  "isTop5": true,
+  "rank1Type": "INTJ",
+  "updatedAt": "2026-04-26T15:10:49.717Z"
 }
