@@ -10,6 +10,32 @@ export type PresetTierList = {
 
 export const PRESET_TIER_LISTS: PresetTierList[] = [
   {
+    id: "two_faced",
+    title: "実は腹黒いMBTIランキング",
+    tiktokCaption: "優しそうに見えて裏では計算高い…実は腹黒いMBTIは誰？ 第1位はヤバすぎて自作サイトにまとめました。今すぐ『対人課題解決プラットフォーム』で検索して確認して！ #MBTI #MBTI診断 #性格診断 #裏の顔 #腹黒",
+    videoType: "top5",
+    entries: [
+      { mbtiType: "ISFJ", tier: "5", comment: "第5位 ISFJ。献身的に見えるが、実は恩を着せて相手をコントロールしようとする" },
+      { mbtiType: "ENFP", tier: "4", comment: "第4位 ENFP。無邪気なフリをして、気付かないうちに自分に有利な状況を作る天才" },
+      { mbtiType: "INFJ", tier: "3", comment: "第3位 INFJ。優しさの裏で、他人の弱点と利用価値を冷酷に分析している" },
+      { mbtiType: "ESFJ", tier: "2", comment: "第2位 ESFJ。みんなの味方を装いながら、裏で巧妙な情報操作をしている" },
+      { mbtiType: "ENFJ", tier: "1", comment: "第1位は、ヤバすぎて運営に動画を消されるかもしれないので、私の制作したウェブサイトで公開しています。『対人課題解決プラットフォーム』で検索してサイトを確認してください。", webAnswer: "圧倒的なカリスマ性で周囲を洗脳し、笑顔のまま他人を自分の駒として完全に支配する本物の支配者だから。" },
+    ],
+  },
+  {
+    id: "socially_awkward_genius",
+    title: "社会不適合な天才ランキング",
+    tiktokCaption: "頭は良すぎるのに社会生活が壊滅的…天才ゆえに生きづらいMBTIは？第1位は社会適応能力が低すぎて消されるかもしれないので、自作サイトにまとめました。今すぐ『対人課題解決プラットフォーム』で検索して確認して！ #MBTI #MBTI診断 #天才 #社会不適合者",
+    videoType: "top5",
+    entries: [
+      { mbtiType: "ENFP", tier: "5", comment: "第5位 ENFP。独創的すぎるアイデアが多すぎて、普通の会社では浮きまくる" },
+      { mbtiType: "ISTP", tier: "4", comment: "第4位 ISTP。圧倒的な技術力を持つが、人間関係が面倒で全てを放棄する" },
+      { mbtiType: "INTJ", tier: "3", comment: "第3位 INTJ。脳内の戦略は完璧なのに、それを他人に説明するのを諦めている" },
+      { mbtiType: "ENTP", tier: "2", comment: "第2位 ENTP。議論に勝つことしか考えておらず、協調性が皆無" },
+      { mbtiType: "INTP", tier: "1", comment: "第1位は、ヤバすぎて運営に動画を消されるかもしれないので、私の制作したウェブサイトで公開しています。『対人課題解決プラットフォーム』で検索してサイトを確認してください。", webAnswer: "興味のある事には常人の100倍の集中力を発揮するが、それ以外の社会のルールや常識を「無意味なノイズ」として完全に無視するから。" },
+    ],
+  },
+  {
     id: "do_not_anger",
     title: "怒らせるとヤバいMBTI",
     tiktokCaption: "絶対に敵に回してはいけない。普段優しいのに怒らせたら人生終わる『隠れサイコパス』なMBTIは？\n第1位はヤバすぎて運営に消されるかもしれないので、自作サイトにまとめました。今すぐ『対人課題解決プラットフォーム』で検索してサイトで確認して。\n\n#MBTI #MBTI診断 #怒らせてはいけない #サイコパス #16タイプ診断 #性格診断",
