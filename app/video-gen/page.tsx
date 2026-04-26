@@ -28,9 +28,12 @@ export default function VideoGeneratorPage() {
 
       setStatus("内部データから台本と画像を組み立て中...");
       
+      const isTop5 = preset.videoType === "top5";
+
       const mappedEntries = preset.entries.map(e => {
         return {
           ...e,
+          rank: isTop5 ? parseInt(e.tier, 10) : undefined,
           imageUrl: `/characters/${e.mbtiType}.png`
         };
       });
@@ -44,17 +47,19 @@ export default function VideoGeneratorPage() {
 
       // 3. 動画のレンダリング
       setStatus("動画をバックグラウンドでMP4にレンダリング中... (約20秒かかります)");
-      const durationInFrames = entriesWithAudio.length * 80 + 150; // 各80フレーム + アウトロ150
+      
+      const popDuration = isTop5 ? 150 : 80;
       
       const renderRes = await fetch("/api/render-video", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          compositionId: isTop5 ? "Top5RankingVideo" : "TierListVideo",
+          presetId: preset.id, // トップページ連動用
           inputProps: {
             title: preset.title,
             entries: entriesWithAudio,
-            popDuration: 80,
-            // audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3" // BGMを無効化
+            popDuration: popDuration,
           }
         })
       });

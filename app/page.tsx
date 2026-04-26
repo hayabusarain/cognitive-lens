@@ -2,10 +2,25 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, Sparkles, Languages, FlaskConical, Zap, Shield, BarChart2 } from "lucide-react";
+import { ArrowRight, Sparkles, Languages, FlaskConical, Zap, Shield, BarChart2, Video } from "lucide-react";
 import AdSenseUnit from "@/app/components/ads/AdSenseUnit";
+import { useEffect, useState } from "react";
 
 export default function HomePage() {
+  const [latestRank, setLatestRank] = useState<any>(null);
+
+  useEffect(() => {
+    // 開発/ローカル環境で自動生成された最新ランキングを取得
+    fetch("/latest-rank.json")
+      .then(res => res.ok ? res.json() : null)
+      .then(data => {
+        if (data && data.isTop5 && data.rank1Type) {
+          setLatestRank(data);
+        }
+      })
+      .catch(e => console.error("Failed to fetch latest rank", e));
+  }, []);
+
   return (
     <>
       {/* Aurora background */}
@@ -24,6 +39,39 @@ export default function HomePage() {
             β BETA
           </span>
         </nav>
+
+        {/* ── 動画連動 特大広告バナー（最新ランキングの第1位） ── */}
+        {latestRank && (
+          <div className="w-full bg-gradient-to-r from-rose-600 to-pink-600 shadow-2xl overflow-hidden relative animate-fade-in-down z-20">
+            <div className="absolute inset-0 bg-[url('/noise.png')] opacity-20 mix-blend-overlay pointer-events-none"></div>
+            <div className="max-w-4xl mx-auto p-4 md:p-6 text-center text-white relative z-10 flex flex-col md:flex-row items-center gap-6 justify-center">
+              
+              <div className="flex-1 text-left">
+                <div className="inline-flex items-center gap-2 bg-black/30 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-2">
+                  <Video size={14} className="text-rose-200" />
+                  TikTok最新動画の答え合わせ！
+                </div>
+                <h2 className="text-2xl md:text-3xl font-black mb-1 leading-tight text-white drop-shadow-md">
+                  「{latestRank.title}」<br/>
+                  圧倒的第1位は...
+                  <span className="text-yellow-300 ml-2 text-4xl">{latestRank.rank1Type}</span> !!
+                </h2>
+                <p className="text-rose-100 text-sm font-medium mt-2">
+                  自分と同じタイプと出会うなら、国内最大級の相性マッチングアプリで。
+                </p>
+              </div>
+
+              <div className="shrink-0 w-full md:w-auto">
+                {/* ここがアフィリエイト用ボタン（現状はWIPPY想定のダミーリンク） */}
+                <a href="#" className="block w-full text-center bg-yellow-400 hover:bg-yellow-300 text-slate-900 font-black text-lg py-4 px-8 rounded-full shadow-[0_0_20px_rgba(250,204,21,0.5)] transition-all hover:scale-105 active:scale-95 border-2 border-yellow-200">
+                  相性の良い人を探す
+                  <span className="block text-xs font-semibold opacity-70 mt-0.5">※無料登録・心理テスト付き</span>
+                </a>
+              </div>
+
+            </div>
+          </div>
+        )}
 
         {/* AdSense: Header */}
         <AdSenseUnit id="adsense-header" slotId="1111111111" />

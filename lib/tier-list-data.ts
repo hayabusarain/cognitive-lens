@@ -4,6 +4,7 @@ export type PresetTierList = {
   id: string;
   title: string;
   tiktokCaption?: string;
+  videoType?: "tier-list" | "top5"; // デフォルトはtier-list
   entries: Omit<TierListEntry, "imageUrl" | "ttsUrl">[]; // imageUrlとttsUrlは動的に付与する
 };
 
@@ -35,23 +36,13 @@ export const PRESET_TIER_LISTS: PresetTierList[] = [
     id: "do_not_anger",
     title: "怒らせるとヤバいMBTI",
     tiktokCaption: "絶対に敵に回してはいけない。普段優しいのに怒らせたら人生終わる『隠れサイコパス』なMBTIは？\n圧倒的第1位はヤバすぎるのでプロフィールのリンクに答えを置きました。自分が当てはまってないか今すぐ確認して。\n\n#MBTI #MBTI診断 #怒らせてはいけない #サイコパス #16タイプ診断 #性格診断",
+    videoType: "top5",
     entries: [
-      { mbtiType: "INFP", tier: "D", comment: "怒っても泣く事しかできず、後で一人で病む無害な羊" },
-      { mbtiType: "ISFP", tier: "D", comment: "怒る前に面倒になって現実逃避する、争い回避のプロ" },
-      { mbtiType: "ENFP", tier: "D", comment: "ブチギレても寝て起きたら忘れてるハッピー野郎" },
-      { mbtiType: "ESFP", tier: "D", comment: "怒る時間すらもったいないと遊びに行く快楽主義者" },
-      { mbtiType: "ISTJ", tier: "C", comment: "過去のミスをExcelのように引っ張り出して理詰めで殺す" },
-      { mbtiType: "ESTP", tier: "C", comment: "物理的に手が出るか、一生残るトラウマ級の暴言を吐く" },
-      { mbtiType: "ESFJ", tier: "C", comment: "怒らせると、周囲の人間を洗脳してあなたを村八分にする" },
-      { mbtiType: "ISFJ", tier: "C", comment: "あなたの罪を一生忘れず、無言の圧力で精神を削り取る" },
-      { mbtiType: "ENTP", tier: "B", comment: "相手が泣いて謝るまで笑顔でロジックハラスメントを続ける" },
-      { mbtiType: "INTP", tier: "B", comment: "感情を完全にオフにし、論理の刃でプライドをズタズタにする" },
-      { mbtiType: "ISTP", tier: "B", comment: "無表情のまま、たった一言で相手の急所を的確にえぐり取る" },
-      { mbtiType: "ENFJ", tier: "B", comment: "正義の御旗を掲げ、逃げ場のない正論で社会的に抹殺する" },
-      { mbtiType: "ESTJ", tier: "A", comment: "感情論ゼロ。圧倒的な権力と圧力で息の根を止める" },
-      { mbtiType: "ENTJ", tier: "A", comment: "怒りすら合理的に利用し、気付けば相手の居場所が消滅している" },
-      { mbtiType: "INTJ", tier: "S", comment: "怒りを見せず、数ヶ月後に完璧なシナリオで破滅に追い込む" },
-      { mbtiType: "INFJ", tier: "S", comment: "【警告】一瞬で精神を崩壊させる最強のサイコパス。詳細はプロフのリンクへ" },
+      { mbtiType: "INFP", tier: "5", comment: "第5位 INFP。怒っても泣く事しかできず、後で一人で病む無害な羊" },
+      { mbtiType: "ESTP", tier: "4", comment: "第4位 ESTP。物理的に手が出るか、一生残るトラウマ級の暴言を吐く" },
+      { mbtiType: "ENFJ", tier: "3", comment: "第3位 ENFJ。正義の御旗を掲げ、逃げ場のない正論で社会的に抹殺する" },
+      { mbtiType: "ISFJ", tier: "2", comment: "第2位 ISFJ。あなたの罪を一生忘れず、無言の圧力で精神を削り取る" },
+      { mbtiType: "INFJ", tier: "1", comment: "圧倒的第1位…文字数制限で書けないのでプロフリンクへ！" },
     ],
   },
   {

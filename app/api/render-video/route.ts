@@ -18,7 +18,7 @@ export async function POST(req: Request) {
     lastRenderTime = now;
 
     const body = await req.json();
-    const inputProps = body.inputProps;
+    const { inputProps, compositionId = "TierListVideo", presetId } = body;
 
     if (!inputProps || !inputProps.entries) {
       return NextResponse.json({ error: "inputProps.entries が必要です" }, { status: 400 });
@@ -31,6 +31,22 @@ export async function POST(req: Request) {
     const outDir = path.resolve(process.cwd(), "public", "outputs");
     if (!fs.existsSync(outDir)) {
       fs.mkdirSync(outDir, { recursive: true });
+    }
+
+    // トップページ連動用データの保存
+    if (presetId && inputProps.entries.length > 0) {
+      const isTop5 = compositionId === "Top5RankingVideo";
+      const rank1Entry = isTop5 ? inputProps.entries[inputProps.entries.length - 1] : null;
+      
+      const latestRankData = {
+        presetId,
+        title: inputProps.title,
+        isTop5,
+        rank1Type: rank1Entry ? rank1Entry.mbtiType : null,
+        updatedAt: new Date().toISOString()
+      };
+      const jsonPath = path.resolve(process.cwd(), "public", "latest-rank.json");
+      fs.writeFileSync(jsonPath, JSON.stringify(latestRankData, null, 2), "utf-8");
     }
 
     // ファイル名の生成
@@ -48,7 +64,7 @@ export async function POST(req: Request) {
     
     const composition = await selectComposition({
       serveUrl: bundleLocation,
-      id: "TierListVideo",
+      id: compositionId,
       inputProps,
     });
 
