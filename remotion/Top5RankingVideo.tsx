@@ -173,10 +173,10 @@ const RankingSlide: React.FC<{ entry: RankingEntry, isLast: boolean, fps: number
         <div style={{
           backgroundColor: "#ff0000", color: "white", padding: "10px 30px",
           borderRadius: "20px", fontWeight: "900", border: "4px solid #fff",
-          fontSize: "50px", marginTop: "30px", textShadow: "0px 5px 10px rgba(0,0,0,0.8)",
+          fontSize: "45px", marginTop: "30px", textShadow: "0px 5px 10px rgba(0,0,0,0.8)",
           textAlign: "center"
         }}>
-          圧倒的1位は<br/>プロフのリンクへ
+          運営の削除対策のため<br/>プロフの自作サイトで公開中
         </div>
       )}
 
