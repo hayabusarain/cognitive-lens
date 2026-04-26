@@ -16,6 +16,12 @@ export const RemotionRoot: React.FC = () => {
         fps={30}
         width={1080}
         height={1920}
+        calculateMetadata={({ props }) => {
+          const entryCount = props.entries?.length || 0;
+          return {
+            durationInFrames: Math.max(150, entryCount * (props.popDuration || 80) + 150)
+          };
+        }}
         defaultProps={{
           title: "MBTI Ranking",
           entries: [],
@@ -29,6 +35,12 @@ export const RemotionRoot: React.FC = () => {
         fps={30}
         width={1080}
         height={1920}
+        calculateMetadata={({ props }) => {
+          const entryCount = props.entries?.length || 0;
+          return {
+            durationInFrames: Math.max(150, entryCount * (props.popDuration || 150) + 150)
+          };
+        }}
         defaultProps={{
           title: "Top 5 Ranking",
           entries: [],

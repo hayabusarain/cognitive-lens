@@ -176,7 +176,7 @@ const RankingSlide: React.FC<{ entry: RankingEntry, isLast: boolean, fps: number
           fontSize: "45px", marginTop: "30px", textShadow: "0px 5px 10px rgba(0,0,0,0.8)",
           textAlign: "center"
         }}>
-          運営の削除対策のため<br/>プロフの自作サイトで公開中
+          削除対策のため自作サイトで公開中<br/>「対人課題解決プラットフォーム」で検索
         </div>
       )}
 

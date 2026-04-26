@@ -6,7 +6,10 @@ import fs from "fs";
 
 declare global {
   var cachedBundleLocation: string | undefined;
+  var bundleVersion: number | undefined;
 }
+
+const CURRENT_BUNDLE_VERSION = 2;
 
 let lastRenderTime = 0;
 
@@ -60,7 +63,12 @@ export async function POST(req: Request) {
 
     console.log("バンドルを開始します:", entryPoint);
     
-    // Remotionプロジェクトのバンドル（キャッシュ化して2回目以降の重さを解消）
+    // Remotionプロジェクトのバンドル（バージョンが変わった場合は破棄）
+    if (global.bundleVersion !== CURRENT_BUNDLE_VERSION) {
+      global.cachedBundleLocation = undefined;
+      global.bundleVersion = CURRENT_BUNDLE_VERSION;
+    }
+    
     if (!global.cachedBundleLocation) {
       global.cachedBundleLocation = await bundle({
         entryPoint,
