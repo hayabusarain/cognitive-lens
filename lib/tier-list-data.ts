@@ -10,6 +10,19 @@ export type PresetTierList = {
 
 export const PRESET_TIER_LISTS: PresetTierList[] = [
   {
+    id: "do_not_anger",
+    title: "怒らせるとヤバいMBTI",
+    tiktokCaption: "絶対に敵に回してはいけない。普段優しいのに怒らせたら人生終わる『隠れサイコパス』なMBTIは？\n第1位はヤバすぎて運営に消されるかもしれないので、自作サイトにまとめました。プロフのリンクから今すぐ確認して。\n\n#MBTI #MBTI診断 #怒らせてはいけない #サイコパス #16タイプ診断 #性格診断",
+    videoType: "top5",
+    entries: [
+      { mbtiType: "INFP", tier: "5", comment: "第5位 INFP。怒っても泣く事しかできず、後で一人で病む無害な羊" },
+      { mbtiType: "ESTP", tier: "4", comment: "第4位 ESTP。物理的に手が出るか、一生残るトラウマ級の暴言を吐く" },
+      { mbtiType: "ENFJ", tier: "3", comment: "第3位 ENFJ。正義の御旗を掲げ、逃げ場のない正論で社会的に抹殺する" },
+      { mbtiType: "ISFJ", tier: "2", comment: "第2位 ISFJ。あなたの罪を一生忘れず、無言の圧力で精神を削り取る" },
+      { mbtiType: "INFJ", tier: "1", comment: "第1位は、ヤバすぎて運営に動画を消されるかもしれないので、私の制作したウェブサイトで公開しています。プロフィールのリンクから確認してください。", webAnswer: "相手の弱点を完璧に見抜き、一番えぐられる言葉で精神を完全に破壊する本物のサイコパスだから。" },
+    ],
+  },
+  {
     id: "psychopath",
     title: "真のサイコパスランキング",
     tiktokCaption: "あなたの周りにも絶対いるヤバい奴…😱 当たってたらコメントで教えて！\n\n#MBTI #MBTI診断 #16タイプ診断 #サイコパス #性格診断 #性格テスト",
@@ -30,19 +43,6 @@ export const PRESET_TIER_LISTS: PresetTierList[] = [
       { mbtiType: "INTJ", tier: "A", comment: "脳内で完全犯罪のシミュレーションが終わってる" },
       { mbtiType: "ENTP", tier: "S", comment: "息をするように嘘をついて楽しそうに論破する" },
       { mbtiType: "INTP", tier: "S", comment: "倫理観すら「興味深い研究対象」として扱う真性" },
-    ],
-  },
-  {
-    id: "do_not_anger",
-    title: "怒らせるとヤバいMBTI",
-    tiktokCaption: "絶対に敵に回してはいけない。普段優しいのに怒らせたら人生終わる『隠れサイコパス』なMBTIは？\n第1位はヤバすぎて運営に消されるかもしれないので、自作サイトにまとめました。プロフのリンクから今すぐ確認して。\n\n#MBTI #MBTI診断 #怒らせてはいけない #サイコパス #16タイプ診断 #性格診断",
-    videoType: "top5",
-    entries: [
-      { mbtiType: "INFP", tier: "5", comment: "第5位 INFP。怒っても泣く事しかできず、後で一人で病む無害な羊" },
-      { mbtiType: "ESTP", tier: "4", comment: "第4位 ESTP。物理的に手が出るか、一生残るトラウマ級の暴言を吐く" },
-      { mbtiType: "ENFJ", tier: "3", comment: "第3位 ENFJ。正義の御旗を掲げ、逃げ場のない正論で社会的に抹殺する" },
-      { mbtiType: "ISFJ", tier: "2", comment: "第2位 ISFJ。あなたの罪を一生忘れず、無言の圧力で精神を削り取る" },
-      { mbtiType: "INFJ", tier: "1", comment: "第1位は、ヤバすぎて運営に動画を消されるかもしれないので、私の制作したウェブサイトで公開しています。プロフィールのリンクから確認してください。", webAnswer: "相手の弱点を完璧に見抜き、一番えぐられる言葉で精神を完全に破壊する本物のサイコパスだから。" },
     ],
   },
   {

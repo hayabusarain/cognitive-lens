@@ -4,6 +4,10 @@ import { renderMedia, selectComposition } from "@remotion/renderer";
 import path from "path";
 import fs from "fs";
 
+declare global {
+  var cachedBundleLocation: string | undefined;
+}
+
 let lastRenderTime = 0;
 
 export async function POST(req: Request) {
@@ -56,15 +60,19 @@ export async function POST(req: Request) {
 
     console.log("バンドルを開始します:", entryPoint);
     
-    // Remotionプロジェクトをバンドル
-    const bundleLocation = await bundle({
-      entryPoint,
-    });
+    // Remotionプロジェクトのバンドル（キャッシュ化して2回目以降の重さを解消）
+    if (!global.cachedBundleLocation) {
+      global.cachedBundleLocation = await bundle({
+        entryPoint,
+      });
+    } else {
+      console.log("キャッシュされたバンドルを使用します");
+    }
 
     console.log("コンポジションを選択します...");
     
     const composition = await selectComposition({
-      serveUrl: bundleLocation,
+      serveUrl: global.cachedBundleLocation,
       id: compositionId,
       inputProps,
     });
@@ -74,7 +82,7 @@ export async function POST(req: Request) {
     // バックグラウンドでレンダリングを実行
     await renderMedia({
       composition,
-      serveUrl: bundleLocation,
+      serveUrl: global.cachedBundleLocation,
       codec: "h264",
       outputLocation: outPath,
       inputProps,

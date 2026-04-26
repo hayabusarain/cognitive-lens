@@ -1,7 +1,8 @@
 {
-  "presetId": "do_not_anger",
-  "title": "怒らせるとヤバいMBTI",
-  "isTop5": true,
-  "rank1Type": "INFJ",
-  "updatedAt": "2026-04-26T14:26:13.368Z"
+  "presetId": "psychopath",
+  "title": "真のサイコパスランキング",
+  "isTop5": false,
+  "rank1Type": null,
+  "rank1Reason": null,
+  "updatedAt": "2026-04-26T14:56:59.643Z"
 }
