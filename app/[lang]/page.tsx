@@ -10,8 +10,9 @@ export default async function Page({ params }: { params: Promise<{ lang: string 
   const dict = await getDictionary(lang);
   
   const presets = lang === "en" ? PRESET_TIER_LISTS_EN : PRESET_TIER_LISTS;
-  // 最新のランキングデータを取得 (socially_awkward_genius を優先)
-  const rankPreset = presets.find(p => p.id === "socially_awkward_genius") || presets[1] || presets[0];
+  
+  // 常に一番上（インデックス0）のデータを最新の動画として表示する
+  const rankPreset = presets[0];
   const rank1Entry = rankPreset.entries[rankPreset.entries.length - 1]; // 1位は最後尾
   
   const latestRank = {
