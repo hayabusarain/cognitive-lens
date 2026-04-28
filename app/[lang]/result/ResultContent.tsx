@@ -300,16 +300,20 @@ function ShareButton({
   typeKey,
   typeName,
   bestPartnerType,
-  hardestMatchType
+  hardestMatchType,
+  lang
 }: {
   typeKey: string;
   typeName: string;
   bestPartnerType: string;
   hardestMatchType: string;
+  lang: string;
 }) {
   const handleShare = () => {
     const url = typeof window !== "undefined" ? window.location.href : "";
-    const text = `性格の裏側まで暴かれる診断をやったら【${typeKey}（${typeName}）】でした😇🔪\n\n私と最強に噛み合う運命の相手は『${bestPartnerType}』の人で、逆に関わると確実にお互いメンタル削られる最悪の相手は『${hardestMatchType}』らしいです⚠️\n\nフォロワーの中に私を回収してくれる人いませんか...🙋‍♀️🙋‍♂️\n#16タイプ診断 #相性丸裸 #CognitiveLens`;
+    const text = lang === "en" 
+      ? `My deep personality result is 【${typeKey}】🔪\nBest match: ${bestPartnerType}\nWorst match: ${hardestMatchType} ⚠️\n#MBTI #CognitiveLens`
+      : `性格の裏側を暴く診断で【${typeKey}】でした🔪\n最強の相手は『${bestPartnerType}』、最悪の相手は『${hardestMatchType}』らしい⚠️\n#16タイプ診断 #CognitiveLens`;
     const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
     window.open(twitterUrl, "_blank", "noopener,noreferrer");
   };
@@ -319,7 +323,7 @@ function ShareButton({
       className="btn-primary w-full flex items-center justify-center gap-2.5 px-6 py-4 text-sm font-bold active:scale-[0.98] transition-all duration-150 inline-flex rounded-full"
     >
       <Share2 size={16} />
-      ヤバすぎる診断結果をXで共有する
+      {lang === "en" ? "Share shocking result on X" : "ヤバすぎる診断結果をXで共有する"}
     </button>
   );
 }
@@ -774,6 +778,7 @@ export default function ResultContent({ lang = "ja" }: { lang?: string }) {
           typeName={info.name}
           bestPartnerType={compat.bestPartner.type}
           hardestMatchType={compat.hardestMatch.type}
+          lang={lang}
         />
 
         {/* 広告枠1 */}

@@ -29,7 +29,12 @@ export default function LanguageSwitcher() {
   };
 
   return (
-    <div className="relative z-50">
+    <div className="relative z-50 flex items-center gap-2">
+      {currentLang === "ja" && (
+        <span className="text-[10px] font-extrabold text-slate-400 animate-pulse tracking-wide mr-1">
+          For English 👉
+        </span>
+      )}
       <button 
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/50 backdrop-blur border border-slate-200 text-xs font-bold text-slate-600 hover:bg-white/80 transition-all shadow-sm"
