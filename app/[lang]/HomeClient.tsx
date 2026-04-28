@@ -31,7 +31,7 @@ export default function HomeClient({ dict, lang, initialLatestRank }: { dict: an
         <div className="aurora-mid" />
       </div>
 
-      <main className="content-layer min-h-screen flex flex-col">
+      <main className="content-layer flex flex-col">
         {/* Nav */}
         <nav className="nav-blur flex items-center justify-between px-6 md:px-8 py-4 sticky top-0 z-50">
           <span className="text-sm font-extrabold tracking-tighter text-slate-800">
@@ -80,7 +80,7 @@ export default function HomeClient({ dict, lang, initialLatestRank }: { dict: an
         <AdSenseUnit id="adsense-header" slotId="1111111111" />
 
         {/* Hero */}
-        <section className="flex-1 flex flex-col items-center justify-start px-6 pt-6 pb-6 text-center">
+        <section className="flex flex-col items-center px-6 pt-8 pb-12 text-center">
           <div className="max-w-2xl mx-auto w-full">
 
             {/* Badge */}
