@@ -3,6 +3,7 @@ import { bundle } from "@remotion/bundler";
 import { renderMedia, selectComposition } from "@remotion/renderer";
 import path from "path";
 import fs from "fs";
+import { exec } from "child_process";
 
 declare global {
   var cachedBundleLocation: string | undefined;
@@ -55,6 +56,17 @@ export async function POST(req: Request) {
       };
       const jsonPath = path.resolve(process.cwd(), "public", "latest-rank.json");
       fs.writeFileSync(jsonPath, JSON.stringify(latestRankData, null, 2), "utf-8");
+
+      // 手間ゼロ！：生成と同時に自動でGitHubへプッシュし、Vercelの本番環境を自動更新（再デプロイ）させる
+      if (process.env.NODE_ENV === "development") {
+        exec('git add public/latest-rank.json && git commit -m "Auto: Update latest video for website banner" && git push', (error, stdout, stderr) => {
+          if (error) {
+            console.error("Git auto-push failed:", error);
+          } else {
+            console.log("Git auto-push successful! Vercel rebuild triggered.");
+          }
+        });
+      }
     }
 
     // ファイル名の生成
