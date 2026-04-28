@@ -465,6 +465,8 @@ function AiProfileSection({ typeKey, rawAnswers, lang }: { typeKey: string; rawA
         setSections(parseSections(fullText));
       }
 
+      // 最後のバッファをフラッシュして文字化けを防止
+      fullText += decoder.decode();
       setSections(parseSections(fullText));
       setGenerated(true);
     } catch {
