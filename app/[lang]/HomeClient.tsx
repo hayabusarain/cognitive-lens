@@ -80,7 +80,7 @@ export default function HomeClient({ dict, lang, initialLatestRank }: { dict: an
         <AdSenseUnit id="adsense-header" slotId="1111111111" />
 
         {/* Hero */}
-        <section className="flex-1 flex flex-col items-center justify-center px-6 py-16 text-center">
+        <section className="flex-1 flex flex-col items-center justify-start px-6 pt-6 pb-6 text-center">
           <div className="max-w-2xl mx-auto w-full">
 
             {/* Badge */}
@@ -115,7 +115,7 @@ export default function HomeClient({ dict, lang, initialLatestRank }: { dict: an
             </div>
 
             {/* ── 2 Routes ─────────────────────────── */}
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-16">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-8">
               <Link
                 href={`/${lang}/test`}
                 className="btn-primary inline-flex items-center gap-2 px-8 py-3.5 rounded-full font-bold text-sm"
