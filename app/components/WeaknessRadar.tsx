@@ -11,7 +11,7 @@ interface WeaknessScores {
   suspicion: number;
 }
 
-const LABELS: { key: keyof WeaknessScores; label: string; color: string }[] = [
+const LABELS_JA: { key: keyof WeaknessScores; label: string; color: string }[] = [
   { key: "irrationality", label: "非論理性", color: "#f59e0b" },
   { key: "antisocial",    label: "社会不適合", color: "#8b5cf6" },
   { key: "arrogance",     label: "傲慢", color: "#ef4444" },
@@ -19,20 +19,29 @@ const LABELS: { key: keyof WeaknessScores; label: string; color: string }[] = [
   { key: "suspicion",     label: "猜疑心", color: "#10b981" },
 ];
 
+const LABELS_EN: { key: keyof WeaknessScores; label: string; color: string }[] = [
+  { key: "irrationality", label: "Irrationality", color: "#f59e0b" },
+  { key: "antisocial",    label: "Anti-social", color: "#8b5cf6" },
+  { key: "arrogance",     label: "Arrogance", color: "#ef4444" },
+  { key: "emotional",     label: "Over-emotional", color: "#3b82f6" },
+  { key: "suspicion",     label: "Suspicion", color: "#10b981" },
+];
+
 function polarToXY(angle: number, radius: number, cx: number, cy: number) {
   const rad = (angle - 90) * (Math.PI / 180);
   return { x: cx + radius * Math.cos(rad), y: cy + radius * Math.sin(rad) };
 }
 
-function RadarSVG({ scores }: { scores: WeaknessScores }) {
+function RadarSVG({ scores, lang }: { scores: WeaknessScores; lang: string }) {
   const cx = 150, cy = 150, maxR = 110;
   const step = 360 / 5;
+  const labels = lang === "en" ? LABELS_EN : LABELS_JA;
 
   // Grid rings
   const rings = [0.2, 0.4, 0.6, 0.8, 1.0];
 
   // Data points
-  const points = LABELS.map((l, i) => {
+  const points = labels.map((l, i) => {
     const value = scores[l.key] / 100;
     const angle = i * step;
     return { ...polarToXY(angle, maxR * value, cx, cy), angle, value, ...l };
@@ -46,7 +55,7 @@ function RadarSVG({ scores }: { scores: WeaknessScores }) {
       {rings.map((r) => (
         <polygon
           key={r}
-          points={LABELS.map((_, i) => {
+          points={labels.map((_, i) => {
             const p = polarToXY(i * step, maxR * r, cx, cy);
             return `${p.x},${p.y}`;
           }).join(" ")}
@@ -57,7 +66,7 @@ function RadarSVG({ scores }: { scores: WeaknessScores }) {
       ))}
 
       {/* Axes */}
-      {LABELS.map((_, i) => {
+      {labels.map((_, i) => {
         const p = polarToXY(i * step, maxR, cx, cy);
         return (
           <line key={i} x1={cx} y1={cy} x2={p.x} y2={p.y} stroke="rgba(0,0,0,0.06)" strokeWidth="1" />
@@ -103,7 +112,7 @@ function RadarSVG({ scores }: { scores: WeaknessScores }) {
   );
 }
 
-export default function WeaknessRadar({ typeKey }: { typeKey: string }) {
+export default function WeaknessRadar({ typeKey, lang }: { typeKey: string; lang: string }) {
   const [scores, setScores] = useState<WeaknessScores | null>(null);
   const [comment, setComment] = useState("");
   const [loading, setLoading] = useState(false);
@@ -116,17 +125,17 @@ export default function WeaknessRadar({ typeKey }: { typeKey: string }) {
       const res = await fetch("/api/weakness", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ type: typeKey }),
+        body: JSON.stringify({ type: typeKey, lang }),
       });
       const data = await res.json();
       if (!res.ok) {
-        setError(data.error ?? "失敗しました");
+        setError(data.error ?? (lang === "en" ? "Failed to generate" : "失敗しました"));
       } else {
         setScores(data.scores);
         setComment(data.comment ?? "");
       }
     } catch {
-      setError("ネットワークエラー");
+      setError(lang === "en" ? "Network error" : "ネットワークエラー");
     }
     setLoading(false);
   };
@@ -138,8 +147,12 @@ export default function WeaknessRadar({ typeKey }: { typeKey: string }) {
           <Crosshair size={16} />
         </span>
         <div className="flex-1">
-          <p className="font-semibold text-sm text-slate-800">絶対的弱点レーダーチャート</p>
-          <p className="text-xs text-slate-500">AIが5軸の弱点をスコアリング</p>
+          <p className="font-semibold text-sm text-slate-800">
+            {lang === "en" ? "Fatal Weakness Radar" : "絶対的弱点レーダーチャート"}
+          </p>
+          <p className="text-xs text-slate-500">
+            {lang === "en" ? "AI scoring 5 toxic dimensions" : "AIが5軸の弱点をスコアリング"}
+          </p>
         </div>
       </div>
 
@@ -147,15 +160,16 @@ export default function WeaknessRadar({ typeKey }: { typeKey: string }) {
         {!scores && !loading && (
           <div className="text-center space-y-3">
             <p className="text-xs text-slate-500 leading-relaxed">
-              非論理性・社会不適合・傲慢・感情過多・猜疑心の5項目を
-              <br />AIが認知機能に基づいてスコアリングします。
+              {lang === "en" 
+                ? <>AI scores your cognitive functions across 5 traits: <br/> Irrationality, Anti-sociality, Arrogance, Over-emotion, and Suspicion.</>
+                : <>非論理性・社会不適合・傲慢・感情過多・猜疑心の5項目を<br />AIが認知機能に基づいてスコアリングします。</>}
             </p>
             <button
               onClick={generate}
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-white text-xs font-bold transition-all duration-150 active:scale-[0.98] bg-rose-500 hover:bg-rose-600"
             >
               <Crosshair size={13} />
-              弱点を分析する
+              {lang === "en" ? "Analyze Weaknesses" : "弱点を分析する"}
             </button>
           </div>
         )}
@@ -163,20 +177,24 @@ export default function WeaknessRadar({ typeKey }: { typeKey: string }) {
         {loading && (
           <div className="text-center py-8 space-y-2">
             <Loader2 size={24} className="mx-auto text-rose-400 animate-spin" />
-            <p className="text-xs text-slate-500">弱点をスコアリング中...</p>
+            <p className="text-xs text-slate-500">
+              {lang === "en" ? "Scoring weaknesses..." : "弱点をスコアリング中..."}
+            </p>
           </div>
         )}
 
         {error && (
           <div className="text-center py-4">
             <p className="text-xs text-red-500">{error}</p>
-            <button onClick={generate} className="mt-2 text-xs underline text-slate-500">再試行</button>
+            <button onClick={generate} className="mt-2 text-xs underline text-slate-500">
+              {lang === "en" ? "Retry" : "再試行"}
+            </button>
           </div>
         )}
 
         {scores && (
           <div className="space-y-4">
-            <RadarSVG scores={scores} />
+            <RadarSVG scores={scores} lang={lang} />
 
             {/* Ad slot after chart */}
             <div
@@ -204,7 +222,7 @@ export default function WeaknessRadar({ typeKey }: { typeKey: string }) {
               onClick={generate}
               className="w-full text-xs text-slate-500 underline underline-offset-2 py-1"
             >
-              再スコアリング
+              {lang === "en" ? "Rescore" : "再スコアリング"}
             </button>
           </div>
         )}

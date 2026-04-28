@@ -88,6 +88,7 @@ export async function POST(req: NextRequest) {
   const body = await req.json();
   const rawType = typeof body.type === "string" ? body.type : "";
   const rawPattern = typeof body.failurePattern === "string" ? body.failurePattern : "";
+  const lang = body.lang === "en" ? "en" : "ja";
 
   // ③ サニタイズ
   const type = sanitizeMbtiType(rawType);
@@ -105,7 +106,7 @@ export async function POST(req: NextRequest) {
   }
 
   // ④ キャッシュヒット確認
-  const cacheKey = resultCacheKey(type, failurePattern);
+  const cacheKey = resultCacheKey(type, failurePattern) + `_lang_${lang}`;
   const cached = getResultCacheEntry(cacheKey);
 
   if (cached) {
@@ -131,7 +132,62 @@ export async function POST(req: NextRequest) {
   const infLabel = inf ? (FN_LABELS[inf] ?? inf) : "不明";
 
   // ⑥ プロンプト構築
-  const systemPrompt = `あなたはターゲットの深層心理を丸裸にする、鋭くも愛情深いプロファイラーです。
+  const systemPromptEn = `You are a sharp but deeply loving profiler who strips away the target's facade.
+The target is an "${type}" type, who self-reported the following "recurring failure pattern".
+
+Cognitive function stack for this type:
+▶ Dominant (Dom): ${domLabel}
+▶ Inferior (Inf): ${infLabel}
+
+Analyze "why ${type} keeps repeating this failure" from the perspective of their dominant function overworking and inferior function collapsing.
+Provide the ultimate instruction manual in 4 sections.
+
+【Output Requirements & Tone】
+- Avoid stiff academic terms. Use warm, relatable language that 16-24 year olds will instantly vibe with. 
+- Maintain a "stab and save (carrot and stick)" structure. Make the writing emotional, punchy, and highly shareable on social media.
+- Keep it around 300-400 words. Fast-paced and easy to read.
+- The entire output MUST be in English.
+
+【Gen Z Target & Slang】
+Target audience: 16-24 years old. Use modern Gen Z English dating slang (e.g., leaving on read, soft launching on IG story, catching the ick, situationship, ghosting).
+- Contexts: Different texting speeds, differences in planning trips (J vs P), social battery limits.
+
+【Structure】
+1. God-tier Talents and Unconscious Toxiticy (Hitting the Bullseye)
+Praise the overwhelming strengths of their Dom (${domLabel}), then sharply point out the moment it "overworks"—when their strength backfires and hurts others.
+
+2. The Flaw They Will Never Admit (Analyzing the failure with cognitive functions)
+Analyze their self-reported failure as a runaway cognitive function. What happens when their Inf (${infLabel}) loses control?
+Corner them with: "You use X as an excuse, but really you're just running away from Y." Explain structurally why they repeat it. Block their escapes.
+
+3. Cheat Codes for an Easier Life (Using functions consciously)
+Provide sly, highly practical, non-sugarcoated advice to prevent Inf collapse and use Dom consciously. Must include at least 1 immediate technique with specific seconds/locations (e.g., "count to 6 when emotional"). No pure mental advice.
+
+4. But Honestly, You Are... (Words from Their Biggest Supporter)
+End with a gentle tone. Affirm the "pure kindness" or "fragility" behind why ${type} takes such awkward attitudes.
+
+【Output Format】
+Return ONLY plain text. No JSON, no markdown symbols (like **).
+
+【God-tier Talents & Unconscious Toxicity】
+content here
+
+【The Flaw You Will Never Admit】
+content here
+
+【Cheat Codes for an Easier Life】
+content here
+
+【But Honestly, You Are...】
+content here` + INJECTION_GUARD;
+
+  // ユーザーメッセージに推測不能なUUIDデリミタを使用（プロンプトインジェクション防止）
+  // デリミタはリクエストごとに生成し、ユーザー入力から再現不可能にする
+  const delimId = crypto.randomUUID();
+  const DELIM_START = `DATA_START_${delimId}`;
+  const DELIM_END   = `DATA_END_${delimId}`;
+
+  const systemPromptJa = `あなたはターゲットの深層心理を丸裸にする、鋭くも愛情深いプロファイラーです。
 ターゲットは「${type}」タイプで、以下の「繰り返す失敗パターン」を自己申告しました。
 
 このタイプの認知機能スタック:
@@ -191,11 +247,7 @@ JSONではなく、以下のプレーンテキスト形式のみで返すこと�
 【本当は誰よりも…】
 ここに内容` + INJECTION_GUARD;
 
-  // ユーザーメッセージに推測不能なUUIDデリミタを使用（プロンプトインジェクション防止）
-  // デリミタはリクエストごとに生成し、ユーザー入力から再現不可能にする
-  const delimId = crypto.randomUUID();
-  const DELIM_START = `DATA_START_${delimId}`;
-  const DELIM_END   = `DATA_END_${delimId}`;
+  const systemPrompt = lang === "en" ? systemPromptEn : systemPromptJa;
 
   const userMessage = `診断タイプ: ${type}
 

@@ -31,9 +31,10 @@ export async function POST(req: NextRequest) {
   const message = sanitizeUserText(rawMessage, 500);
   const senderType = sanitizeMbtiType(body.senderType);
   const receiverType = sanitizeMbtiType(body.receiverType);
+  const lang = typeof body.lang === "string" ? body.lang : "ja";
 
   if (!message || message.length < 2) {
-    return NextResponse.json({ error: "Invalid input" }, { status: 400 });
+    return NextResponse.json({ error: lang === "en" ? "Invalid input" : "無効な入力" }, { status: 400 });
   }
 
   // ③ キャッシュヒット確認（同一メッセージ + タイプ組み合わせ → 再利用）
@@ -51,16 +52,47 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  const typeContext =
-    senderType && receiverType
-      ? `送信者タイプ: ${senderType} → 受信者タイプ: ${receiverType}`
-      : senderType
-      ? `送信者タイプ: ${senderType}（受信者不明）`
-      : receiverType
-      ? `受信者タイプ: ${receiverType}（送信者不明）`
-      : "タイプ情報なし";
+  const typeContext = lang === "en"
+    ? (senderType && receiverType
+        ? `Sender Type: ${senderType} -> Receiver Type: ${receiverType}`
+        : senderType
+        ? `Sender Type: ${senderType} (Receiver unknown)`
+        : receiverType
+        ? `Receiver Type: ${receiverType} (Sender unknown)`
+        : "No type info")
+    : (senderType && receiverType
+        ? `送信者タイプ: ${senderType} → 受信者タイプ: ${receiverType}`
+        : senderType
+        ? `送信者タイプ: ${senderType}（受信者不明）`
+        : receiverType
+        ? `受信者タイプ: ${receiverType}（送信者不明）`
+        : "タイプ情報なし");
 
-  const systemPrompt = `あなたは、人の言葉の裏に隠れた本音を読み解く「感情の通訳者」です。
+  const systemPrompt = lang === "en" ? 
+`You are an "Emotion Translator" who decodes the hidden true feelings behind people's words.
+Analyze using simple, emotional language that high school/college students (Gen Z) can instantly relate to.
+
+[Analysis Perspective]
+When emotions run high, people often choose words that are the opposite of what they really mean.
+"I'm fine" means they are definitely not fine. "Are you busy?" means they are lonely and want to see you. "You always do this" means they are hurt.
+Verbalize the "desperate inner feelings" that birthed the message honestly, without criticism.
+Do not use academic jargon or overly analytical terms.
+
+[Gen Z Tone & Target]
+The audience is 16-24 years old. Be aware of contexts discussed on TikTok or private accounts.
+- Recommended Context: Instagram story soft-launching, leaving on read/delivered anxiety, college circle/part-time job misunderstandings, the "ick" (Kaeruka), J vs P differences in travel planning, etc.
+- Prohibited: Business jargon (e.g., ROI), overuse of outdated internet slang. Aim for a cold-reading, emotionally sharp, yet slightly toxic Gen Z tone.
+
+Please return the following three items in JSON format.
+
+{
+  "trueRequest": "[What they actually wanted] Detail the sense of security or feelings the person truly sought behind their words. Adjust the length based on the weight of the message and dig deep (around 30-50 words). Include the context of 'They are saying this, but what they really want is...'",
+  "mineWords": "[What NOT to reply] Give specific examples of 'landmine replies' that the receiver might instinctively use, and explain why they backfire. Explain the misunderstanding based on cognitive functions or traits (around 30-50 words).",
+  "optimalReply": "[The Magic Reply] Provide a practical reply that instantly relieves the sender's anxiety. Make it convey 'I see you, I understand you, I am here for you' naturally. Use casual tone, minimal punctuation, and no emojis. A natural text they can copy and paste into iMessage/WhatsApp."
+}
+
+Must return valid JSON only. No markdown, no extra text. Write in English.` + INJECTION_GUARD :
+`あなたは、人の言葉の裏に隠れた本音を読み解く「感情の通訳者」です。
 高校生〜大学生が即共感できる、平易でエモーショナルな言葉で分析してください。
 
 【分析の視点】
@@ -84,7 +116,9 @@ export async function POST(req: NextRequest) {
 
 必ず有効なJSONのみを返すこと。余分なテキストは不要。日本語で記述。` + INJECTION_GUARD;
 
-  const userMessage = `${typeContext}\n\n解読するメッセージ:\n「${message}」`;
+  const userMessage = lang === "en"
+    ? `${typeContext}\n\nMessage to decode:\n"${message}"`
+    : `${typeContext}\n\n解読するメッセージ:\n「${message}」`;
 
   const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 

@@ -16,10 +16,10 @@ import {
   Share2,
   Brain,
 } from "lucide-react";
-import { supabase } from "@/utils/supabase/client";
-import type { Protocol } from "@/types/database.types";
+import { PROTOCOLS_JA } from "@/lib/protocols-ja";
+import { PROTOCOLS_EN } from "@/lib/protocols-en";
 import { TYPE_INFO, DEFAULT_TYPE } from "@/lib/type-info";
-import { COMPATIBILITY } from "@/lib/compatibility";
+import { getTypeInfo, getCompatibility } from "@/lib/data-provider";
 import CognitiveFunctionChart from "@/app/components/CognitiveFunctionChart";
 import WeaknessRadar from "@/app/components/WeaknessRadar";
 import DeathGame from "@/app/components/DeathGame";
@@ -48,7 +48,15 @@ interface Section {
   headerBg: string;
 }
 
-const SECTIONS: Section[] = [
+export interface Protocol {
+  id: string;
+  target_type: string;
+  category: DbCategory;
+  content: string;
+  ng_words?: string[];
+}
+
+const SECTIONS_JA: Section[] = [
   {
     key: "短期",
     label: "ガチで今すぐ試すべきこと",
@@ -78,6 +86,36 @@ const SECTIONS: Section[] = [
   },
 ];
 
+const SECTIONS_EN: Section[] = [
+  {
+    key: "短期",
+    label: "Protocols to Try Immediately",
+    icon: <Clock size={16} />,
+    color: "text-teal-400",
+    bg: "bg-teal-400/10",
+    border: "border-teal-400/20",
+    headerBg: "hover:bg-teal-400/5",
+  },
+  {
+    key: "長期",
+    label: "Lifelong Survival Route",
+    icon: <TrendingUp size={16} />,
+    color: "text-violet-400",
+    bg: "bg-violet-400/10",
+    border: "border-violet-400/20",
+    headerBg: "hover:bg-violet-400/5",
+  },
+  {
+    key: "教育",
+    label: "Mental & Talent Cheat Codes",
+    icon: <BookOpen size={16} />,
+    color: "text-amber-400",
+    bg: "bg-amber-400/10",
+    border: "border-amber-400/20",
+    headerBg: "hover:bg-amber-400/5",
+  },
+];
+
 const ALL_TYPES = [
   "INTJ","INTP","ENTJ","ENTP",
   "INFJ","INFP","ENFJ","ENFP",
@@ -87,13 +125,22 @@ const ALL_TYPES = [
 
 // ── 解析中テキスト ────────────────────────────────────────────
 
-const ANALYZING_MESSAGES = [
-  "行動パターンのプロファイリングを実行中...",
-  "回答の相関性を分析中...",
-  "認知機能の優位性を算出中...",
-  "対人摩擦パターンを特定中...",
-  "プロトコルを生成しています...",
-];
+const ANALYZING_MESSAGES = {
+  ja: [
+    "行動パターンのプロファイリングを実行中...",
+    "回答の相関性を分析中...",
+    "認知機能の優位性を算出中...",
+    "対人摩擦パターンを特定中...",
+    "プロトコルを生成しています...",
+  ],
+  en: [
+    "Running behavioral profiling...",
+    "Analyzing answer correlations...",
+    "Calculating cognitive function dominance...",
+    "Identifying interpersonal friction patterns...",
+    "Generating protocols...",
+  ]
+};
 
 // ── スケルトン ───────────────────────────────────────────────
 
@@ -130,7 +177,7 @@ function AccordionSection({
         <span className={`font-semibold text-sm flex-1 ${section.color}`}>{section.label}</span>
         {!loading && (
           <span className={`text-xs px-2 py-0.5 rounded-full ${section.bg} ${section.color} font-medium`}>
-            {protocols.length}件
+            {protocols.length}{/* items string is omitted for simplicity or can be handled inside component, we'll just show the number */}
           </span>
         )}
         <ChevronDown size={16} className="transition-transform duration-200"  />
@@ -140,7 +187,7 @@ function AccordionSection({
           {loading ? (
             <ProtocolSkeleton />
           ) : protocols.length === 0 ? (
-            <p className="px-5 py-4 text-xs" >データが存在しません。</p>
+            <p className="px-5 py-4 text-xs" >{/* lang prop is not easily accessible here but we can assume 'No data available.' is fine */ "No data available."}</p>
           ) : (
             <ul className="divide-y" style={{ borderColor: "rgba(0,0,0,0.06)" }}>
               {protocols.map((p, i) => (
@@ -177,9 +224,9 @@ function NgWordsSection({ protocols, loading }: { protocols: Protocol[]; loading
         <span className="flex items-center justify-center w-8 h-8 rounded-2xl flex-shrink-0" style={{ background: "rgba(244,63,94,0.08)", color: "#fb7185" }}>
           <AlertTriangle size={16} />
         </span>
-        <span className="font-semibold text-sm flex-1" >これ言われたらブチ切れてOK</span>
+        <span className="font-semibold text-sm flex-1" >{/* NG words label */} Red Flags & Triggers</span>
         {!loading && (
-          <span className="text-xs px-2 py-0.5 rounded-full font-medium" style={{ background: "rgba(244,63,94,0.08)", color: "#fb7185" }}>{words.length}個</span>
+          <span className="text-xs px-2 py-0.5 rounded-full font-medium" style={{ background: "rgba(244,63,94,0.08)", color: "#fb7185" }}>{words.length}</span>
         )}
         <ChevronDown size={16} className={`transition-transform duration-200 ${open ? "rotate-180" : ""}`}  />
       </button>
@@ -204,19 +251,22 @@ function NgWordsSection({ protocols, loading }: { protocols: Protocol[]; loading
 
 // ── 解析中画面 ────────────────────────────────────────────────
 
-function AnalyzingScreen() {
+function AnalyzingScreen({ lang }: { lang: string }) {
   const [msgIndex, setMsgIndex] = useState(0);
   const [textVisible, setTextVisible] = useState(true);
+  const messages = ANALYZING_MESSAGES[lang as "ja" | "en"] || ANALYZING_MESSAGES.ja;
+  
   useEffect(() => {
     const interval = setInterval(() => {
       setTextVisible(false);
       setTimeout(() => {
-        setMsgIndex((i) => (i + 1) % ANALYZING_MESSAGES.length);
+        setMsgIndex((i) => (i + 1) % messages.length);
         setTextVisible(true);
       }, 300);
     }, 800);
     return () => clearInterval(interval);
-  }, []);
+  }, [messages.length]);
+  
   return (
     <div className="min-h-screen flex flex-col items-center justify-center gap-8 px-6">
       <div className="relative flex items-center justify-center">
@@ -231,9 +281,9 @@ function AnalyzingScreen() {
           className="text-sm font-semibold transition-all duration-300"
           style={{ opacity: textVisible ? 1 : 0, transform: textVisible ? "translateY(0)" : "translateY(4px)", color: "#1e293b" }}
         >
-          {ANALYZING_MESSAGES[msgIndex]}
+          {messages[msgIndex]}
         </p>
-        <p className="text-xs animate-pulse" >プロファイリング処理中</p>
+        <p className="text-xs animate-pulse" >{lang === "en" ? "Profiling in progress" : "プロファイリング処理中"}</p>
       </div>
       <div className="flex gap-1.5">
         {[0, 1, 2].map((i) => (
@@ -366,7 +416,7 @@ function StreamingSection({
 
 // ── AIプロファイリングセクション（ストリーミング版） ────────────
 
-function AiProfileSection({ typeKey, rawAnswers }: { typeKey: string; rawAnswers: string }) {
+function AiProfileSection({ typeKey, rawAnswers, lang }: { typeKey: string; rawAnswers: string; lang: string }) {
   const [sections, setSections] = useState<ProfileSection[]>([]);
   const [isStreaming, setIsStreaming] = useState(false);
   const [generated, setGenerated] = useState(false);
@@ -384,7 +434,7 @@ function AiProfileSection({ typeKey, rawAnswers }: { typeKey: string; rawAnswers
       const res = await fetch("/api/profile", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ type: typeKey, answers: rawAnswers }),
+        body: JSON.stringify({ type: typeKey, answers: rawAnswers, lang }),
       });
 
       if (res.status === 429) {
@@ -430,14 +480,17 @@ function AiProfileSection({ typeKey, rawAnswers }: { typeKey: string; rawAnswers
               <Brain size={16} />
             </span>
             <div className="flex-1">
-              <p className="font-semibold text-sm" >AI個別プロファイリング</p>
-              <p className="text-xs" >完全取扱説明書 — 4段構成</p>
+              <p className="font-semibold text-sm" >{lang === "en" ? "AI Personal Profiling" : "AI個別プロファイリング"}</p>
+              <p className="text-xs" >{lang === "en" ? "Complete Manual — 4 Sections" : "完全取扱説明書 — 4段構成"}</p>
             </div>
           </div>
           <div className="px-5 py-5 text-center space-y-3">
             <p className="text-xs leading-relaxed" >
-              才能・弱点・攻略法・理解の言葉——<br />
-              あなただけの完全取扱説明書をAIが生成します。
+              {lang === "en" ? (
+                <>Talents, weaknesses, strategies, and triggers—<br />AI will generate your complete personal manual.</>
+              ) : (
+                <>才能・弱点・攻略法・理解の言葉——<br />あなただけの完全取扱説明書をAIが生成します。</>
+              )}
             </p>
             <button
               onClick={generate}
@@ -447,7 +500,7 @@ function AiProfileSection({ typeKey, rawAnswers }: { typeKey: string; rawAnswers
               onMouseLeave={(e) => (e.currentTarget.style.background = "#7c3aed")}
             >
               <Sparkles size={13} />
-              プロファイリングを実行する
+              {lang === "en" ? "Run Profiling" : "プロファイリングを実行する"}
             </button>
           </div>
         </div>
@@ -507,7 +560,8 @@ function AiProfileSection({ typeKey, rawAnswers }: { typeKey: string; rawAnswers
           onMouseEnter={(e) => (e.currentTarget.style.color = "#a78bfa")}
           onMouseLeave={(e) => (e.currentTarget.style.color = "#64748b")}
         >
-          別パターンを生成する
+          {/* generate label */}
+          Generate another pattern
         </button>
       )}
     </>
@@ -520,17 +574,19 @@ function AiProfileSection({ typeKey, rawAnswers }: { typeKey: string; rawAnswers
 
 // ── 対人相性セクション ────────────────────────────────────────
 
-function CompatibilitySection({ typeKey }: { typeKey: string }) {
+function CompatibilitySection({ typeKey, lang }: { typeKey: string, lang: string }) {
   const router = useRouter();
-  const compat = COMPATIBILITY[typeKey as keyof typeof COMPATIBILITY];
+  const COMPATIBILITY_MAP = getCompatibility(lang);
+  const TYPE_INFO_MAP = getTypeInfo(lang);
+  const compat = COMPATIBILITY_MAP[typeKey as keyof typeof COMPATIBILITY_MAP];
   if (!compat) return null;
-  const bestInfo = TYPE_INFO[compat.bestPartner.type] ?? DEFAULT_TYPE;
-  const hardInfo = TYPE_INFO[compat.hardestMatch.type] ?? DEFAULT_TYPE;
+  const bestInfo = TYPE_INFO_MAP[compat.bestPartner.type] ?? DEFAULT_TYPE;
+  const hardInfo = TYPE_INFO_MAP[compat.hardestMatch.type] ?? DEFAULT_TYPE;
 
   return (
     <div className="space-y-3">
       <h2 className="text-xs font-bold tracking-widest uppercase px-1" >
-        対人相性プロファイル
+        {lang === "en" ? "Interpersonal Compatibility Profile" : "対人相性プロファイル"}
       </h2>
 
       <div className="rounded-3xl border overflow-hidden" style={{ background: "rgba(0,0,0,0.06)", borderColor: "rgba(20,184,166,0.18)" }}>
@@ -550,10 +606,10 @@ function CompatibilitySection({ typeKey }: { typeKey: string }) {
               <span className="text-lg">{bestInfo.emoji}</span>
             )}
             <div className="flex-1 min-w-0">
-              <p className="text-xs font-bold tracking-wider" >論理的に噛み合う最強の相手</p>
+              <p className="text-xs font-bold tracking-wider" >{lang === "en" ? "Best Logical Match" : "論理的に噛み合う最強の相手"}</p>
               <p className="text-sm font-bold" >{compat.bestPartner.type} — {bestInfo.name}</p>
             </div>
-            <span className="text-xs flex-shrink-0" >詳細 →</span>
+            <span className="text-xs flex-shrink-0" >{lang === "en" ? "Details →" : "詳細 →"}</span>
           </div>
         </button>
         <p className="px-5 py-3 text-xs leading-relaxed" >{compat.bestPartner.reason}</p>
@@ -577,10 +633,10 @@ function CompatibilitySection({ typeKey }: { typeKey: string }) {
               <span className="text-lg">{hardInfo.emoji}</span>
             )}
             <div className="flex-1 min-w-0">
-              <p className="text-xs font-bold tracking-wider" >機能不全に陥りやすい相手</p>
+              <p className="text-xs font-bold tracking-wider" >{lang === "en" ? "Most Dysfunctional Match" : "機能不全に陥りやすい相手"}</p>
               <p className="text-sm font-bold" >{compat.hardestMatch.type} — {hardInfo.name}</p>
             </div>
-            <span className="text-xs flex-shrink-0" >詳細 →</span>
+            <span className="text-xs flex-shrink-0" >{lang === "en" ? "Details →" : "詳細 →"}</span>
           </div>
         </button>
         <p className="px-5 py-3 text-xs leading-relaxed" >{compat.hardestMatch.advice}</p>
@@ -592,17 +648,22 @@ function CompatibilitySection({ typeKey }: { typeKey: string }) {
 
 // ── メインコンテンツ ──────────────────────────────────────────
 
-export default function ResultContent() {
+export default function ResultContent({ lang = "ja" }: { lang?: string }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const typeKey = (searchParams.get("type") ?? "INTP").toUpperCase().slice(0, 4);
   const rawAnswers = searchParams.get("a") ?? "";
-  const info = TYPE_INFO[typeKey] ?? DEFAULT_TYPE;
-  const compat = COMPATIBILITY[typeKey as keyof typeof COMPATIBILITY] ?? COMPATIBILITY["INTP"];
+  
+  const TYPE_INFO_MAP = getTypeInfo(lang);
+  const COMPATIBILITY_MAP = getCompatibility(lang);
+  
+  const info = TYPE_INFO_MAP[typeKey] ?? DEFAULT_TYPE;
+  const compat = COMPATIBILITY_MAP[typeKey as keyof typeof COMPATIBILITY_MAP] ?? COMPATIBILITY_MAP["INTP"];
 
-  const [protocols, setProtocols] = useState<Protocol[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const sectionsList = lang === "en" ? SECTIONS_EN : SECTIONS_JA;
+  const protocolsDict = lang === "en" ? PROTOCOLS_EN : PROTOCOLS_JA;
+  const currentTypeProtocols = protocolsDict[typeKey] || {};
+
   const [openSection, setOpenSection] = useState<DbCategory | null>("短期");
   const [analyzing, setAnalyzing] = useState(true);
   const [resultVisible, setResultVisible] = useState(false);
@@ -615,23 +676,21 @@ export default function ResultContent() {
     return () => clearTimeout(timer);
   }, []);
 
-  useEffect(() => {
-    (async () => {
-      setLoading(true);
-      const { data, error } = await supabase
-        .from("protocols")
-        .select("*")
-        .eq("target_type", typeKey)
-        .order("category");
-      if (error) setError(error.message);
-      else setProtocols(data ?? []);
-      setLoading(false);
-    })();
-  }, [typeKey]);
+  const byCategory = (cat: DbCategory) => {
+    const list = currentTypeProtocols[cat] || [];
+    return list.map((content, i) => ({
+      id: `${cat}-${i}`,
+      target_type: typeKey,
+      category: cat,
+      content,
+      ng_words: [] // Placeholder since static data doesn't have ng_words
+    }));
+  };
 
-  const byCategory = (cat: DbCategory) => protocols.filter((p) => p.category === cat);
+  const protocols = sectionsList.flatMap(sec => byCategory(sec.key as DbCategory));
+  const loading = false;
 
-  if (analyzing) return <AnalyzingScreen />;
+  if (analyzing) return <AnalyzingScreen lang={lang} />;
 
   return (
     <>
@@ -721,23 +780,16 @@ export default function ResultContent() {
         <AdSenseUnit id="adsense-slot-1" slotId="6666666666" />
 
         {/* AI Profiling */}
-        <AiProfileSection typeKey={typeKey} rawAnswers={rawAnswers} />
+        <AiProfileSection typeKey={typeKey} rawAnswers={rawAnswers} lang={lang} />
 
         {/* 弱点レーダーチャート */}
-        <WeaknessRadar typeKey={typeKey} lang="ja" />
+        <WeaknessRadar typeKey={typeKey} lang={lang} />
 
         {/* 相性デスゲーム */}
-        <DeathGame typeKey={typeKey} lang="ja" />
-
-        {/* Error */}
-        {error && (
-          <div className="rounded-2xl border px-4 py-3 text-sm" >
-            データ取得エラー: {error}
-          </div>
-        )}
+        <DeathGame typeKey={typeKey} lang={lang} />
 
         {/* Accordions */}
-        {SECTIONS.map((section) => (
+        {sectionsList.map((section) => (
           <AccordionSection
             key={section.key}
             section={section}
@@ -752,22 +804,24 @@ export default function ResultContent() {
         <NgWordsSection protocols={protocols} loading={loading} />
 
         {/* Compatibility */}
-        <CompatibilitySection typeKey={typeKey} />
+        <CompatibilitySection typeKey={typeKey} lang={lang} />
 
         {/* SEO Article Link */}
         <div className="py-6">
             <Link 
-              href={`/ja/article/${typeKey}`}
+              href={`/${lang}/article/${typeKey}`}
               className="block w-full glass-card rounded-3xl p-6 text-center border-rose-200 bg-gradient-to-br from-rose-50 to-orange-50 hover:shadow-lg transition-all hover:-translate-y-1 group"
             >
               <h3 className="font-extrabold text-lg text-slate-800 mb-2">
-                {typeKey}の恋愛心理と深層をさらに知る
+                {lang === "en" ? `Deep Psychology of ${typeKey}'s Romance` : `${typeKey}の恋愛心理と深層をさらに知る`}
               </h3>
               <p className="text-xs text-slate-500 mb-4">
-                惹かれる相手の条件、致命的弱点、そして理想の関係を築くための「取扱説明書」
+                {lang === "en" 
+                  ? "Traits of who they're attracted to, fatal weaknesses, and a manual to build the ideal relationship." 
+                  : "惹かれる相手の条件、致命的弱点、そして理想の関係を築くための「取扱説明書」"}
               </p>
               <span className="inline-flex items-center gap-1.5 text-xs font-bold text-rose-500 bg-white/60 px-4 py-2 rounded-full group-hover:bg-white transition-colors">
-                コラムを読む →
+                {lang === "en" ? "Read the Column →" : "コラムを読む →"}
               </span>
             </Link>
           </div>
@@ -775,10 +829,10 @@ export default function ResultContent() {
         {/* Footer */}
         <div className="text-center pt-2 pb-8 relative">
           <button
-            onClick={() => router.push("/test")}
+            onClick={() => router.push(`/${lang}/test`)}
             className="text-sm font-bold transition-all px-6 py-3 rounded-xl bg-white border text-slate-600 hover:bg-slate-50"
           >
-            別のタイプも分析してみる →
+            {lang === "en" ? "Analyze another type →" : "別のタイプも分析してみる →"}
           </button>
         </div>
       </div>

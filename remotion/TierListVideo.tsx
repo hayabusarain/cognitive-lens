@@ -18,6 +18,7 @@ export type TierListVideoProps = {
   entries: TierListEntry[];
   audioUrl?: string;
   popDuration: number; // 1キャラあたりの表示時間（フレーム）
+  lang?: string;
 };
 
 const TIER_COLORS: Record<string, string> = {
@@ -35,17 +36,21 @@ export const TierListVideo: React.FC<TierListVideoProps> = ({
   entries,
   audioUrl,
   popDuration,
+  lang = "ja",
 }) => {
   const frame = useCurrentFrame();
   const { fps, durationInFrames } = useVideoConfig();
 
-  // アウトロ（宣伝）用の尺設定（しっかり読めるように150フレーム = 5秒 に延長）
+  // フック用の尺
+  const introDuration = 60;
+  // アウトロ（宣伝）用の尺設定
   const outroDuration = 150;
   const outroStart = durationInFrames - outroDuration;
 
-  // 現在フォーカスされているエントリを取得
+  // 現在フォーカスされているエントリを取得 (フックの60フレーム分を考慮)
+  const mainFrame = Math.max(0, frame - introDuration);
   const currentEntryIndex = Math.min(
-    Math.floor(frame / popDuration),
+    Math.floor(mainFrame / popDuration),
     entries.length - 1
   );
   const currentEntry = entries[currentEntryIndex];
@@ -73,76 +78,101 @@ export const TierListVideo: React.FC<TierListVideoProps> = ({
         }} />
       </AbsoluteFill>
 
-      {/* Title */}
-      <div style={{
-        width: "100%", padding: "40px", textAlign: "center", zIndex: 10,
-        textShadow: "0 0 20px cyan", borderBottom: "4px solid cyan",
-        backgroundColor: "rgba(0,0,0,0.5)", backdropFilter: "blur(10px)"
-      }}>
-        <h1 style={{
-          fontFamily: "'M PLUS Rounded 1c', sans-serif", color: "#fff",
-          fontSize: "65px", margin: 0, letterSpacing: "2px",
-          fontWeight: "bold", // 潰れないように調整
-          WebkitTextStroke: "1px #00ffff" // タイトルも縁取りを細くして可読性を上げる
-        }}>
-          {title}
-        </h1>
-      </div>
+      {/* 最初の2秒間のフック演出 */}
+      <Sequence from={0} durationInFrames={introDuration} name="IntroHook">
+        <IntroHook title={title} fps={fps} />
+      </Sequence>
 
-      {/* Tier Board */}
-      <div style={{
-        display: "flex", flexDirection: "column", gap: "10px",
-        padding: "20px", marginTop: "20px", flex: "none", zIndex: 5
-      }}>
-        {TIERS.map((tier) => (
-          <TierRow
-            key={tier}
-            tier={tier}
-            entries={entries.filter((e) => e.tier === tier)}
-            frame={frame}
-            fps={fps}
-            popDuration={popDuration}
-            entriesList={entries}
-          />
-        ))}
-      </div>
-
-      {/* サイト宣伝用ウォーターマーク（常時表示：Dランクの直下） */}
-      <div style={{
-        display: "flex", justifyContent: "center", width: "100%", zIndex: 10, marginTop: "10px"
-      }}>
+      {/* メインコンテンツ（フック後に開始） */}
+      <Sequence from={introDuration} name="MainContent">
+        {/* セーフエリア（TikTok/ShortsのUI被り防止） */}
         <div style={{
-          display: "inline-flex", alignItems: "center", gap: "15px",
-          backgroundColor: "rgba(0, 0, 0, 0.65)", backdropFilter: "blur(10px)",
-          padding: "20px 40px", borderRadius: "100px",
-          border: "3px solid rgba(0, 255, 255, 0.4)",
-          boxShadow: "0 10px 30px rgba(0,0,0,0.8)"
+          position: "absolute",
+          top: "150px",     // 上部のタブ類を避ける
+          bottom: "350px",  // 下部のキャプション類を避ける
+          left: "20px",
+          right: "120px",   // 右側のいいねボタン等を避ける
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          zIndex: 10,
+          transform: "scale(0.85)", // 全体がはみ出さないように少し縮小
+          transformOrigin: "top center"
         }}>
-          <span style={{ fontSize: "50px" }}>🔎</span>
-          <div style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
-            <span style={{ color: "#fff", fontSize: "28px", fontWeight: "bold", fontFamily: "sans-serif" }}>
-              無料のガチMBTI診断は
-            </span>
-            <span style={{ color: "#00ffff", fontSize: "36px", fontWeight: "900", fontFamily: "sans-serif", textShadow: "0 0 15px rgba(0,255,255,0.6)" }}>
-              「対人課題解決プラットフォーム」で検索
-            </span>
+          {/* Title */}
+          <div style={{
+            width: "100%", padding: "20px", textAlign: "center", zIndex: 10,
+            textShadow: "0 0 20px cyan", borderBottom: "4px solid cyan",
+            backgroundColor: "rgba(0,0,0,0.5)", backdropFilter: "blur(10px)",
+            borderRadius: "20px"
+          }}>
+            <h1 style={{
+              fontFamily: "'M PLUS Rounded 1c', sans-serif", color: "#fff",
+              fontSize: "60px", margin: 0, letterSpacing: "2px",
+              fontWeight: "bold",
+              WebkitTextStroke: "1px #00ffff"
+            }}>
+              {title}
+            </h1>
+          </div>
+
+          {/* Tier Board */}
+          <div style={{
+            display: "flex", flexDirection: "column", gap: "10px",
+            padding: "20px", marginTop: "10px", flex: "none", zIndex: 5,
+            width: "100%"
+          }}>
+            {TIERS.map((tier) => (
+              <TierRow
+                key={tier}
+                tier={tier}
+                entries={entries.filter((e) => e.tier === tier)}
+                frame={mainFrame}
+                fps={fps}
+                popDuration={popDuration}
+                entriesList={entries}
+              />
+            ))}
+          </div>
+
+          {/* サイト宣伝用ウォーターマーク */}
+          <div style={{
+            display: "flex", justifyContent: "center", width: "100%", zIndex: 10, marginTop: "10px"
+          }}>
+            <div style={{
+              display: "inline-flex", alignItems: "center", gap: "15px",
+              backgroundColor: "rgba(0, 0, 0, 0.65)", backdropFilter: "blur(10px)",
+              padding: "20px 40px", borderRadius: "100px",
+              border: "3px solid rgba(0, 255, 255, 0.4)",
+              boxShadow: "0 10px 30px rgba(0,0,0,0.8)"
+            }}>
+              <span style={{ fontSize: "50px" }}>🔎</span>
+              <div style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
+                <span style={{ color: "#fff", fontSize: "28px", fontWeight: "bold", fontFamily: "sans-serif" }}>
+                  {lang === "en" ? "For the real 16 Type test," : "無料のガチ16タイプ診断は"}
+                </span>
+                <span style={{ color: "#00ffff", fontSize: "36px", fontWeight: "900", fontFamily: "sans-serif", textShadow: "0 0 15px rgba(0,255,255,0.6)" }}>
+                  {lang === "en" ? "Search 'CognitiveLens'" : "「対人課題解決プラットフォーム」で検索"}
+                </span>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Bottom Popup Comment */}
-      {frame >= 0 && currentEntry && frame < outroStart && (
-        <CommentPopup entry={currentEntry} frame={frame} popDuration={popDuration} fps={fps} entriesList={entries} />
-      )}
+        {/* Bottom Popup Comment */}
+        {mainFrame >= 0 && currentEntry && mainFrame < outroStart - introDuration && (
+          <CommentPopup entry={currentEntry} frame={mainFrame} popDuration={popDuration} fps={fps} entriesList={entries} lang={lang} />
+        )}
+      </Sequence>
 
       {/* Audio Layer - BGM */}
       {audioUrl && <Audio src={audioUrl} />}
 
-      {/* TTS Audio Layer - 音声読み上げ用。マウント解除されないようにトップレベルで配置 */}
+      {/* TTS Audio Layer */}
       {entries.map((entry, index) => {
         if (!entry.ttsUrl) return null;
         return (
-          <Sequence key={`tts-${index}`} from={index * popDuration} durationInFrames={popDuration}>
+          <Sequence key={`tts-${index}`} from={introDuration + (index * popDuration)} durationInFrames={popDuration}>
             <Audio src={entry.ttsUrl.startsWith("http") ? entry.ttsUrl : staticFile(entry.ttsUrl)} />
           </Sequence>
         );
@@ -150,7 +180,7 @@ export const TierListVideo: React.FC<TierListVideoProps> = ({
       
       {/* アウトロ宣伝レイヤー */}
       <Sequence from={outroStart} durationInFrames={outroDuration}>
-        <Outro />
+        <Outro lang={lang} />
       </Sequence>
     </AbsoluteFill>
   );
@@ -232,7 +262,8 @@ const CommentPopup: React.FC<{
   popDuration: number;
   fps: number;
   entriesList: TierListEntry[];
-}> = ({ entry, frame, popDuration, fps, entriesList }) => {
+  lang?: string;
+}> = ({ entry, frame, popDuration, fps, entriesList, lang = "ja" }) => {
   const globalIdx = entriesList.findIndex(e => e.mbtiType === entry.mbtiType);
   const startFrame = globalIdx * popDuration;
   
@@ -243,7 +274,7 @@ const CommentPopup: React.FC<{
   });
 
   return (
-    <AbsoluteFill style={{ justifyContent: "flex-end", alignItems: "center", paddingBottom: "80px", zIndex: 20 }}>
+    <AbsoluteFill style={{ justifyContent: "flex-end", alignItems: "center", paddingBottom: "350px", zIndex: 20 }}>
       {/* SE効果のように一瞬輝かせる */}
       <div style={{
         transform: `scale(${bounce})`,
@@ -256,7 +287,7 @@ const CommentPopup: React.FC<{
         textAlign: "center"
       }}>
         <div style={{ fontSize: "35px", fontWeight: "bold", color: "#666", marginBottom: "15px" }}>
-          {entry.mbtiType} [{entry.tier}ランク]
+          {entry.mbtiType} {lang === "en" ? `[Tier ${entry.tier}]` : `[${entry.tier}ランク]`}
         </div>
         <div style={{
           fontSize: "45px", 
@@ -268,6 +299,43 @@ const CommentPopup: React.FC<{
           {entry.comment}
         </div>
       </div>
+    </AbsoluteFill>
+  );
+};
+
+// 最初の2秒（フック）演出コンポーネント
+const IntroHook: React.FC<{ title: string, fps: number }> = ({ title, fps }) => {
+  const frame = useCurrentFrame();
+  
+  // スケールとバウンド
+  const scale = spring({ frame, fps, config: { damping: 10, stiffness: 150 } });
+  
+  // チカチカさせる演出 (5フレームごとに色反転)
+  const isFlash = Math.floor(frame / 5) % 2 === 0;
+
+  return (
+    <AbsoluteFill style={{
+      backgroundColor: isFlash ? "#00ffff" : "#000",
+      justifyContent: "center", alignItems: "center"
+    }}>
+      <h1 style={{
+        fontFamily: "'Dela Gothic One', sans-serif",
+        color: isFlash ? "#000" : "#fff",
+        fontSize: "100px",
+        fontWeight: "900",
+        textAlign: "center",
+        lineHeight: "1.3",
+        transform: `scale(${scale})`,
+        textShadow: isFlash ? "none" : "0 0 50px #00ffff",
+        padding: "50px",
+        WebkitTextStroke: isFlash ? "none" : "3px #00ffff"
+      }}>
+        {title.split(" ").map((word, i) => (
+          <React.Fragment key={i}>
+            {word}<br/>
+          </React.Fragment>
+        ))}
+      </h1>
     </AbsoluteFill>
   );
 };

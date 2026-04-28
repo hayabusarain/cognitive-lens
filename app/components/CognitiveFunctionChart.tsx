@@ -32,6 +32,7 @@ interface Props {
   typeKey: string;
   compareTypeKey?: string;
   size?: number;
+  lang?: string;
 }
 
 interface ChartEntry {
@@ -43,9 +44,10 @@ interface ChartEntry {
 // ── Custom tick ──────────────────────────────────────────────
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function AxisTick(props: any) {
-  const { x, y, payload, textAnchor } = props as {
-    x: number;
+function createAxisTick(lang: string) {
+  return function AxisTick(props: any) {
+    const { x, y, payload, textAnchor } = props as {
+      x: number;
     y: number;
     payload: { value: string };
     textAnchor: string;
@@ -76,6 +78,7 @@ function AxisTick(props: any) {
       </text>
     </g>
   );
+  };
 }
 
 // ── Custom dot ───────────────────────────────────────────────
@@ -187,6 +190,7 @@ export default function CognitiveFunctionChart({
   typeKey,
   compareTypeKey,
   size = 320,
+  lang = "ja",
 }: Props) {
   const scores = FUNCTION_SCORES[typeKey];
   if (!scores) return null;
@@ -218,7 +222,7 @@ export default function CognitiveFunctionChart({
         <PolarAngleAxis
           dataKey="fn"
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          tick={AxisTick as any}
+          tick={createAxisTick(lang) as any}
           tickLine={false}
         />
 

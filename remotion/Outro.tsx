@@ -1,7 +1,7 @@
 import { AbsoluteFill, Sequence, spring, useCurrentFrame, useVideoConfig } from "remotion";
 import React from "react";
 
-export const Outro: React.FC = () => {
+export const Outro: React.FC<{ lang?: string }> = ({ lang = "ja" }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
@@ -44,7 +44,11 @@ export const Outro: React.FC = () => {
           lineHeight: "1.4"
         }}
       >
-        自己診断・相性診断は<br/>WEBサイトで！
+        {lang === "en" ? (
+          <>Try the ultimate<br/>16 Type test now!</>
+        ) : (
+          <>自己診断・相性診断は<br/>WEBサイトで！</>
+        )}
       </h1>
 
       {/* 検索エンジンの入力枠風のUI */}

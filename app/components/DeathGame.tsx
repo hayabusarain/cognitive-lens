@@ -38,7 +38,7 @@ function AdSlot({ id }: { id: string }) {
   );
 }
 
-export default function DeathGame({ typeKey }: { typeKey: string }) {
+export default function DeathGame({ typeKey, lang }: { typeKey: string; lang: string }) {
   const [selectedType, setSelectedType] = useState("");
   const [open, setOpen] = useState(false);
   const [userGender, setUserGender] = useState("その他/指定しない");
@@ -68,18 +68,18 @@ export default function DeathGame({ typeKey }: { typeKey: string }) {
       const res = await fetch("/api/deathgame", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ type1: typeKey, type2: target, userGender, targetGender }),
+        body: JSON.stringify({ type1: typeKey, type2: target, userGender, targetGender, lang }),
       });
       const data = await res.json();
       if (!res.ok) {
-        setError(data.error ?? "失敗しました");
+        setError(data.error ?? (lang === "en" ? "Failed" : "失敗しました"));
       } else {
         setPhases(data.phases ?? []);
         setEpitaph(data.epitaph ?? "");
         setResultType(target);
       }
     } catch {
-      setError("ネットワークエラー");
+      setError(lang === "en" ? "Network error" : "ネットワークエラー");
     }
     setLoading(false);
   };
@@ -97,8 +97,12 @@ export default function DeathGame({ typeKey }: { typeKey: string }) {
           <Skull size={16} />
         </span>
         <div className="flex-1">
-          <p className="font-semibold text-sm text-slate-800">相性デスゲーム</p>
-          <p className="text-xs text-slate-500">相手を選んで「最悪の未来」をシミュレーション</p>
+          <p className="font-semibold text-sm text-slate-800">
+            {lang === "en" ? "Compatibility Death Game" : "相性デスゲーム"}
+          </p>
+          <p className="text-xs text-slate-500">
+            {lang === "en" ? "Select a partner and simulate the worst possible outcome" : "相手を選んで「最悪の未来」をシミュレーション"}
+          </p>
         </div>
         <ChevronDown size={16} className={`text-slate-400 transition-transform ${open ? "rotate-180" : ""}`} />
       </button>
@@ -109,36 +113,42 @@ export default function DeathGame({ typeKey }: { typeKey: string }) {
           {/* Gender Selector */}
           <div className="grid grid-cols-2 gap-3 pb-4 border-b border-slate-100">
             <div>
-              <p className="text-[10px] font-bold text-slate-500 mb-1.5 ml-1">あなたの性別</p>
+              <p className="text-[10px] font-bold text-slate-500 mb-1.5 ml-1">
+                {lang === "en" ? "Your Gender" : "あなたの性別"}
+              </p>
               <select
                 value={userGender}
                 onChange={(e) => setUserGender(e.target.value)}
                 className="w-full bg-slate-50/50 border border-slate-200 text-slate-700 text-xs px-3 py-2 rounded-xl outline-none focus:border-slate-400 focus:ring-2 focus:ring-slate-100 transition-all appearance-none"
                 style={{ backgroundImage: 'url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 20 20\'%3E%3Cpath stroke=\'%2364748b\' stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'1.5\' d=\'m6 8 4 4 4-4\'/%3E%3C/svg%3E")', backgroundPosition: 'right 0.5rem center', backgroundRepeat: 'no-repeat', backgroundSize: '1.5em 1.5em', paddingRight: '2rem' }}
               >
-                <option value="その他/指定しない">指定しない</option>
-                <option value="男性">男性</option>
-                <option value="女性">女性</option>
+                <option value="その他/指定しない">{lang === "en" ? "Unspecified" : "指定しない"}</option>
+                <option value="男性">{lang === "en" ? "Male" : "男性"}</option>
+                <option value="女性">{lang === "en" ? "Female" : "女性"}</option>
               </select>
             </div>
             <div>
-              <p className="text-[10px] font-bold text-slate-500 mb-1.5 ml-1">相手の性別</p>
+              <p className="text-[10px] font-bold text-slate-500 mb-1.5 ml-1">
+                {lang === "en" ? "Partner's Gender" : "相手の性別"}
+              </p>
               <select
                 value={targetGender}
                 onChange={(e) => setTargetGender(e.target.value)}
                 className="w-full bg-slate-50/50 border border-slate-200 text-slate-700 text-xs px-3 py-2 rounded-xl outline-none focus:border-slate-400 focus:ring-2 focus:ring-slate-100 transition-all appearance-none"
                 style={{ backgroundImage: 'url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 20 20\'%3E%3Cpath stroke=\'%2364748b\' stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'1.5\' d=\'m6 8 4 4 4-4\'/%3E%3C/svg%3E")', backgroundPosition: 'right 0.5rem center', backgroundRepeat: 'no-repeat', backgroundSize: '1.5em 1.5em', paddingRight: '2rem' }}
               >
-                <option value="その他/指定しない">指定しない</option>
-                <option value="男性">男性</option>
-                <option value="女性">女性</option>
+                <option value="その他/指定しない">{lang === "en" ? "Unspecified" : "指定しない"}</option>
+                <option value="男性">{lang === "en" ? "Male" : "男性"}</option>
+                <option value="女性">{lang === "en" ? "Female" : "女性"}</option>
               </select>
             </div>
           </div>
 
           {/* Type selector — changing this does NOT update displayed results */}
           <div>
-            <p className="text-[10px] font-bold text-slate-500 mb-2 ml-1">相手のタイプを選択</p>
+            <p className="text-[10px] font-bold text-slate-500 mb-2 ml-1">
+              {lang === "en" ? "Select Partner's Type" : "相手のタイプを選択"}
+            </p>
             <div className="grid grid-cols-4 gap-1.5">
               {ALL_TYPES.map((t) => (
                 <button
@@ -166,7 +176,7 @@ export default function DeathGame({ typeKey }: { typeKey: string }) {
               className="w-full inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-2xl text-white text-sm font-bold transition-all duration-150 active:scale-[0.98] bg-gradient-to-r from-slate-800 to-slate-900 hover:from-slate-900 hover:to-black shadow-lg"
             >
               <Zap size={15} />
-              {typeKey} × {selectedType} を分析する
+              {lang === "en" ? `Analyze ${typeKey} × ${selectedType}` : `${typeKey} × ${selectedType} を分析する`}
             </button>
           )}
 
@@ -174,7 +184,9 @@ export default function DeathGame({ typeKey }: { typeKey: string }) {
           {loading && (
             <div className="text-center py-8 space-y-2">
               <Loader2 size={24} className="mx-auto text-slate-400 animate-spin" />
-              <p className="text-xs text-slate-500">関係の崩壊過程を生成中...</p>
+              <p className="text-xs text-slate-500">
+                {lang === "en" ? "Simulating the collapse of the relationship..." : "関係の崩壊過程を生成中..."}
+              </p>
             </div>
           )}
 
@@ -182,7 +194,9 @@ export default function DeathGame({ typeKey }: { typeKey: string }) {
           {error && (
             <div className="text-center py-4">
               <p className="text-xs text-red-500">{error}</p>
-              <button onClick={generate} className="mt-2 text-xs underline text-slate-500">再試行</button>
+              <button onClick={generate} className="mt-2 text-xs underline text-slate-500">
+                {lang === "en" ? "Retry" : "再試行"}
+              </button>
             </div>
           )}
 
@@ -190,7 +204,7 @@ export default function DeathGame({ typeKey }: { typeKey: string }) {
           {phases.length > 0 && !loading && (
             <div className="space-y-3">
               <p className="text-xs font-bold text-slate-400 tracking-widest uppercase">
-                {typeKey} × {resultType} — 破局のタイムライン
+                {lang === "en" ? `${typeKey} × ${resultType} — Timeline of Ruin` : `${typeKey} × ${resultType} — 破局のタイムライン`}
               </p>
 
               <div className="relative pl-4 space-y-3">
@@ -261,14 +275,14 @@ export default function DeathGame({ typeKey }: { typeKey: string }) {
                 onClick={generate}
                 className="w-full text-xs text-slate-500 underline underline-offset-2 py-1"
               >
-                別パターンを生成
+                {lang === "en" ? "Generate Alternative Outcome" : "別パターンを生成"}
               </button>
             </div>
           )}
 
           {!selectedType && phases.length === 0 && (
             <p className="text-xs text-slate-400 text-center py-2">
-              相手のタイプを選択してから「分析する」を押してください
+              {lang === "en" ? "Select a partner's type and press 'Analyze'." : "相手のタイプを選択してから「分析する」を押してください"}
             </p>
           )}
         </div>

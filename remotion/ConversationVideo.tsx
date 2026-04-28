@@ -15,6 +15,7 @@ export type ConversationVideoProps = {
   // Right Character
   mbtiRightUrl: string;
   mbtiRightType: string;
+  lang?: string;
 };
 
 export const ConversationVideo: React.FC<ConversationVideoProps> = ({
@@ -25,6 +26,7 @@ export const ConversationVideo: React.FC<ConversationVideoProps> = ({
   mbtiLeftType,
   mbtiRightUrl,
   mbtiRightType,
+  lang = "ja",
 }) => {
   const frame = useCurrentFrame();
   const { fps, durationInFrames } = useVideoConfig();
@@ -97,7 +99,7 @@ export const ConversationVideo: React.FC<ConversationVideoProps> = ({
       
       {/* 宣伝用のアウトロ層 */}
       <Sequence from={outroStart} durationInFrames={outroDuration}>
-        <Outro />
+        <Outro lang={lang} />
       </Sequence>
       
     </AbsoluteFill>
@@ -121,7 +123,7 @@ const SpeakerAvatar: React.FC<{
     <div
       style={{
         position: "absolute",
-        bottom: "150px",
+        bottom: "350px",
         left: position === "left" ? "20px" : undefined,
         right: position === "right" ? "20px" : undefined,
         display: "flex",

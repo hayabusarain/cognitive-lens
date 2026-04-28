@@ -20,6 +20,7 @@ export async function POST(req: NextRequest) {
 
   const body = await req.json();
   const type = sanitizeMbtiType(body.type);
+  const lang = body.lang === "en" ? "en" : "ja";
 
   if (!type) {
     return NextResponse.json({ error: "Invalid type" }, { status: 400 });
@@ -27,7 +28,7 @@ export async function POST(req: NextRequest) {
 
   const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-  const prompt = `あなたはMBTIの認知機能に精通した心理分析AIです。
+  const promptJa = `あなたはMBTIの認知機能に精通した心理分析AIです。
 タイプ「${type}」の**絶対的弱点**を、以下の5項目でそれぞれ0〜100のスコアで評価してください。
 
 【5項目】
@@ -53,6 +54,35 @@ export async function POST(req: NextRequest) {
   },
   "comment": "最も高い弱点に対する鋭い一言"
 }` + INJECTION_GUARD;
+
+  const promptEn = `You are a psychological analysis AI expert in MBTI cognitive functions.
+Evaluate the **absolute weaknesses** of type "${type}" across the following 5 dimensions on a scale of 0-100.
+
+【5 Dimensions】
+1. Irrationality: Tendency to be swayed by emotions/intuition, causing logical breakdowns.
+2. Anti-social: Tendency to ignore or fail to read implicit social rules and atmospheres.
+3. Arrogance: Overconfidence in one's abilities/perspectives, looking down on others.
+4. Emotional: Tendency to be easily dominated by emotions, losing calm judgment.
+5. Suspicion: Difficulty trusting others, doubting people's intentions.
+
+【Rules】
+- Calculate scores logically based on the cognitive function stack of ${type}.
+- Do NOT make scores even. Create a clear bias that matches ${type}.
+- Write a sharp, 1-sentence comment about the highest scored weakness (comment field). The comment MUST be in English and use modern Gen Z slang.
+
+Return ONLY the following JSON:
+{
+  "scores": {
+    "irrationality": number,
+    "antisocial": number,
+    "arrogance": number,
+    "emotional": number,
+    "suspicion": number
+  },
+  "comment": "A sharp, 1-sentence toxic comment in English about their biggest weakness."
+}` + INJECTION_GUARD;
+
+  const prompt = lang === "en" ? promptEn : promptJa;
 
   try {
     const completion = await client.chat.completions.create({

@@ -23,7 +23,7 @@ export const RemotionRoot: React.FC = () => {
           };
         }}
         defaultProps={{
-          title: "MBTI Ranking",
+          title: "16Type Ranking",
           entries: [],
           popDuration: 80,
         }}
