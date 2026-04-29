@@ -28,7 +28,7 @@ export default function RootLayout({
           strategy="afterInteractive"
         />
       </head>
-      <body className="min-h-screen antialiased pb-24 md:pb-0">
+      <body className="min-h-screen antialiased">
         {children}
         <CookieConsentBanner />
         <Footer />

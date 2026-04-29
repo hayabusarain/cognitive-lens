@@ -37,7 +37,7 @@ export default function AdSenseUnit({
     return (
       <div
         id={id}
-        className="w-full min-h-[90px] bg-slate-50 border border-dashed border-slate-200 flex items-center justify-center text-slate-400 text-xs tracking-widest uppercase my-6 mx-auto max-w-full rounded-xl"
+        className="w-full min-h-[90px] bg-slate-50 border border-dashed border-slate-200 flex items-center justify-center text-slate-400 text-xs tracking-widest uppercase my-2 mx-auto max-w-full rounded-xl"
       >
         Dummy Ad Slot: {id}
       </div>
@@ -45,7 +45,7 @@ export default function AdSenseUnit({
   }
 
   return (
-    <div id={id} className="w-full my-6 text-center mx-auto overflow-hidden">
+    <div id={id} className="w-full my-2 text-center mx-auto overflow-hidden">
       <ins
         ref={adRef}
         className="adsbygoogle text-center"
