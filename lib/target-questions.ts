@@ -78,7 +78,7 @@ export const TARGET_QUESTIONS: TargetQuestion[] = [
   // --- T/F (思考 vs 感情) 判定 ---
   {
     id: 11,
-    text: "あなたが病みLINEを送った時、あの人の返信は？",
+    text: "あなたがメンタル崩壊LINEを送った時、あの人の返信は？",
     optionA: { text: "「こうやって対処しな」って淡々と解決策を提示してくる", value: "T" },
     optionB: { text: "「わかる、それめっちゃしんどいね…」とまずは全肯定してくれる", value: "F" }
   },
@@ -135,7 +135,7 @@ export const TARGET_QUESTIONS: TargetQuestion[] = [
   {
     id: 20,
     text: "大学の課題やめんどくさいタスクへの向き合い方は？",
-    optionA: { text: "期限より前に計画的に終わらせていそう。ギリギリだと病むタイプ", value: "J" },
+    optionA: { text: "期限より前に計画的に終わらせていそう。ギリギリだとパニックになるタイプ", value: "J" },
     optionB: { text: "当日まで放置して、謎の爆発力でギリギリ乗り切ってそう", value: "P" }
   }
 ];
