@@ -76,9 +76,6 @@ export default function HomeClient({ dict, lang, initialLatestRank }: { dict: an
           </div>
         )}
 
-        {/* AdSense: Header */}
-        <AdSenseUnit id="adsense-header" slotId="1111111111" />
-
         {/* Hero */}
         <section className="flex flex-col items-center px-6 pt-8 pb-12 text-center">
           <div className="max-w-2xl mx-auto w-full">
@@ -216,18 +213,13 @@ export default function HomeClient({ dict, lang, initialLatestRank }: { dict: an
             </div>
 
             {/* AdSense: Bottom */}
-            <div className="mt-12">
+            <div className="mt-6">
               <AdSenseUnit id="adsense-bottom" slotId="2222222222" />
             </div>
 
           </div>
         </section>
       </main>
-
-      {/* Footer */}
-      <footer className="text-center py-6 text-slate-400 text-xs">
-        <p>© 2026 CognitiveLens. All rights reserved.</p>
-      </footer>
     </>
   );
 }
