@@ -26,12 +26,12 @@ export const AestheticPOVVideo: React.FC<AestheticPOVProps> = ({
   const { fps } = useVideoConfig();
 
   // Layout timing config
-  // Each text will be shown for 3 seconds (90 frames) + 0.5 sec fade out + 0.5 sec gap
-  const TEXT_DURATION = 3.5 * fps;
+  // Each text will be shown for 3 seconds (90 frames) + 0.5 sec gap
+  const TEXT_DURATION = 3.0 * fps;
   const GAP_DURATION = 0.5 * fps;
   const SEQUENCE_DURATION = TEXT_DURATION + GAP_DURATION;
 
-  // Title fades in for 2 seconds, stays for 2, fades out for 1
+  // Title fades in for 2 seconds, stays for 1, fades out for 1
   const titleOpacity = interpolate(frame, [0, 30, 90, 120], [0, 1, 1, 0], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
@@ -122,10 +122,10 @@ const FadeText: React.FC<{ text: string }> = ({ text }) => {
   const frame = useCurrentFrame();
   const { durationInFrames } = useVideoConfig();
 
-  // Fade in for 1.5 seconds, stay, fade out for 1.5 seconds
+  // Fade in for 0.5 seconds, stay, fade out for 0.5 seconds
   const opacity = interpolate(
     frame,
-    [0, 45, durationInFrames - 45, durationInFrames],
+    [0, 15, durationInFrames - 15, durationInFrames],
     [0, 1, 1, 0],
     {
       extrapolateLeft: "clamp",
