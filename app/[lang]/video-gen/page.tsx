@@ -89,7 +89,8 @@ export default function VideoGeneratorPage() {
         setProgress(40);
         
         // プレビュー用にモックとして1件だけ入れる
-        setGeneratedEntries([{ mbtiType: pov.mbti, tier: "POV", comment: pov.caption } as any]);
+        const hashtags = `\n\n#${pov.mbti} #${pov.mbti}あるある #MBTI #性格診断 #恋愛 #pov`;
+        setGeneratedEntries([{ mbtiType: pov.mbti, tier: "POV", comment: pov.caption + hashtags } as any]);
         setProgress(60);
 
         setStatus("POV動画をレンダリング中... (数分かかる場合があります)");
