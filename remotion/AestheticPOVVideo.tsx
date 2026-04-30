@@ -69,7 +69,7 @@ export const AestheticPOVVideo: React.FC<AestheticPOVProps> = ({
       />
 
       {/* Layer 4: Cinematic Text */}
-      <AbsoluteFill style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", padding: "80px" }}>
+      <AbsoluteFill style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
         
         {/* Title Sequence */}
         <Sequence from={0} durationInFrames={120}>
@@ -78,7 +78,10 @@ export const AestheticPOVVideo: React.FC<AestheticPOVProps> = ({
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            width: "100%"
+            justifyContent: "center",
+            width: "100%",
+            height: "100%",
+            padding: "280px 80px 400px 80px"
           }}>
             <h2 style={{
               fontFamily: "'Noto Serif JP', serif",
@@ -142,7 +145,7 @@ const Outro: React.FC<{ mbtiType: string }> = ({ mbtiType }) => {
   });
 
   return (
-    <AbsoluteFill style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", opacity, transform: `scale(${scale})` }}>
+    <AbsoluteFill style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", opacity, transform: `scale(${scale})`, padding: "280px 80px 400px 80px" }}>
       <Img 
         src={`/characters/${mbtiType}.png`} 
         style={{ width: "350px", height: "350px", objectFit: "contain", marginBottom: "40px", filter: "drop-shadow(0 0 30px rgba(255,255,255,0.2))" }} 
@@ -207,7 +210,7 @@ const FadeText: React.FC<{ text: string }> = ({ text }) => {
   );
 
   return (
-    <AbsoluteFill style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+    <AbsoluteFill style={{ display: "flex", justifyContent: "center", alignItems: "center", padding: "280px 80px 400px 80px" }}>
       <p style={{
         opacity,
         transform: `translateY(${translateY}px)`,
