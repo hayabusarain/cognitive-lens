@@ -652,6 +652,73 @@ function CompatibilitySection({ typeKey, lang }: { typeKey: string, lang: string
   );
 }
 
+// ── 適職・キャリア診断セクション（アフィリエイト連携用） ────────────────
+import { CAREER_DATA } from "@/lib/career-data";
+import { Briefcase } from "lucide-react";
+
+function CareerSection({ typeKey, lang }: { typeKey: string, lang: string }) {
+  if (lang !== "ja") return null; // 現在は日本語のみ対応
+  
+  const career = CAREER_DATA[typeKey];
+  if (!career) return null;
+
+  return (
+    <div className="my-8 rounded-3xl overflow-hidden shadow-lg border" style={{ background: "rgba(255,255,255,0.8)", borderColor: "rgba(16,185,129,0.2)" }}>
+      <div className="bg-gradient-to-r from-emerald-500 to-teal-500 p-4 text-white">
+        <h2 className="text-sm font-black tracking-wider flex items-center gap-2">
+          <Briefcase size={18} />
+          {typeKey}の「適職」と「絶対にやってはいけない職業」
+        </h2>
+        <p className="text-[10px] opacity-80 mt-1">※アフィリエイト誘導用プレビュー</p>
+      </div>
+      
+      <div className="p-5 space-y-5">
+        {/* 地獄の職業 */}
+        <div className="rounded-2xl p-4 bg-rose-50 border border-rose-100 relative">
+          <div className="absolute -top-3 left-4 bg-rose-500 text-white text-[10px] font-bold px-3 py-1 rounded-full tracking-widest shadow-sm">
+            絶望ルート（地獄）
+          </div>
+          <h3 className="font-bold text-rose-700 text-sm mt-1">{career.hellJob}</h3>
+          <p className="text-xs text-rose-900/80 mt-1 leading-relaxed">{career.hellReason}</p>
+        </div>
+
+        {/* 生存ルート */}
+        <div className="rounded-2xl p-4 bg-teal-50 border border-teal-100 relative">
+          <div className="absolute -top-3 left-4 bg-teal-500 text-white text-[10px] font-bold px-3 py-1 rounded-full tracking-widest shadow-sm">
+            生存ルート（適職）
+          </div>
+          <h3 className="font-bold text-teal-800 text-sm mt-1">{career.survivalRoute}</h3>
+          <p className="text-xs text-teal-900/80 mt-1 leading-relaxed">{career.survivalReason}</p>
+        </div>
+
+        {/* 面接チート */}
+        <div className="rounded-2xl p-4 bg-amber-50 border border-amber-100">
+          <h3 className="font-bold text-amber-800 text-xs mb-1 flex items-center gap-1">
+            <Sparkles size={12} /> 面接・転職のチート技
+          </h3>
+          <p className="text-xs text-amber-900/80 leading-relaxed">{career.cheatCode}</p>
+        </div>
+
+        {/* アフィリエイトCTA（仮） */}
+        <div className="pt-2 text-center">
+          <p className="text-[10px] text-slate-500 mb-2 font-bold">＼ {career.survivalRoute}の求人を探す ／</p>
+          <button className="w-full relative overflow-hidden group bg-slate-900 text-white font-bold text-sm py-3.5 rounded-xl shadow-lg transition-all hover:-translate-y-0.5 hover:shadow-xl active:scale-[0.98]">
+            <span className="relative z-10 flex items-center justify-center gap-2">
+              自分に合った転職サービスを見る
+              <ArrowLeft size={14} className="rotate-180 group-hover:translate-x-1 transition-transform" />
+            </span>
+            <div className="absolute inset-0 bg-gradient-to-r from-emerald-400 to-teal-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <span className="relative z-10 absolute inset-0 flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              自分に合った転職サービスを見る
+              <ArrowLeft size={14} className="rotate-180 group-hover:translate-x-1 transition-transform" />
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ── メインコンテンツ ──────────────────────────────────────────
 
 export default function ResultContent({ lang = "ja" }: { lang?: string }) {
@@ -812,6 +879,9 @@ export default function ResultContent({ lang = "ja" }: { lang?: string }) {
 
         {/* Compatibility */}
         <CompatibilitySection typeKey={typeKey} lang={lang} />
+
+        {/* Career & Affiliate */}
+        <CareerSection typeKey={typeKey} lang={lang} />
 
         {/* SEO Article Link */}
         <div className="py-6">
