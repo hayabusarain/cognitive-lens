@@ -6,7 +6,8 @@ import {
   useVideoConfig,
   Video,
   Img,
-  Sequence
+  Sequence,
+  staticFile
 } from "remotion";
 
 export interface AestheticPOVProps {
@@ -147,7 +148,7 @@ const Outro: React.FC<{ mbtiType: string }> = ({ mbtiType }) => {
   return (
     <AbsoluteFill style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", opacity, transform: `scale(${scale})`, padding: "280px 80px 400px 80px" }}>
       <Img 
-        src={`/characters/${mbtiType}.png`} 
+        src={staticFile(`characters/${mbtiType}.png`)} 
         style={{ width: "350px", height: "350px", objectFit: "contain", marginBottom: "40px", filter: "drop-shadow(0 0 30px rgba(255,255,255,0.2))" }} 
       />
       
