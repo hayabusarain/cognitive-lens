@@ -20,8 +20,11 @@ export default function VideoGeneratorPage() {
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
   const [errorMSG, setErrorMSG] = useState<string | null>(null);
 
+  const [videoFormat, setVideoFormat] = useState<"ranking" | "pov">("ranking");
+  const [selectedPovType, setSelectedPovType] = useState("INFP");
+  
   const handleGenerate = async () => {
-    if (!selectedPresetId) return;
+    if (videoFormat === "ranking" && !selectedPresetId) return;
     setIsLoading(true);
     setVideoUrl(null);
     setErrorMSG(null);
@@ -29,55 +32,92 @@ export default function VideoGeneratorPage() {
     setProgress(10);
 
     try {
-      const preset = PRESETS.find(p => p.id === selectedPresetId);
-      if (!preset) throw new Error(lang === "en" ? "Theme not found" : "お題が見つかりません");
+      if (videoFormat === "ranking") {
+        const preset = PRESETS.find(p => p.id === selectedPresetId);
+        if (!preset) throw new Error(lang === "en" ? "Theme not found" : "お題が見つかりません");
 
-      setStatus(lang === "en" ? "Assembling script and images..." : "内部データから台本と画像を組み立て中...");
-      
-      const isTop5 = preset.videoType === "top5";
+        setStatus(lang === "en" ? "Assembling script and images..." : "内部データから台本と画像を組み立て中...");
+        
+        const isTop5 = preset.videoType === "top5";
 
-      const mappedEntries = preset.entries.map(e => {
-        return {
-          ...e,
-          rank: isTop5 ? parseInt(e.tier, 10) : undefined,
-          imageUrl: `/characters/${e.mbtiType}.png`
-        };
-      });
-      setProgress(40);
-      
-      // 音声処理スキップのためそのまま渡す
-      const entriesWithAudio = mappedEntries as TierListEntry[];
-      
-      setGeneratedEntries(entriesWithAudio);
-      setProgress(60);
+        const mappedEntries = preset.entries.map(e => {
+          return {
+            ...e,
+            rank: isTop5 ? parseInt(e.tier, 10) : undefined,
+            imageUrl: `/characters/${e.mbtiType}.png`
+          };
+        });
+        setProgress(40);
+        
+        const entriesWithAudio = mappedEntries as TierListEntry[];
+        setGeneratedEntries(entriesWithAudio);
+        setProgress(60);
 
-      // 3. 動画のレンダリング
-      setStatus(lang === "en" ? "Rendering video to MP4 in the background... (takes ~20s)" : "動画をバックグラウンドでMP4にレンダリング中... (約20秒かかります)");
-      
-      const popDuration = isTop5 ? 150 : 80;
-      
-      const renderRes = await fetch("/api/render-video", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          compositionId: isTop5 ? "Top5RankingVideo" : "TierListVideo",
-          presetId: preset.id, // トップページ連動用
-          inputProps: {
-            title: preset.title,
-            entries: entriesWithAudio,
-            popDuration: popDuration,
-            lang: lang,
-          }
-        })
-      });
+        setStatus(lang === "en" ? "Rendering video to MP4 in the background... (takes ~20s)" : "動画をバックグラウンドでMP4にレンダリング中... (約20秒かかります)");
+        
+        const popDuration = isTop5 ? 150 : 80;
+        
+        const renderRes = await fetch("/api/render-video", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            compositionId: isTop5 ? "Top5RankingVideo" : "TierListVideo",
+            presetId: preset.id,
+            inputProps: {
+              title: preset.title,
+              entries: entriesWithAudio,
+              popDuration: popDuration,
+              lang: lang,
+            }
+          })
+        });
 
-      if (!renderRes.ok) {
-        const errJson = await renderRes.json();
-        throw new Error(errJson.error || (lang === "en" ? "Video rendering failed" : "動画のレンダリングに失敗しました"));
+        if (!renderRes.ok) {
+          const errJson = await renderRes.json();
+          throw new Error(errJson.error || (lang === "en" ? "Video rendering failed" : "動画のレンダリングに失敗しました"));
+        }
+        
+        const renderData = await renderRes.json();
+        setVideoUrl(renderData.url);
+      } else {
+        // POV
+        const { POV_DATA } = await import("@/lib/pov-data");
+        const pov = POV_DATA[selectedPovType];
+        if (!pov) throw new Error("POV data not found");
+
+        setStatus("POVスクリプトを読み込み中...");
+        setProgress(40);
+        
+        // プレビュー用にモックとして1件だけ入れる
+        setGeneratedEntries([{ mbtiType: pov.mbti, tier: "POV", comment: pov.caption } as any]);
+        setProgress(60);
+
+        setStatus("POV動画をレンダリング中... (数分かかる場合があります)");
+        
+        const renderRes = await fetch("/api/render-video", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            compositionId: "AestheticPOVVideo",
+            presetId: `pov_${pov.mbti}`,
+            inputProps: {
+              mbtiType: pov.mbti,
+              title: pov.title,
+              texts: pov.texts,
+              // backgroundUrl: "" // TODO: 背景URLを指定できるUI
+            }
+          })
+        });
+
+        if (!renderRes.ok) {
+          const errJson = await renderRes.json();
+          throw new Error(errJson.error || "動画のレンダリングに失敗しました");
+        }
+        
+        const renderData = await renderRes.json();
+        setVideoUrl(renderData.url);
       }
       
-      const renderData = await renderRes.json();
-      setVideoUrl(renderData.url);
       setProgress(100);
       setStatus(lang === "en" ? "Completed!" : "完成しました！");
 
@@ -107,11 +147,35 @@ export default function VideoGeneratorPage() {
 
         <main className="bg-white/5 border border-white/10 rounded-3xl p-8 backdrop-blur-xl shadow-2xl">
           <div className="space-y-6">
-            <div>
-              <label className="block text-sm font-bold text-cyan-400 mb-2 uppercase tracking-widest flex items-center gap-2">
-                <Settings2 className="w-4 h-4" />
-                {lang === "en" ? "Select Theme" : "Select Theme / お題を選択"}
-              </label>
+            <div className="flex gap-4 mb-6">
+              <button
+                onClick={() => setVideoFormat("ranking")}
+                className={`flex-1 py-3 rounded-xl font-bold transition-all ${
+                  videoFormat === "ranking" 
+                    ? "bg-cyan-500 text-black shadow-[0_0_15px_rgba(6,182,212,0.4)]" 
+                    : "bg-white/5 text-neutral-400 hover:bg-white/10"
+                }`}
+              >
+                ランキング / Tier List
+              </button>
+              <button
+                onClick={() => setVideoFormat("pov")}
+                className={`flex-1 py-3 rounded-xl font-bold transition-all ${
+                  videoFormat === "pov" 
+                    ? "bg-purple-500 text-white shadow-[0_0_15px_rgba(168,85,247,0.4)]" 
+                    : "bg-white/5 text-neutral-400 hover:bg-white/10"
+                }`}
+              >
+                Aesthetic POV
+              </button>
+            </div>
+
+            {videoFormat === "ranking" ? (
+              <div>
+                <label className="block text-sm font-bold text-cyan-400 mb-2 uppercase tracking-widest flex items-center gap-2">
+                  <Settings2 className="w-4 h-4" />
+                  {lang === "en" ? "Select Theme" : "Select Theme / お題を選択"}
+                </label>
               <select 
                 value={selectedPresetId}
                 onChange={(e) => setSelectedPresetId(e.target.value)}
@@ -125,6 +189,25 @@ export default function VideoGeneratorPage() {
                 ))}
               </select>
             </div>
+            ) : (
+              <div>
+                <label className="block text-sm font-bold text-purple-400 mb-2 uppercase tracking-widest flex items-center gap-2">
+                  <Settings2 className="w-4 h-4" />
+                  対象のMBTIタイプを選択
+                </label>
+                <select 
+                  value={selectedPovType}
+                  onChange={(e) => setSelectedPovType(e.target.value)}
+                  className="w-full bg-black/50 border border-neutral-700 rounded-xl p-4 text-xl focus:border-purple-400 focus:ring-1 focus:ring-purple-400 outline-none transition-all text-white"
+                  disabled={isLoading}
+                >
+                  {["INFP", "ENFP", "INFJ", "ISFJ", "ENTP", "ISTP", "INTJ", "ISFP", "INTP", "ENFJ"].map(type => (
+                    <option key={type} value={type}>{type}</option>
+                  ))}
+                </select>
+                <p className="mt-3 text-xs text-neutral-400">※ 実写背景の適用は今後のアップデートで追加されます（現在は自動ダークグラデーション＋ノイズが適用されます）</p>
+              </div>
+            )}
 
             <button 
               onClick={handleGenerate}
@@ -207,7 +290,11 @@ export default function VideoGeneratorPage() {
                       </p>
                       <textarea
                         readOnly
-                        value={PRESETS.find(p => p.id === selectedPresetId)?.tiktokCaption || ""}
+                        value={
+                          videoFormat === "ranking" 
+                            ? PRESETS.find(p => p.id === selectedPresetId)?.tiktokCaption || ""
+                            : generatedEntries?.[0]?.comment || "" // POVの場合はcommentにtitle(またはcaption)を入れていた。正しくはcaptionを取得したい。
+                        }
                         className="w-full bg-black/40 border border-neutral-700 rounded-lg p-3 text-white text-xs outline-none resize-none"
                         rows={4}
                         onClick={(e) => (e.target as HTMLTextAreaElement).select()}

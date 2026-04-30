@@ -1,6 +1,7 @@
 import { Composition, registerRoot } from "remotion";
 import { TierListVideo } from "./TierListVideo";
 import { Top5RankingVideo } from "./Top5RankingVideo";
+import { AestheticPOVVideo } from "./AestheticPOVVideo";
 import React from "react";
 
 // デフォルトのフレーム数（レンダリング時に inputProps に基づいて動的にオーバーライド可能）
@@ -45,6 +46,33 @@ export const RemotionRoot: React.FC = () => {
           title: "Top 5 Ranking",
           entries: [],
           popDuration: 150,
+        }}
+      />
+      <Composition
+        id="AestheticPOVVideo"
+        component={AestheticPOVVideo}
+        durationInFrames={DEFAULT_DURATION}
+        fps={30}
+        width={1080}
+        height={1920}
+        calculateMetadata={({ props }) => {
+          // Duration logic: 120 frames (title) + texts * 120 frames
+          const textCount = props.texts?.length || 0;
+          return {
+            durationInFrames: 120 + textCount * 120
+          };
+        }}
+        defaultProps={{
+          mbtiType: "INFP",
+          title: "深夜3時、未送信の「500文字のLINE」",
+          texts: [
+            "嫌いになったわけじゃない。",
+            "ただ、どう思われるかシミュレーションを重ねるうちに、",
+            "相手の感情を受信しすぎて息ができなくなった。",
+            "100の感情を持っていても、",
+            "世界に出力できるのはいつも『ごめん、寝てた』の7文字だけだ。"
+          ],
+          backgroundUrl: undefined
         }}
       />
     </>

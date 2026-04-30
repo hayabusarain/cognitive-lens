@@ -28,7 +28,11 @@ export async function POST(req: Request) {
     const body = await req.json();
     const { inputProps, compositionId = "TierListVideo", presetId } = body;
 
-    if (!inputProps || !inputProps.entries) {
+    if (!inputProps) {
+      return NextResponse.json({ error: "inputProps が必要です" }, { status: 400 });
+    }
+    
+    if (compositionId !== "AestheticPOVVideo" && !inputProps.entries) {
       return NextResponse.json({ error: "inputProps.entries が必要です" }, { status: 400 });
     }
 
@@ -42,7 +46,7 @@ export async function POST(req: Request) {
     }
 
     // トップページ連動用データの保存
-    if (presetId && inputProps.entries.length > 0) {
+    if (presetId && inputProps.entries && inputProps.entries.length > 0) {
       const isTop5 = compositionId === "Top5RankingVideo";
       const rank1Entry = isTop5 ? inputProps.entries[inputProps.entries.length - 1] : null;
       
