@@ -10,7 +10,7 @@ declare global {
   var bundleVersion: number | undefined;
 }
 
-const CURRENT_BUNDLE_VERSION = 2;
+const CURRENT_BUNDLE_VERSION = 3;
 
 let lastRenderTime = 0;
 
