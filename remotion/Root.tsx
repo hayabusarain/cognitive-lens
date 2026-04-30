@@ -56,10 +56,10 @@ export const RemotionRoot: React.FC = () => {
         width={1080}
         height={1920}
         calculateMetadata={({ props }) => {
-          // Duration logic: 120 frames (title) + texts * 120 frames
+          // 120 frames (title) + texts * 105 frames + 150 frames (outro)
           const textCount = props.texts?.length || 0;
           return {
-            durationInFrames: 120 + textCount * 120
+            durationInFrames: 120 + (textCount * 105) + 150
           };
         }}
         defaultProps={{

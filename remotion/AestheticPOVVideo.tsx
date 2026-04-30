@@ -112,7 +112,69 @@ export const AestheticPOVVideo: React.FC<AestheticPOVProps> = ({
             </Sequence>
           );
         })}
+
+        {/* Outro Sequence */}
+        <Sequence from={120 + texts.length * SEQUENCE_DURATION} durationInFrames={150}>
+          <Outro mbtiType={mbtiType} />
+        </Sequence>
       </AbsoluteFill>
+    </AbsoluteFill>
+  );
+};
+
+// Sub-component for Outro
+const Outro: React.FC<{ mbtiType: string }> = ({ mbtiType }) => {
+  const frame = useCurrentFrame();
+  const { durationInFrames } = useVideoConfig();
+
+  // Fade in for 30 frames, stay, fade out for 15 frames
+  const opacity = interpolate(
+    frame,
+    [0, 30, durationInFrames - 15, durationInFrames],
+    [0, 1, 1, 0],
+    { extrapolateLeft: "clamp", extrapolateRight: "clamp" }
+  );
+
+  // Subtle zoom in
+  const scale = interpolate(frame, [0, durationInFrames], [0.95, 1.05], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+  });
+
+  return (
+    <AbsoluteFill style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", opacity, transform: `scale(${scale})` }}>
+      <Img 
+        src={`/characters/${mbtiType}.png`} 
+        style={{ width: "350px", height: "350px", objectFit: "contain", marginBottom: "40px", filter: "drop-shadow(0 0 30px rgba(255,255,255,0.2))" }} 
+      />
+      
+      <p style={{
+        fontFamily: "'Noto Serif JP', serif",
+        fontSize: "36px",
+        color: "rgba(255,255,255,0.9)",
+        letterSpacing: "0.1em",
+        marginBottom: "20px",
+        textAlign: "center"
+      }}>
+        {mbtiType}の「致命的バグ」の正体
+      </p>
+
+      <div style={{
+        background: "linear-gradient(90deg, rgba(168,85,247,0.3) 0%, rgba(6,182,212,0.3) 100%)",
+        padding: "15px 40px",
+        borderRadius: "50px",
+        border: "1px solid rgba(255,255,255,0.2)"
+      }}>
+        <p style={{
+          fontFamily: "sans-serif",
+          fontSize: "28px",
+          fontWeight: "bold",
+          color: "white",
+          letterSpacing: "0.05em",
+        }}>
+          プロフのリンク（CognitiveLens）で解説中
+        </p>
+      </div>
     </AbsoluteFill>
   );
 };
