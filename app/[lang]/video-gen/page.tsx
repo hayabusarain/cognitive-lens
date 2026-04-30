@@ -81,8 +81,16 @@ export default function VideoGeneratorPage() {
         setVideoUrl(renderData.url);
       } else {
         // POV
-        const { POV_DATA } = await import("@/lib/pov-data");
-        const pov = POV_DATA[selectedPovType];
+        let povDataObj;
+        if (lang === "en") {
+          const { POV_DATA_EN } = await import("@/lib/pov-data-en");
+          povDataObj = POV_DATA_EN;
+        } else {
+          const { POV_DATA } = await import("@/lib/pov-data");
+          povDataObj = POV_DATA;
+        }
+        
+        const pov = povDataObj[selectedPovType];
         if (!pov) throw new Error("POV data not found");
 
         setStatus("POVスクリプトを読み込み中...");

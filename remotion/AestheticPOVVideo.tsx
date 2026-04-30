@@ -15,13 +15,15 @@ export interface AestheticPOVProps {
   title: string;
   texts: string[];
   backgroundUrl?: string; // Optional URL for background video or image
+  lang?: string;
 }
 
 export const AestheticPOVVideo: React.FC<AestheticPOVProps> = ({
   mbtiType,
   title,
   texts,
-  backgroundUrl
+  backgroundUrl,
+  lang = "ja"
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -119,7 +121,7 @@ export const AestheticPOVVideo: React.FC<AestheticPOVProps> = ({
 
         {/* Outro Sequence */}
         <Sequence from={120 + texts.length * SEQUENCE_DURATION} durationInFrames={150}>
-          <Outro mbtiType={mbtiType} />
+          <Outro mbtiType={mbtiType} lang={lang} />
         </Sequence>
       </AbsoluteFill>
     </AbsoluteFill>
@@ -127,7 +129,7 @@ export const AestheticPOVVideo: React.FC<AestheticPOVProps> = ({
 };
 
 // Sub-component for Outro
-const Outro: React.FC<{ mbtiType: string }> = ({ mbtiType }) => {
+const Outro: React.FC<{ mbtiType: string; lang?: string }> = ({ mbtiType, lang = "ja" }) => {
   const frame = useCurrentFrame();
   const { durationInFrames } = useVideoConfig();
 
@@ -145,6 +147,9 @@ const Outro: React.FC<{ mbtiType: string }> = ({ mbtiType }) => {
     extrapolateRight: "clamp",
   });
 
+  const headingText = lang === "en" ? `The truth behind ${mbtiType}'s "fatal bug"` : `${mbtiType}の「致命的バグ」の正体`;
+  const btnText = lang === "en" ? `Explained at the link in bio (CognitiveLens)` : `プロフのリンク（CognitiveLens）で解説中`;
+
   return (
     <AbsoluteFill style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", opacity, transform: `scale(${scale})`, padding: "280px 80px 400px 80px" }}>
       <Img 
@@ -153,14 +158,14 @@ const Outro: React.FC<{ mbtiType: string }> = ({ mbtiType }) => {
       />
       
       <p style={{
-        fontFamily: "'Noto Serif JP', serif",
-        fontSize: "36px",
+        fontFamily: lang === "en" ? "sans-serif" : "'Noto Serif JP', serif",
+        fontSize: lang === "en" ? "28px" : "36px",
         color: "rgba(255,255,255,0.9)",
         letterSpacing: "0.1em",
         marginBottom: "20px",
         textAlign: "center"
       }}>
-        {mbtiType}の「致命的バグ」の正体
+        {headingText}
       </p>
 
       <div style={{
@@ -171,12 +176,12 @@ const Outro: React.FC<{ mbtiType: string }> = ({ mbtiType }) => {
       }}>
         <p style={{
           fontFamily: "sans-serif",
-          fontSize: "28px",
+          fontSize: lang === "en" ? "22px" : "28px",
           fontWeight: "bold",
           color: "white",
           letterSpacing: "0.05em",
         }}>
-          プロフのリンク（CognitiveLens）で解説中
+          {btnText}
         </p>
       </div>
     </AbsoluteFill>
