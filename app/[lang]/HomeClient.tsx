@@ -7,23 +7,7 @@ import AdSenseUnit from "@/app/components/ads/AdSenseUnit";
 import { useEffect, useState } from "react";
 import LanguageSwitcher from "@/app/components/LanguageSwitcher";
 
-export default function HomeClient({ dict, lang, initialLatestRank }: { dict: any, lang: string, initialLatestRank?: any }) {
-  const [latestRank, setLatestRank] = useState<any>(initialLatestRank || null);
-
-  useEffect(() => {
-    // If not provided by SSR, attempt to fetch (fallback)
-    if (!latestRank) {
-      fetch("/latest-rank.json")
-        .then(res => res.ok ? res.json() : null)
-        .then(data => {
-          if (data && data.isTop5 && data.rank1Type) {
-            setLatestRank(data);
-          }
-        })
-        .catch(e => console.error("Failed to fetch latest rank", e));
-    }
-  }, [latestRank]);
-
+export default function HomeClient({ dict, lang }: { dict: any, lang: string }) {
   return (
     <>
       {/* Aurora background */}
@@ -45,36 +29,6 @@ export default function HomeClient({ dict, lang, initialLatestRank }: { dict: an
             </span>
           </div>
         </nav>
-
-        {/* ── 動画連動 特大広告バナー（最新ランキングの第1位） ── */}
-        {latestRank && (
-          <div className="w-full bg-gradient-to-r from-rose-600 to-pink-600 shadow-2xl overflow-hidden relative animate-fade-in-down z-20">
-            <div className="absolute inset-0 bg-[url('/noise.png')] opacity-20 mix-blend-overlay pointer-events-none"></div>
-            <div className="max-w-4xl mx-auto p-4 md:p-6 text-center text-white relative z-10 flex flex-col md:flex-row items-center gap-6 justify-center">
-              
-              <div className="flex-1 text-left w-full">
-                <div className="inline-flex items-center gap-2 bg-black/30 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-2">
-                  <Video size={14} className="text-rose-200" />
-                  {dict.home.banner_badge}
-                </div>
-                <h2 className="text-2xl md:text-3xl font-black mb-1 leading-tight text-white drop-shadow-md">
-                  {dict.home.banner_prefix}{latestRank.title}{dict.home.banner_suffix}<br/>
-                  <span className="text-yellow-300 ml-2 text-4xl">{latestRank.rank1Type}</span> !!
-                </h2>
-                
-                {latestRank.rank1Reason && (
-                  <div className="mt-4 bg-black/20 p-4 rounded-xl border border-rose-400/30 backdrop-blur-sm w-full md:w-4/5">
-                    <p className="text-rose-50 text-sm font-bold leading-relaxed">
-                      <span className="text-yellow-300 mb-1 block text-xs">{dict.home.banner_reason_label}</span>
-                      {latestRank.rank1Reason}
-                    </p>
-                  </div>
-                )}
-              </div>
-
-            </div>
-          </div>
-        )}
 
         {/* Hero */}
         <section className="flex flex-col items-center px-6 pt-8 pb-12 text-center">

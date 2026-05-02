@@ -8,6 +8,25 @@ export interface ArticleData {
   pulseSigns?: string[];
 }
 
+export const MBTI_COLORS: Record<string, string> = {
+  INTJ: "text-purple-600",
+  INTP: "text-blue-600",
+  ENTJ: "text-purple-700",
+  ENTP: "text-blue-500",
+  INFJ: "text-emerald-600",
+  INFP: "text-emerald-500",
+  ENFJ: "text-emerald-700",
+  ENFP: "text-green-500",
+  ISTJ: "text-cyan-700",
+  ISFJ: "text-cyan-600",
+  ESTJ: "text-cyan-800",
+  ESFJ: "text-teal-500",
+  ISTP: "text-amber-500",
+  ISFP: "text-amber-400",
+  ESTP: "text-orange-600",
+  ESFP: "text-orange-500"
+};
+
 export const ARTICLE_DATA: Record<string, ArticleData> = {
   INTJ: {
     type: "INTJ",

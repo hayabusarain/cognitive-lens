@@ -2,7 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   // Remotionなどの重いバイナリやNodeネイティブモジュールをTurbopackビルドから除外
-  serverExternalPackages: ["@remotion/bundler", "@remotion/renderer", "esbuild"],
+  serverExternalPackages: ["@remotion/bundler", "@remotion/renderer", "esbuild", "@ffmpeg-installer/ffmpeg", "fluent-ffmpeg", "yt-dlp-exec"],
 
   // Google Cloud Shell のプロキシ経由アクセスを許可
   allowedDevOrigins: [

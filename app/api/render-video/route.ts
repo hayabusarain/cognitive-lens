@@ -10,7 +10,7 @@ declare global {
   var bundleVersion: number | undefined;
 }
 
-const CURRENT_BUNDLE_VERSION = 6;
+const CURRENT_BUNDLE_VERSION = 11;
 
 let lastRenderTime = 0;
 
@@ -32,7 +32,15 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "inputProps が必要です" }, { status: 400 });
     }
     
-    if (compositionId !== "AestheticPOVVideo" && !inputProps.entries) {
+    const noEntriesComps = [
+      "AestheticPOVVideo", 
+      "LocalizedDubVideo", 
+      "SmartphoneScreenVideo", 
+      "ReactionPOVVideo", 
+      "PieChartVideo", 
+      "HellishComboVideo"
+    ];
+    if (!noEntriesComps.includes(compositionId) && !inputProps.entries) {
       return NextResponse.json({ error: "inputProps.entries が必要です" }, { status: 400 });
     }
 

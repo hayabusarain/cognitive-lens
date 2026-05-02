@@ -1,0 +1,186 @@
+// Smartphone Screen Format Presets (English - 10 presets)
+
+import { SmartphonePreset } from "./smartphone-data";
+
+export const SMARTPHONE_PRESETS_EN: SmartphonePreset[] = [
+  {
+    id: "sp_en_search_history",
+    title: "🔍 MBTI Search History Exposed",
+    tiktokCaption: "Each MBTI type's search history is WAY too accurate 😱🔍\nWhich one is yours?\n\nFull personality breakdown → Search 'CognitiveLens' 🔍\n\n#MBTI #16personalities #searchhistory #relatable #mbtirelatable #personalitytype #INTP #ENFP #INTJ",
+    inputProps: {
+      theme: "MBTI Types' Search History Exposed 🤫🔍",
+      type: "search",
+      sections: [
+        { mbtiType: "INTP", items: ["why do i think in systems", "how to win an argument without talking", "am i a genius or just lazy", "best excuse for not replying"] },
+        { mbtiType: "ENFP", items: ["new hobby ideas 2024", "how to finish what you start", "personality quiz #47 today", "why do i fall in love every week"] },
+        { mbtiType: "INTJ", items: ["5 year plan template excel", "how to tolerate stupid people", "most efficient morning routine", "am i intimidating quiz"] },
+        { mbtiType: "ESFP", items: ["best party playlist", "how to make everything fun", "why do people call me loud", "outfit inspo for tonight"] },
+        { mbtiType: "INFJ", items: ["why do i absorb other peoples emotions", "how to set boundaries without guilt", "am i psychic or just observant", "is it normal to predict the future"] },
+        { mbtiType: "ESTP", items: ["extreme sports near me", "how to talk your way out of anything", "fastest car under 30k", "why is sitting still so hard"] },
+        { mbtiType: "ISFJ", items: ["how to say no politely", "birthday gift ideas for everyone i know", "is it bad to remember every insult", "homemade soup recipe"] },
+      ],
+    },
+  },
+  {
+    id: "sp_en_first_date",
+    title: "🔍 Night Before First Date Search History",
+    tiktokCaption: "The night before a first date, your search history reveals your MBTI 🫣💕\nWhich one are you?\n\nSearch 'CognitiveLens' for your full analysis 🔍\n\n#MBTI #16personalities #firstdate #dating #searchhistory #relatable #mbtirelatable",
+    inputProps: {
+      theme: "Night Before First Date — MBTI Search History 🫣💕",
+      type: "search",
+      sections: [
+        { mbtiType: "INFP", items: ["what if they don't like the real me", "romantic restaurant with cozy lighting", "how to not overshare on first date", "wedding venues (just curious)"] },
+        { mbtiType: "ENTJ", items: ["power date conversation topics", "how to close a deal i mean date", "best restaurants with strong wifi", "date success rate optimization"] },
+        { mbtiType: "ESFP", items: ["what to wear tomorrow ahhh", "most instagram-worthy restaurant", "how to be chill when you're excited", "playlist for getting ready"] },
+        { mbtiType: "INTJ", items: ["conversation flowchart for dates", "probability of second date formula", "how to appear warm and approachable", "exit strategy if date goes wrong"] },
+        { mbtiType: "ENFP", items: ["100 fun questions to ask on a date", "surprise ideas for someone you just met", "is it too early to plan a trip together", "how to not text too much"] },
+        { mbtiType: "ISFJ", items: ["should i bake cookies for first date", "weather forecast for tomorrow", "how to not seem too eager", "what if i spill something"] },
+        { mbtiType: "ISTP", items: ["cool date spots that aren't restaurants", "how to make small talk less painful", "is jeans ok for a date", "how long do dates usually last"] },
+      ],
+    },
+  },
+  {
+    id: "sp_en_horror_movie",
+    title: "🔍 After Horror Movie Search History",
+    tiktokCaption: "Your search history after a horror movie reveals your MBTI 👻💀\nEven fear has personality types…\n\nSearch 'CognitiveLens' for your analysis 🔍\n\n#MBTI #16personalities #horrormovie #searchhistory #relatable #mbtirelatable #scary",
+    inputProps: {
+      theme: "After a Horror Movie — MBTI Search History 👻",
+      type: "search",
+      sections: [
+        { mbtiType: "ENFP", items: ["was that movie based on a true story", "cute puppy videos to cleanse my soul", "can ghosts actually follow you home", "scary movie bingo with friends"] },
+        { mbtiType: "INTJ", items: ["plot holes in the conjuring", "scientific explanation for ghost sightings", "horror movie kill count statistics", "the villain's strategy was inefficient"] },
+        { mbtiType: "ISFJ", items: ["how to sleep after scary movie", "is my closet door always open like that", "calming bedtime routine", "prayer for protection (just in case)"] },
+        { mbtiType: "ESTP", items: ["scariest haunted houses near me", "i would have survived that movie easily", "horror movie marathon rankings", "prank ideas inspired by the movie"] },
+        { mbtiType: "INFP", items: ["i feel bad for the ghost actually", "the monster was just misunderstood", "comfort anime to watch right now", "why do i do this to myself every time"] },
+        { mbtiType: "INTP", items: ["physics of supernatural phenomena", "how do movie ghosts violate thermodynamics", "creepypasta iceberg explained", "3am and still analyzing the plot"] },
+        { mbtiType: "ESFJ", items: ["checking on friends who watched it too", "group chat: is everyone ok??", "comfort food recipes for after scary movies", "sleeping with lights on normal?"] },
+      ],
+    },
+  },
+  {
+    id: "sp_en_exam_eve",
+    title: "🔍 Night Before Exam Search History",
+    tiktokCaption: "Night before an exam, each MBTI type's search history hits different 📝💀\nStudying? Not studying?\n\nSearch 'CognitiveLens' for your analysis 🔍\n\n#MBTI #16personalities #exam #searchhistory #relatable #mbtirelatable #student",
+    inputProps: {
+      theme: "Night Before an Exam — MBTI Search History 📝💀",
+      type: "search",
+      sections: [
+        { mbtiType: "ENFP", items: ["can you learn a whole semester in 6 hours", "study playlist that actually works", "what if i just don't go tomorrow", "motivational quotes about exams"] },
+        { mbtiType: "ISTJ", items: ["study schedule final review checklist", "all notes organized by chapter ✓", "how many hours until exam starts", "backup alarm clock just in case"] },
+        { mbtiType: "INTP", items: ["interesting tangent from chapter 3", "wait this connects to quantum physics", "i now know everything except the syllabus", "what is the meaning of grades anyway"] },
+        { mbtiType: "ESFP", items: ["exam tomorrow but this tiktok is fire", "study group anyone? (with snacks)", "passing grade requirement lookup", "outfit for exam day"] },
+        { mbtiType: "INTJ", items: ["predicted exam questions based on pattern analysis", "optimal cramming strategy research", "professor's previous exams PDF", "already calculated minimum score needed"] },
+        { mbtiType: "INFP", items: ["existential crisis about my major", "why does society value grades", "daydreaming instead of studying again", "comfort show while highlighting notes"] },
+        { mbtiType: "ESTP", items: ["can you pass with vibes alone", "cheat sheet that isn't cheating", "how to write fast under pressure", "it's fine i work best last minute"] },
+      ],
+    },
+  },
+  {
+    id: "sp_en_breakup",
+    title: "🔍 Post-Breakup Search History",
+    tiktokCaption: "Post-breakup search history by MBTI type is emotionally devastating 💔😭\nHealing looks different for everyone…\n\nSearch 'CognitiveLens' for your analysis 🔍\n\n#MBTI #16personalities #breakup #searchhistory #relatable #mbtirelatable #heartbreak",
+    inputProps: {
+      theme: "Post-Breakup MBTI Search History 💔😭",
+      type: "search",
+      sections: [
+        { mbtiType: "INFP", items: ["sad playlist for crying in the shower", "poems about lost love", "do they miss me too", "how to unlove someone"] },
+        { mbtiType: "ENTJ", items: ["how to move on efficiently", "self improvement plan post breakup", "gym membership near me", "deleting photos: batch process"] },
+        { mbtiType: "ESFP", items: ["rebound outfit ideas", "best bars this weekend", "revenge glow up tutorial", "new dating app reviews 2024"] },
+        { mbtiType: "INTJ", items: ["relationship failure analysis spreadsheet", "attachment theory deep dive", "how to never feel this again", "stoicism quotes"] },
+        { mbtiType: "ENFP", items: ["signs the universe has something better", "solo travel destinations for healing", "maybe we're better as friends?", "new hobby to distract myself"] },
+        { mbtiType: "ISFJ", items: ["is it ok to keep their hoodie", "how long is it normal to cry", "should i text happy birthday still", "comfort food recipes for one"] },
+        { mbtiType: "ESTP", items: ["adrenaline activities near me", "how to not think about your ex", "new extreme sport to try", "their loss honestly"] },
+      ],
+    },
+  },
+  {
+    id: "sp_en_3am",
+    title: "🔍 3AM Search History",
+    tiktokCaption: "3AM search history by MBTI type is absolute chaos 🌙👀\nWhat are y'all searching at 3am…?\n\nSearch 'CognitiveLens' for your analysis 🔍\n\n#MBTI #16personalities #3am #searchhistory #relatable #mbtirelatable #nightowl",
+    inputProps: {
+      theme: "3AM MBTI Search History 🌙👀",
+      type: "search",
+      sections: [
+        { mbtiType: "INTP", items: ["if the universe is expanding what's it expanding into", "can you hear silence or is that tinnitus", "game theory applied to dating", "why am i like this"] },
+        { mbtiType: "ENFP", items: ["business idea: dog hotel with pools", "countries with easiest visa requirements", "am i in love or just bored", "random wikipedia rabbit hole"] },
+        { mbtiType: "INTJ", items: ["how to optimize my life while everyone sleeps", "world domination plan draft 47", "melatonin dosage calculator", "why don't people think logically"] },
+        { mbtiType: "ESFP", items: ["late night food delivery still open", "who's still awake group chat", "tiktok compilation 4 hours", "how did it become 3am already"] },
+        { mbtiType: "INFJ", items: ["why do i feel everything so deeply", "meaning of my dream last night", "am i the only one who notices this", "how to stop overthinking at night"] },
+        { mbtiType: "ESTP", items: ["24 hour gym near me", "can you outrun a bear", "extreme sports fails compilation", "order food? yes. order food."] },
+        { mbtiType: "ISFP", items: ["aesthetic pinterest boards", "lo-fi beats to cry to", "art at 3am hits different", "is staring at the moon a hobby"] },
+      ],
+    },
+  },
+  {
+    id: "sp_en_job_search",
+    title: "🔍 Job Hunting Search History",
+    tiktokCaption: "Job hunting search history by MBTI is painfully real 👔😰\nYour cover letter says a lot about your type…\n\nSearch 'CognitiveLens' for your analysis 🔍\n\n#MBTI #16personalities #jobhunting #searchhistory #relatable #mbtirelatable #career",
+    inputProps: {
+      theme: "Job Hunting MBTI Search History 👔😰",
+      type: "search",
+      sections: [
+        { mbtiType: "INFP", items: ["jobs that don't crush your soul", "can you make money from poetry", "work from home with cats", "how to answer 'tell me about yourself' without crying"] },
+        { mbtiType: "ENTJ", items: ["highest paying entry level positions", "how to become CEO by 30", "salary negotiation power moves", "linkedin optimization strategy"] },
+        { mbtiType: "INTP", items: ["jobs where i don't talk to people", "does overthinking count as a skill", "remote work no meetings required", "forgot to reply to recruiter for 3 weeks"] },
+        { mbtiType: "ESFP", items: ["fun jobs that pay well", "can i list 'good vibes' on resume", "interview outfit ideas", "jobs where every day is different"] },
+        { mbtiType: "INTJ", items: ["company's quarterly earnings report", "interviewer's linkedin deep dive", "questions to intimidate the interviewer", "already planned my 5 year trajectory there"] },
+        { mbtiType: "ENFP", items: ["50 different career paths quiz", "changed dream job again this week", "startup ideas that could change the world", "can passion count as experience"] },
+        { mbtiType: "ISTJ", items: ["professional resume template 2024", "interview preparation checklist complete", "company dress code policy", "should i arrive 30 or 45 minutes early"] },
+      ],
+    },
+  },
+  {
+    id: "sp_en_diet",
+    title: "🔍 On-a-Diet Search History",
+    tiktokCaption: "Diet search history by MBTI type is brutally honest 🏋️‍♀️🍰\nAre you actually committed though…?\n\nSearch 'CognitiveLens' for your analysis 🔍\n\n#MBTI #16personalities #diet #searchhistory #relatable #mbtirelatable #fitness",
+    inputProps: {
+      theme: "On a Diet — MBTI Search History 🏋️‍♀️🍰",
+      type: "search",
+      sections: [
+        { mbtiType: "ENFP", items: ["new trendy diet i just heard about", "healthy snacks that taste like junk food", "cheat day rules (asking for a friend)", "started 7 diets this year finished 0"] },
+        { mbtiType: "INTJ", items: ["macro tracking spreadsheet template", "optimal caloric deficit calculator", "meal prep efficiency optimization", "body fat percentage measurement methods"] },
+        { mbtiType: "ESFP", items: ["pizza calories if you eat it fast", "do cocktails count as fruit", "gym selfie poses", "how to diet without giving up fun"] },
+        { mbtiType: "ISTJ", items: ["weekly meal prep schedule", "calorie counting app comparison", "progress tracking spreadsheet", "day 47: on track as planned"] },
+        { mbtiType: "INFP", items: ["intuitive eating vs counting calories", "is emotional eating a personality trait", "healthy food that feeds the soul", "gave up and ordered cake"] },
+        { mbtiType: "ESTP", items: ["can working out cancel out pizza", "extreme weight loss challenges", "protein shake taste test rankings", "6 pack in 2 weeks (possible?)"] },
+        { mbtiType: "ISFJ", items: ["healthy recipes the whole family will love", "is it rude to not eat grandma's cookies", "gentle exercise for beginners", "how to diet without anyone noticing"] },
+      ],
+    },
+  },
+  {
+    id: "sp_en_payday",
+    title: "🔍 Payday Search History",
+    tiktokCaption: "Payday search history by MBTI is way too real 💰🤑\nSpenders vs Savers — which are you?\n\nSearch 'CognitiveLens' for your analysis 🔍\n\n#MBTI #16personalities #payday #searchhistory #relatable #mbtirelatable #money",
+    inputProps: {
+      theme: "Payday MBTI Search History 💰🤑",
+      type: "search",
+      sections: [
+        { mbtiType: "ESFP", items: ["treat yourself shopping list", "best restaurants open tonight", "money comes and goes right?", "already spent half my paycheck"] },
+        { mbtiType: "INTJ", items: ["investment portfolio rebalancing", "compound interest calculator", "FIRE movement timeline update", "one book as my reward"] },
+        { mbtiType: "ENFP", items: ["spontaneous trip deals this weekend", "gift ideas for everyone i love", "new hobby starter kit", "wait where did my money go"] },
+        { mbtiType: "ISTJ", items: ["automatic savings transfer setup", "monthly budget spreadsheet update", "bill payment schedule confirmed", "small treat: fancy coffee"] },
+        { mbtiType: "ESTP", items: ["latest gadget reviews", "best sneaker drops this month", "treating the squad tonight", "next paycheck will be better i promise"] },
+        { mbtiType: "INFJ", items: ["ethical investing options", "donation to favorite charity", "bookstore wishlist checkout", "future anxiety about money"] },
+        { mbtiType: "ENTJ", items: ["stock market analysis this week", "real estate investment seminar", "networking dinner reservation", "money is just a tool for power"] },
+      ],
+    },
+  },
+  {
+    id: "sp_en_summer_break",
+    title: "🔍 First Day of Summer Search History",
+    tiktokCaption: "First day of summer break search history by MBTI 🌴☀️\nPlanners vs Couch Potatoes\n\nSearch 'CognitiveLens' for your analysis 🔍\n\n#MBTI #16personalities #summerbreak #searchhistory #relatable #mbtirelatable #summer",
+    inputProps: {
+      theme: "First Day of Summer Break — MBTI Search History 🌴☀️",
+      type: "search",
+      sections: [
+        { mbtiType: "ENFP", items: ["bucket list ideas for summer", "road trip playlist 2024", "learn surfing in one day possible?", "summer glow up transformation"] },
+        { mbtiType: "INTJ", items: ["summer productivity schedule", "books to read this summer (list of 30)", "online course certifications", "finally alone for 3 months"] },
+        { mbtiType: "ESFP", items: ["pool party planning checklist", "summer festival lineup", "best beach outfits", "who wants to hang out RIGHT NOW"] },
+        { mbtiType: "INTP", items: ["interesting documentaries to binge", "coding project ideas for summer", "how many hours of sleep is too many", "it's day 1 and i'm already bored"] },
+        { mbtiType: "ISFJ", items: ["summer cleaning schedule", "homemade lemonade recipe", "visit grandparents this week", "sunscreen SPF comparison chart"] },
+        { mbtiType: "ESTP", items: ["skydiving near me", "summer sports leagues sign up", "jet ski rental prices", "every day is an adventure"] },
+        { mbtiType: "INFP", items: ["aesthetic summer journal ideas", "indie songs for golden hour", "stargazing spots nearby", "summer is for healing"] },
+      ],
+    },
+  },
+];
