@@ -99,7 +99,7 @@ export default function VideoGeneratorPage() {
         
         const renderData = await renderRes.json();
         setVideoUrl(renderData.url);
-        setTiktokCaption(preset.tiktokCaption);
+        setTiktokCaption(preset.tiktokCaption || null);
       } else if (videoFormat === "pov") {
         // POV
         let povDataObj;
