@@ -18,12 +18,8 @@ import {
   Heart,
 } from "lucide-react";
 import { PROTOCOLS_JA } from "@/lib/protocols-ja";
-import { PROTOCOLS_EN } from "@/lib/protocols-en";
 import { TYPE_INFO, DEFAULT_TYPE } from "@/lib/type-info";
 import { getTypeInfo, getCompatibility } from "@/lib/data-provider";
-import CognitiveFunctionChart from "@/app/components/CognitiveFunctionChart";
-import WeaknessRadar from "@/app/components/WeaknessRadar";
-import DeathGame from "@/app/components/DeathGame";
 import AdSenseUnit from "@/app/components/ads/AdSenseUnit";
 
 // ── Chart colors (modern fixed) ───────────────────────────────
@@ -813,35 +809,6 @@ export default function ResultContent({ lang = "ja" }: { lang?: string }) {
           </div>
         </div>
 
-        {/* 認知機能レーダーチャート */}
-        <div
-          className="rounded-3xl overflow-hidden"
-          style={{ background: "rgba(0,0,0,0.06)", border: `1px solid ${CC.grid}` }}
-        >
-          <div className="flex items-center gap-3 px-5 py-4 border-b" style={{ borderColor: CC.grid }}>
-            <span
-              className="flex items-center justify-center w-8 h-8 rounded-2xl flex-shrink-0"
-              style={{ backgroundColor: `${CC.primary}20`, color: CC.primary }}
-            >
-              <Brain size={16} />
-            </span>
-            <div className="flex-1">
-              <p className="font-semibold text-sm" style={{ color: CC.axisLabel }}>
-                認知機能プロファイル
-              </p>
-              <p className="text-xs" style={{ color: CC.axisSub }}>
-                8軸心理機能マッピング — 主機能
-                <span className="mx-1" style={{ color: CC.primary }}>●</span>
-                劣等機能
-                <span className="mx-1" style={{ color: CC.inferior }}>●</span>
-              </p>
-            </div>
-          </div>
-          <div className="py-4 flex justify-center">
-            <CognitiveFunctionChart typeKey={typeKey} size={320} />
-          </div>
-        </div>
-
         {/* Share */}
         <ShareButton
           typeKey={typeKey}
@@ -856,12 +823,6 @@ export default function ResultContent({ lang = "ja" }: { lang?: string }) {
 
         {/* AI Profiling */}
         <AiProfileSection typeKey={typeKey} rawAnswers={rawAnswers} lang={lang} />
-
-        {/* 弱点レーダーチャート */}
-        <WeaknessRadar typeKey={typeKey} lang={lang} />
-
-        {/* 相性デスゲーム */}
-        <DeathGame typeKey={typeKey} lang={lang} />
 
         {/* Accordions */}
         {sectionsList.map((section) => (
