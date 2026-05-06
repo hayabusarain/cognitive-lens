@@ -15,6 +15,7 @@ import {
   Sparkles,
   Share2,
   Brain,
+  Heart,
 } from "lucide-react";
 import { PROTOCOLS_JA } from "@/lib/protocols-ja";
 import { PROTOCOLS_EN } from "@/lib/protocols-en";
@@ -606,7 +607,7 @@ function CompatibilitySection({ typeKey, lang }: { typeKey: string, lang: string
           >
             {bestInfo.imageUrl ? (
               <div className="w-12 h-12 relative flex-shrink-0 bg-white shadow-sm border border-teal-100 rounded-full overflow-hidden">
-                <Image src={bestInfo.imageUrl} alt={bestInfo.name} fill className="object-cover" />
+                <Image src={bestInfo.imageUrl} alt={bestInfo.name} fill className="object-cover" sizes="(max-width: 640px) 50vw, 33vw" />
               </div>
             ) : (
               <span className="text-lg">{bestInfo.emoji}</span>
@@ -633,7 +634,7 @@ function CompatibilitySection({ typeKey, lang }: { typeKey: string, lang: string
           >
             {hardInfo.imageUrl ? (
               <div className="w-12 h-12 relative flex-shrink-0 bg-white shadow-sm border border-rose-100 rounded-full overflow-hidden">
-                <Image src={hardInfo.imageUrl} alt={hardInfo.name} fill className="object-cover" />
+                <Image src={hardInfo.imageUrl} alt={hardInfo.name} fill className="object-cover" sizes="(max-width: 640px) 50vw, 33vw" />
               </div>
             ) : (
               <span className="text-lg">{hardInfo.emoji}</span>
@@ -883,25 +884,39 @@ export default function ResultContent({ lang = "ja" }: { lang?: string }) {
         {/* Career & Affiliate */}
         <CareerSection typeKey={typeKey} lang={lang} />
 
-        {/* SEO Article Link */}
-        <div className="py-6">
-            <Link 
-              href={`/${lang}/article/${typeKey}`}
-              className="block w-full glass-card rounded-3xl p-6 text-center border-rose-200 bg-gradient-to-br from-rose-50 to-orange-50 hover:shadow-lg transition-all hover:-translate-y-1 group"
-            >
-              <h3 className="font-extrabold text-lg text-slate-800 mb-2">
-                {lang === "en" ? `Deep Psychology of ${typeKey}'s Romance` : `${typeKey}の恋愛心理と深層をさらに知る`}
+        {/* Romance Column Selector */}
+        <div className="pt-8 pb-4">
+          <div className="glass-card rounded-3xl p-6 sm:p-8 border-rose-200 bg-gradient-to-br from-rose-50 to-orange-50 shadow-sm relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-rose-400/10 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
+            
+            <div className="text-center mb-6 relative z-10">
+              <div className="inline-flex items-center gap-1.5 text-xs font-bold text-rose-500 bg-white/60 px-3 py-1 rounded-full mb-3 border border-rose-100">
+                <Heart size={12} className="fill-rose-500" />
+                {lang === "en" ? "Romance Column" : "恋愛心理コラム"}
+              </div>
+              <h3 className="font-black text-xl text-slate-800 mb-2 tracking-tight">
+                {lang === "en" ? "Who are you interested in?" : "あの人の恋愛傾向を知る"}
               </h3>
-              <p className="text-xs text-slate-500 mb-4">
+              <p className="text-xs text-slate-500 leading-relaxed">
                 {lang === "en" 
-                  ? "Traits of who they're attracted to, fatal weaknesses, and a manual to build the ideal relationship." 
-                  : "惹かれる相手の条件、致命的弱点、そして理想の関係を築くための「取扱説明書」"}
+                  ? "Select their type to discover how to build the perfect relationship." 
+                  : "気になる相手のタイプを選んで、理想の関係を築くための「取扱説明書」を読もう。"}
               </p>
-              <span className="inline-flex items-center gap-1.5 text-xs font-bold text-rose-500 bg-white/60 px-4 py-2 rounded-full group-hover:bg-white transition-colors">
-                {lang === "en" ? "Read the Column →" : "コラムを読む →"}
-              </span>
-            </Link>
+            </div>
+
+            <div className="grid grid-cols-4 gap-2 sm:gap-3 relative z-10">
+              {ALL_TYPES.map((type) => (
+                <Link
+                  key={type}
+                  href={`/${lang}/article/${type}`}
+                  className="py-3 sm:py-4 bg-white/80 rounded-2xl shadow-sm border border-rose-100 text-[11px] sm:text-sm font-black text-slate-700 hover:border-rose-400 hover:text-rose-600 hover:bg-white transition-all text-center flex items-center justify-center hover:-translate-y-0.5 active:scale-95"
+                >
+                  {type}
+                </Link>
+              ))}
+            </div>
           </div>
+        </div>
 
         {/* Footer */}
         <div className="text-center pt-2 pb-8 relative">

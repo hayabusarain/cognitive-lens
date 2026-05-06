@@ -10,7 +10,7 @@ declare global {
   var bundleVersion: number | undefined;
 }
 
-const CURRENT_BUNDLE_VERSION = 11;
+const CURRENT_BUNDLE_VERSION = 14;
 
 let lastRenderTime = 0;
 
@@ -38,7 +38,8 @@ export async function POST(req: Request) {
       "SmartphoneScreenVideo", 
       "ReactionPOVVideo", 
       "PieChartVideo", 
-      "HellishComboVideo"
+      "HellishComboVideo",
+      "StaticInfographicVideo"
     ];
     if (!noEntriesComps.includes(compositionId) && !inputProps.entries) {
       return NextResponse.json({ error: "inputProps.entries が必要です" }, { status: 400 });

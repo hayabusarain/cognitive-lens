@@ -155,7 +155,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ lang: 
                     ) : (
                       <>
                         <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-rose-500">
-                          {typeKey}のあなた
+                          {typeKey}の人
                         </span>
                         と運命の出会いを果たすには？
                       </>
@@ -200,6 +200,16 @@ export default async function ArticlePage({ params }: { params: Promise<{ lang: 
             {/* ──────────────────────────────────────────────── */}
           </div>
         </article>
+
+        {/* AdSense Space (Bottom) */}
+        <div className="mt-8 rounded-3xl p-4 bg-white/40 border border-white/40 flex flex-col items-center justify-center min-h-[250px] relative overflow-hidden backdrop-blur-md">
+          <div className="w-full text-left mb-2 relative z-10">
+            <span className="text-[10px] text-slate-500 font-bold tracking-[0.2em] uppercase">Sponsored</span>
+          </div>
+          <div className="relative z-10 w-full flex-1 flex items-center justify-center overflow-hidden">
+            <AdSenseUnit id="adsense-article-bottom" slotId="3333333333" />
+          </div>
+        </div>
 
         <div className="mt-12 text-center">
           <Link href={`/${lang}/result?type=${typeKey}`} className="inline-block px-8 py-4 bg-slate-800 text-white font-bold rounded-full hover:bg-slate-700 transition-transform hover:scale-105 shadow-xl">

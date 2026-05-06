@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, Sparkles, Languages, FlaskConical, Zap, Shield, BarChart2, Video } from "lucide-react";
+import { ArrowRight, Sparkles, Languages, FlaskConical, Zap, Shield, BarChart2, Video, Heart } from "lucide-react";
 import AdSenseUnit from "@/app/components/ads/AdSenseUnit";
 import { useEffect, useState } from "react";
 import LanguageSwitcher from "@/app/components/LanguageSwitcher";
@@ -65,106 +65,109 @@ export default function HomeClient({ dict, lang }: { dict: any, lang: string }) 
               </p>
             </div>
 
-            {/* ── 2 Routes ─────────────────────────── */}
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-8">
+            {/* ── 機能リスト (統一ボタン形式) ────────────────────────── */}
+            <div className="flex flex-col gap-4 mb-10 w-full">
+              
+              {/* 1. 通常診断 */}
               <Link
                 href={`/${lang}/test`}
-                className="btn-primary inline-flex items-center gap-2 px-8 py-3.5 rounded-full font-bold text-sm"
+                className="flex items-center gap-4 p-4 md:p-5 glass-card rounded-3xl hover:-translate-y-1 hover:shadow-lg transition-all group border-l-4 border-cyan-400 bg-white/80"
               >
-                {dict.home.cta_button}
-                <ArrowRight size={15} />
+                <div className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 bg-gradient-to-br from-cyan-400 to-blue-500 text-white shadow-md">
+                  <Sparkles size={20} />
+                </div>
+                <div className="flex-1 text-left">
+                  <h3 className="font-extrabold text-sm md:text-lg text-slate-800 mb-1">
+                    {dict.home.cta_button}
+                  </h3>
+                  <p className="text-[10px] md:text-xs text-slate-500 leading-relaxed">
+                    {lang === "en" 
+                      ? "Uncover your deep psychology and interpersonal friction habits using the 16 cognitive function models." 
+                      : "16の認知機能モデルから、あなたの深層心理と対人摩擦のクセを暴き出します。"}
+                  </p>
+                </div>
+                <div className="shrink-0 pl-1">
+                  <ArrowRight size={18} className="text-slate-300 group-hover:text-cyan-500 group-hover:translate-x-1 transition-all" />
+                </div>
               </Link>
-              <Link
-                href={`/${lang}/skip-path`}
-                className="glass-card inline-flex items-center gap-2 px-6 py-3 rounded-full text-sm font-semibold text-slate-600 transition-all hover:-translate-y-0.5 hover:shadow-md"
-              >
-                <FlaskConical size={14} className="text-violet-500" />
-                {dict.home.about_link}
-              </Link>
-            </div>
 
-            {/* ── Bento Grid ────────────────────────── */}
-            <div className="grid grid-cols-2 gap-3">
-              {/* ★ メインカード: コミュニケーション翻訳（大きく強調） */}
+              {/* 2. 脈ありチェッカー */}
+              <Link
+                href={`/${lang}/romance-checker`}
+                className="flex items-center gap-4 p-4 md:p-5 glass-card rounded-3xl hover:-translate-y-1 hover:shadow-lg transition-all group border-l-4 border-fuchsia-400 bg-white/80"
+              >
+                <div className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 bg-gradient-to-br from-fuchsia-400 to-pink-500 text-white shadow-md">
+                  <Heart size={20} />
+                </div>
+                <div className="flex-1 text-left">
+                  <h3 className="font-extrabold text-sm md:text-lg text-slate-800 mb-1">
+                    {lang === "en" ? "Romance Reverse-Lookup Checker" : "脈あり・恋愛逆引きチェッカー"}
+                  </h3>
+                  <p className="text-[10px] md:text-xs text-slate-500 leading-relaxed">
+                    {lang === "en"
+                      ? "Scan their MBTI and pulse rate simply by tapping the target's common behaviors."
+                      : "気になる相手の「あるある行動」をタップするだけで、MBTIと脈あり度をスキャン。"}
+                  </p>
+                </div>
+                <div className="shrink-0 pl-1">
+                  <ArrowRight size={18} className="text-slate-300 group-hover:text-fuchsia-500 group-hover:translate-x-1 transition-all" />
+                </div>
+              </Link>
+
+              {/* AdSense Space (Mid List) */}
+              <div className="my-2 rounded-3xl p-4 bg-slate-50 border border-slate-200 flex flex-col items-center justify-center min-h-[250px] relative overflow-hidden">
+                <div className="w-full text-left mb-2 relative z-10">
+                  <span className="text-[10px] text-slate-400 font-bold tracking-[0.2em] uppercase">Sponsored</span>
+                </div>
+                <div className="relative z-10 w-full flex-1 flex items-center justify-center overflow-hidden">
+                  <AdSenseUnit id="adsense-home-mid" slotId="1111111111" />
+                </div>
+              </div>
+
+              {/* 3. コミュニケーション翻訳 */}
               <Link
                 href={`/${lang}/translate`}
-                className="col-span-2 glass-card rounded-3xl p-6 text-left group relative overflow-hidden transition-all hover:-translate-y-1 hover:shadow-xl border border-cyan-200 bg-gradient-to-br from-cyan-50 to-blue-50"
+                className="flex items-center gap-4 p-4 md:p-5 glass-card rounded-3xl hover:-translate-y-1 hover:shadow-lg transition-all group border-l-4 border-blue-400 bg-white/80"
               >
-                <div className="absolute top-0 right-0 w-32 h-32 bg-cyan-400/10 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 group-hover:scale-150 transition-transform duration-500" />
-                <div className="absolute -right-2 -bottom-6 w-32 h-32 transition-transform duration-500 group-hover:scale-110 pointer-events-none drop-shadow-xl z-0">
-                  <Image src="/characters/INFJ.png" alt="INFJ" fill className="object-contain" priority />
+                <div className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 bg-gradient-to-br from-blue-400 to-indigo-500 text-white shadow-md">
+                  <Languages size={20} />
                 </div>
-                <div className="relative z-10">
-                  <div className="inline-flex items-center justify-center w-11 h-11 rounded-2xl mb-4 shadow-md bg-gradient-to-br from-cyan-400 to-blue-500 text-white">
-                    <Languages size={20} />
-                  </div>
-                  <h3 className="font-extrabold text-lg mb-2 tracking-tighter text-slate-800">
+                <div className="flex-1 text-left">
+                  <h3 className="font-extrabold text-sm md:text-lg text-slate-800 mb-1">
                     {dict.home.translate_title}
                   </h3>
-                  <p className="text-sm leading-relaxed text-slate-600 mb-3">
+                  <p className="text-[10px] md:text-xs text-slate-500 leading-relaxed">
                     {dict.home.translate_desc}
                   </p>
-                  <span className="inline-flex items-center gap-1.5 text-xs font-bold text-cyan-600 group-hover:text-cyan-700 transition-colors">
-                    {dict.home.translate_cta}
-                    <ArrowRight size={13} className="group-hover:translate-x-1 transition-transform" />
-                  </span>
+                </div>
+                <div className="shrink-0 pl-1">
+                  <ArrowRight size={18} className="text-slate-300 group-hover:text-blue-500 group-hover:translate-x-1 transition-all" />
                 </div>
               </Link>
-              {/* ★ メインカード2: ターゲットを勝手に診断する */}
+
+              {/* 4. ターゲット攻略判定 */}
               <Link
                 href={`/${lang}/target-diagnosis`}
-                className="col-span-2 glass-card rounded-3xl p-6 text-left group relative overflow-hidden transition-all hover:-translate-y-1 hover:shadow-[0_0_30px_rgba(139,92,246,0.3)] border border-violet-500/30 bg-slate-950"
+                className="flex items-center gap-4 p-4 md:p-5 glass-card rounded-3xl hover:-translate-y-1 hover:shadow-lg transition-all group border-l-4 border-violet-500 bg-white/80"
               >
-                <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-violet-900/40 via-fuchsia-900/20 to-transparent pointer-events-none" />
-                <div className="absolute top-0 right-0 w-32 h-32 bg-fuchsia-500/20 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 group-hover:scale-150 transition-transform duration-500 pointer-events-none" />
-                
-                {/* Character Mosaics Background */}
-                <div className="absolute top-0 right-0 w-full h-full pointer-events-none overflow-hidden">
-                  <div className="absolute -right-6 -bottom-4 w-32 h-32 transform rotate-12 drop-shadow-2xl transition-transform duration-700 group-hover:scale-110">
-                    <Image src="/characters/ENTJ.png" alt="ENTJ" fill className="object-contain" sizes="128px" priority />
-                  </div>
-                  <div className="absolute right-12 top-4 w-24 h-24 transform -rotate-12 drop-shadow-xl transition-transform duration-1000 group-hover:scale-110">
-                    <Image src="/characters/ENFP.png" alt="ENFP" fill className="object-contain" sizes="96px" priority />
-                  </div>
-                  <div className="absolute right-32 -bottom-2 w-20 h-20 transform rotate-6 drop-shadow-md transition-transform duration-500 group-hover:-translate-y-2">
-                    <Image src="/characters/ESTP.png" alt="ESTP" fill className="object-contain" sizes="80px" />
-                  </div>
+                <div className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 bg-gradient-to-br from-violet-500 to-purple-600 text-white shadow-md">
+                  <Zap size={20} />
                 </div>
-                <div className="relative z-10">
-                  <div className="inline-flex items-center justify-center w-11 h-11 rounded-2xl mb-4 shadow-[0_0_15px_rgba(192,132,252,0.5)] bg-slate-800 text-fuchsia-400 border border-fuchsia-500/50">
-                    <Sparkles size={20} />
-                  </div>
-                  <h3 className="font-extrabold text-lg mb-2 tracking-tighter text-white drop-shadow-[0_0_5px_rgba(192,132,252,0.5)]">
+                <div className="flex-1 text-left">
+                  <h3 className="font-extrabold text-sm md:text-lg text-slate-800 mb-1">
                     {dict.home.target_title}
                   </h3>
-                  <p className="text-sm leading-relaxed text-slate-300 mb-3">
+                  <p className="text-[10px] md:text-xs text-slate-500 leading-relaxed">
                     {dict.home.target_desc}
                   </p>
-                  <span className="inline-flex items-center gap-1.5 text-xs font-bold text-fuchsia-400 group-hover:text-fuchsia-300 transition-colors">
-                    {dict.home.target_cta}
-                    <ArrowRight size={13} className="group-hover:translate-x-1 transition-transform" />
-                  </span>
+                </div>
+                <div className="shrink-0 pl-1">
+                  <ArrowRight size={18} className="text-slate-300 group-hover:text-violet-500 group-hover:translate-x-1 transition-all" />
                 </div>
               </Link>
-
-              {/* サブカード1: 認知クセの可視化 */}
-              <div className="glass-card rounded-3xl p-5 text-left border bg-amber-50 border-amber-200 relative overflow-hidden group">
-                <div className="mb-3 w-8 h-8 rounded-xl bg-amber-200 flex items-center justify-center text-amber-600">
-                  <BarChart2 size={16} />
-                </div>
-                <h3 className="font-bold text-sm mb-1 text-slate-800">{dict.home.sub_1_title}</h3>
-                <p className="text-xs text-slate-500">{dict.home.sub_1_desc}</p>
-              </div>
-
-              {/* サブカード2 */}
-              <div className="glass-card rounded-3xl p-5 text-left border bg-emerald-50 border-emerald-200 relative overflow-hidden group">
-                <div className="mb-3 w-8 h-8 rounded-xl bg-emerald-200 flex items-center justify-center text-emerald-600">
-                  <Shield size={16} />
-                </div>
-                <h3 className="font-bold text-sm mb-1 text-slate-800">{dict.home.sub_2_title}</h3>
-                <p className="text-xs text-slate-500">{dict.home.sub_2_desc}</p>
-              </div>
             </div>
+
+
 
             {/* AdSense: Bottom */}
             <div className="mt-6">

@@ -230,7 +230,7 @@ export default function DeathGame({ typeKey, lang }: { typeKey: string; lang: st
                         {/* Player 1 Chat Bubble */}
                         <div className="flex gap-2.5 items-start">
                           <div className="w-9 h-9 relative flex-shrink-0 bg-white rounded-full shadow-sm border border-slate-200 overflow-hidden">
-                            <Image src={`/characters/${typeKey}.png`} alt={typeKey} fill className="object-cover" />
+                            <Image src={`/characters/${typeKey}.png`} alt={typeKey} fill className="object-cover" sizes="(max-width: 640px) 100vw, 50vw" />
                           </div>
                           <div className="flex-1 bg-blue-50/80 border border-blue-100/50 rounded-2xl p-3 rounded-tl-sm text-slate-700 shadow-sm relative">
                             <p className="text-[10px] font-bold text-blue-500 mb-0.5">{typeKey}</p>
@@ -241,7 +241,7 @@ export default function DeathGame({ typeKey, lang }: { typeKey: string; lang: st
                         {/* Player 2 Chat Bubble */}
                         <div className="flex gap-2.5 items-start flex-row-reverse">
                           <div className="w-9 h-9 relative flex-shrink-0 bg-white rounded-full shadow-sm border border-slate-200 overflow-hidden">
-                            <Image src={`/characters/${resultType}.png`} alt={resultType} fill className="object-cover" />
+                            <Image src={`/characters/${resultType}.png`} alt={resultType} fill className="object-cover" sizes="(max-width: 640px) 100vw, 50vw" />
                           </div>
                           <div className="flex-1 bg-rose-50/80 border border-rose-100/50 rounded-2xl p-3 rounded-tr-sm text-slate-700 shadow-sm relative text-right">
                             <p className="text-[10px] font-bold text-rose-500 mb-0.5">{resultType}</p>

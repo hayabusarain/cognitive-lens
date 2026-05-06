@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import JSZip from "jszip";
 import { useParams } from "next/navigation";
 import { TierListEntry } from "@/remotion/TierListVideo";
 import { PRESET_TIER_LISTS } from "@/lib/tier-list-data";
@@ -13,6 +14,8 @@ import { PIECHART_PRESETS } from "@/lib/piechart-data";
 import { PIECHART_PRESETS_EN } from "@/lib/piechart-data-en";
 import { COMBO_PRESETS } from "@/lib/combo-data";
 import { COMBO_PRESETS_EN } from "@/lib/combo-data-en";
+import { SLIDE_PRESETS } from "@/lib/slide-data";
+import { SLIDE_PRESETS_EN } from "@/lib/slide-data-en";
 import { Loader2, Download, PlayCircle, Settings2, Sparkles, Video } from "lucide-react";
 
 export default function VideoGeneratorPage() {
@@ -23,6 +26,7 @@ export default function VideoGeneratorPage() {
   const reactionPresets = lang === "en" ? REACTION_PRESETS_EN : REACTION_PRESETS;
   const piechartPresets = lang === "en" ? PIECHART_PRESETS_EN : PIECHART_PRESETS;
   const comboPresets = lang === "en" ? COMBO_PRESETS_EN : COMBO_PRESETS;
+  const slidePresets = lang === "en" ? SLIDE_PRESETS_EN : SLIDE_PRESETS;
 
   const [selectedPresetId, setSelectedPresetId] = useState(PRESETS[0].id);
   const [isLoading, setIsLoading] = useState(false);
@@ -30,14 +34,17 @@ export default function VideoGeneratorPage() {
   const [progress, setProgress] = useState(0);
   const [generatedEntries, setGeneratedEntries] = useState<TierListEntry[] | null>(null);
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
+  const [imageUrls, setImageUrls] = useState<string[] | null>(null);
+  const [zipExportPath, setZipExportPath] = useState<string | null>(null);
   const [errorMSG, setErrorMSG] = useState<string | null>(null);
 
-  const [videoFormat, setVideoFormat] = useState<"ranking" | "pov" | "smartphone" | "reaction" | "piechart" | "combo">("ranking");
+  const [videoFormat, setVideoFormat] = useState<"ranking" | "pov" | "smartphone" | "reaction" | "piechart" | "combo" | "infographic">("ranking");
   const [selectedPovType, setSelectedPovType] = useState("INFP");
   const [selectedSmartphoneId, setSelectedSmartphoneId] = useState(smartphonePresets[0].id);
   const [selectedReactionId, setSelectedReactionId] = useState(reactionPresets[0].id);
   const [selectedPiechartId, setSelectedPiechartId] = useState(piechartPresets[0].id);
   const [selectedComboId, setSelectedComboId] = useState(comboPresets[0].id);
+  const [selectedSlideId, setSelectedSlideId] = useState(slidePresets[0].id);
   const [tiktokCaption, setTiktokCaption] = useState<string | null>(null);
   const [captionCopied, setCaptionCopied] = useState(false);
   
@@ -45,6 +52,8 @@ export default function VideoGeneratorPage() {
     if (videoFormat === "ranking" && !selectedPresetId) return;
     setIsLoading(true);
     setVideoUrl(null);
+    setImageUrls(null);
+    setZipExportPath(null);
     setErrorMSG(null);
     setGeneratedEntries(null);
     setTiktokCaption(null);
@@ -189,6 +198,42 @@ export default function VideoGeneratorPage() {
           presetId = preset.id;
           presetTitle = preset.title;
           caption = preset.tiktokCaption;
+        } else if (videoFormat === "infographic") {
+          const preset = slidePresets.find(p => p.id === selectedSlideId);
+          if (!preset) throw new Error("プリセットが見つかりません");
+          
+          setGeneratedEntries([{ mbtiType: "ALL", tier: videoFormat, comment: `「${preset.title}」の画像を生成中` } as any]);
+          setProgress(50);
+          setStatus("画像をレンダリング中... (数分かかる場合があります)");
+
+          const renderRes = await fetch("/api/render-images", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              preset,
+              presetId: preset.id,
+              items: preset.items,
+              groupColor: preset.groupColor,
+              lang
+            })
+          });
+
+          if (!renderRes.ok) {
+            const errJson = await renderRes.json();
+            throw new Error(errJson.error || "画像のレンダリングに失敗しました");
+          }
+          
+          
+          const renderData = await renderRes.json();
+          setImageUrls(renderData.urls);
+          if (renderData.zipPath) {
+            setZipExportPath(renderData.zipPath);
+          }
+          
+          setProgress(100);
+          setStatus(lang === "en" ? "Completed!" : "完成しました！");
+          setIsLoading(false);
+          return;
         }
 
         setGeneratedEntries([{ mbtiType: "ALL", tier: videoFormat, comment: `「${presetTitle}」のプリセットで生成中` } as any]);
@@ -229,10 +274,38 @@ export default function VideoGeneratorPage() {
     }
   };
 
+  const handleDownloadZip = async () => {
+    if (!imageUrls || imageUrls.length === 0) return;
+    try {
+      const zip = new JSZip();
+      
+      // Fetch each base64 URL and add it to the ZIP
+      await Promise.all(imageUrls.map(async (url, index) => {
+        const response = await fetch(url);
+        const blob = await response.blob();
+        zip.file(`slide_${index + 1}.png`, blob);
+      }));
+      
+      const zipBlob = await zip.generateAsync({ type: "blob" });
+      const downloadUrl = URL.createObjectURL(zipBlob);
+      
+      const a = document.createElement("a");
+      a.href = downloadUrl;
+      a.download = `${selectedSlideId || "slides"}.zip`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(downloadUrl);
+    } catch (e) {
+      console.error("ZIP creation failed", e);
+      alert(lang === "en" ? "Failed to create ZIP" : "ZIP作成に失敗しました");
+    }
+  };
+
   return (
     <div className="min-h-screen bg-neutral-950 p-10 text-white font-sans">
       <div className="max-w-4xl mx-auto">
-        <header className="mb-10 text-center">
+        <header className="mb-10 text-center relative">
           <h1 className="text-4xl font-black mb-3 flex items-center justify-center gap-3">
             <Video className="w-10 h-10 text-cyan-400" />
             <span className="bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent">
@@ -242,14 +315,25 @@ export default function VideoGeneratorPage() {
           <p className="text-neutral-400">
             {lang === "en" ? "Just select a theme and let AI generate the script + voice + tier list video automatically." : "お題を入力するだけで、AI台本 + 音声 + ティアリスト動画 を全自動生成"}
           </p>
+          <div className="absolute top-0 right-0 hidden md:flex flex-col items-center">
+            <img 
+              src={`https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=http://192.168.0.25:3000/${lang}/video-gen?refresh=1`} 
+              alt="QR Code" 
+              className="w-20 h-20 rounded-lg bg-white p-1" 
+            />
+            <p className="text-[10px] text-neutral-500 mt-1 font-bold">スマホでアクセス</p>
+          </div>
         </header>
 
-        <main className="bg-white/5 border border-white/10 rounded-3xl p-8 backdrop-blur-xl shadow-2xl">
-          <div className="space-y-6">
-            <div className="flex flex-wrap gap-2 mb-6">
+        {/* iOS Safariのbackdrop-filterバグを完全に防ぐため、スマホでは背景ぼかしをオフにし単色にする */}
+        <main className="relative z-10 bg-neutral-900 md:bg-white/5 border border-white/10 rounded-3xl p-8 md:backdrop-blur-xl shadow-2xl transform-gpu">
+          <div className="space-y-6 relative z-20">
+            {/* デスクトップ用フォーマット選択ボタン */}
+            <div className="hidden md:flex gap-3 mb-6 overflow-x-auto pb-4 custom-scrollbar touch-pan-x relative z-30">
               <button
+                type="button"
                 onClick={() => setVideoFormat("ranking")}
-                className={`flex-1 min-w-[120px] py-3 rounded-xl font-bold transition-all text-sm ${
+                className={`relative z-40 shrink-0 whitespace-nowrap px-6 py-3 rounded-xl font-bold transition-all text-sm active:scale-95 ${
                   videoFormat === "ranking" 
                     ? "bg-cyan-500 text-black shadow-[0_0_15px_rgba(6,182,212,0.4)]" 
                     : "bg-white/5 text-neutral-400 hover:bg-white/10"
@@ -258,8 +342,9 @@ export default function VideoGeneratorPage() {
                 ランキング
               </button>
               <button
+                type="button"
                 onClick={() => setVideoFormat("pov")}
-                className={`flex-1 min-w-[120px] py-3 rounded-xl font-bold transition-all text-sm ${
+                className={`relative z-40 shrink-0 whitespace-nowrap px-6 py-3 rounded-xl font-bold transition-all text-sm active:scale-95 ${
                   videoFormat === "pov" 
                     ? "bg-purple-500 text-white shadow-[0_0_15px_rgba(168,85,247,0.4)]" 
                     : "bg-white/5 text-neutral-400 hover:bg-white/10"
@@ -268,8 +353,9 @@ export default function VideoGeneratorPage() {
                 POV
               </button>
               <button
+                type="button"
                 onClick={() => setVideoFormat("smartphone")}
-                className={`flex-1 min-w-[120px] py-3 rounded-xl font-bold transition-all text-sm ${
+                className={`relative z-40 shrink-0 whitespace-nowrap px-6 py-3 rounded-xl font-bold transition-all text-sm active:scale-95 ${
                   videoFormat === "smartphone" 
                     ? "bg-blue-500 text-white shadow-[0_0_15px_rgba(59,130,246,0.4)]" 
                     : "bg-white/5 text-neutral-400 hover:bg-white/10"
@@ -278,8 +364,9 @@ export default function VideoGeneratorPage() {
                 スマホ画面
               </button>
               <button
+                type="button"
                 onClick={() => setVideoFormat("reaction")}
-                className={`flex-1 min-w-[120px] py-3 rounded-xl font-bold transition-all text-sm ${
+                className={`relative z-40 shrink-0 whitespace-nowrap px-6 py-3 rounded-xl font-bold transition-all text-sm active:scale-95 ${
                   videoFormat === "reaction" 
                     ? "bg-rose-500 text-white shadow-[0_0_15px_rgba(244,63,94,0.4)]" 
                     : "bg-white/5 text-neutral-400 hover:bg-white/10"
@@ -288,8 +375,9 @@ export default function VideoGeneratorPage() {
                 シチュエーション
               </button>
               <button
+                type="button"
                 onClick={() => setVideoFormat("piechart")}
-                className={`flex-1 min-w-[120px] py-3 rounded-xl font-bold transition-all text-sm ${
+                className={`relative z-40 shrink-0 whitespace-nowrap px-6 py-3 rounded-xl font-bold transition-all text-sm active:scale-95 ${
                   videoFormat === "piechart" 
                     ? "bg-fuchsia-500 text-white shadow-[0_0_15px_rgba(217,70,239,0.4)]" 
                     : "bg-white/5 text-neutral-400 hover:bg-white/10"
@@ -298,8 +386,9 @@ export default function VideoGeneratorPage() {
                 脳内円グラフ
               </button>
               <button
+                type="button"
                 onClick={() => setVideoFormat("combo")}
-                className={`flex-1 min-w-[120px] py-3 rounded-xl font-bold transition-all text-sm ${
+                className={`relative z-40 shrink-0 whitespace-nowrap px-6 py-3 rounded-xl font-bold transition-all text-sm active:scale-95 ${
                   videoFormat === "combo" 
                     ? "bg-red-600 text-white shadow-[0_0_15px_rgba(220,38,38,0.4)]" 
                     : "bg-white/5 text-neutral-400 hover:bg-white/10"
@@ -307,6 +396,38 @@ export default function VideoGeneratorPage() {
               >
                 会話劇コンボ
               </button>
+              <button
+                type="button"
+                onClick={() => setVideoFormat("infographic")}
+                className={`relative z-40 shrink-0 whitespace-nowrap px-6 py-3 rounded-xl font-bold transition-all text-sm active:scale-95 ${
+                  videoFormat === "infographic" 
+                    ? "bg-emerald-500 text-white shadow-[0_0_15px_rgba(16,185,129,0.4)]" 
+                    : "bg-white/5 text-neutral-400 hover:bg-white/10"
+                }`}
+              >
+                1枚絵まとめ
+              </button>
+            </div>
+
+            {/* スマホ用フォーマット選択ドロップダウン（絶対動くネイティブUI） */}
+            <div className="block md:hidden mb-8 relative z-50">
+              <label className="block text-sm font-bold text-neutral-400 mb-2 uppercase tracking-widest flex items-center gap-2">
+                <Settings2 className="w-4 h-4" />
+                {lang === "en" ? "Select Video/Image Format" : "動画・画像フォーマットを選択"}
+              </label>
+              <select
+                value={videoFormat}
+                onChange={(e) => setVideoFormat(e.target.value as any)}
+                className="w-full bg-neutral-900 border-2 border-cyan-500/50 rounded-xl p-4 text-xl focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400 outline-none transition-all text-white font-bold shadow-lg"
+              >
+                <option value="ranking">🏆 ランキング</option>
+                <option value="pov">👀 POV</option>
+                <option value="smartphone">📱 スマホ画面</option>
+                <option value="reaction">💬 シチュエーション</option>
+                <option value="piechart">🧠 脳内円グラフ</option>
+                <option value="combo">🔥 会話劇コンボ</option>
+                <option value="infographic">🖼️ 1枚絵まとめ (画像生成)</option>
+              </select>
             </div>
 
             {videoFormat === "ranking" ? (
@@ -318,7 +439,7 @@ export default function VideoGeneratorPage() {
               <select 
                 value={selectedPresetId}
                 onChange={(e) => setSelectedPresetId(e.target.value)}
-                className="w-full bg-black/50 border border-neutral-700 rounded-xl p-4 text-xl focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 outline-none transition-all text-white"
+                className="relative z-50 w-full bg-black/50 border border-neutral-700 rounded-xl p-4 text-xl focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 outline-none transition-all text-white"
                 disabled={isLoading}
               >
                 {PRESETS.map(preset => (
@@ -337,7 +458,7 @@ export default function VideoGeneratorPage() {
                 <select 
                   value={selectedPovType}
                   onChange={(e) => setSelectedPovType(e.target.value)}
-                  className="w-full bg-black/50 border border-neutral-700 rounded-xl p-4 text-xl focus:border-purple-400 focus:ring-1 focus:ring-purple-400 outline-none transition-all text-white"
+                  className="relative z-50 w-full bg-black/50 border border-neutral-700 rounded-xl p-4 text-xl focus:border-purple-400 focus:ring-1 focus:ring-purple-400 outline-none transition-all text-white"
                   disabled={isLoading}
                 >
                   {["INFP", "ENFP", "INFJ", "ISFJ", "ENTP", "ISTP", "INTJ", "ISFP", "INTP", "ENFJ"].map(type => (
@@ -355,7 +476,7 @@ export default function VideoGeneratorPage() {
                 <select 
                   value={selectedSmartphoneId}
                   onChange={(e) => setSelectedSmartphoneId(e.target.value)}
-                  className="w-full bg-black/50 border border-neutral-700 rounded-xl p-4 text-xl focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none transition-all text-white"
+                  className="relative z-50 w-full bg-black/50 border border-neutral-700 rounded-xl p-4 text-xl focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none transition-all text-white"
                   disabled={isLoading}
                 >
                   {smartphonePresets.map(p => (
@@ -372,7 +493,7 @@ export default function VideoGeneratorPage() {
                 <select 
                   value={selectedReactionId}
                   onChange={(e) => setSelectedReactionId(e.target.value)}
-                  className="w-full bg-black/50 border border-neutral-700 rounded-xl p-4 text-xl focus:border-rose-400 focus:ring-1 focus:ring-rose-400 outline-none transition-all text-white"
+                  className="relative z-50 w-full bg-black/50 border border-neutral-700 rounded-xl p-4 text-xl focus:border-rose-400 focus:ring-1 focus:ring-rose-400 outline-none transition-all text-white"
                   disabled={isLoading}
                 >
                   {reactionPresets.map(p => (
@@ -389,7 +510,7 @@ export default function VideoGeneratorPage() {
                 <select 
                   value={selectedPiechartId}
                   onChange={(e) => setSelectedPiechartId(e.target.value)}
-                  className="w-full bg-black/50 border border-neutral-700 rounded-xl p-4 text-xl focus:border-fuchsia-400 focus:ring-1 focus:ring-fuchsia-400 outline-none transition-all text-white"
+                  className="relative z-50 w-full bg-black/50 border border-neutral-700 rounded-xl p-4 text-xl focus:border-fuchsia-400 focus:ring-1 focus:ring-fuchsia-400 outline-none transition-all text-white"
                   disabled={isLoading}
                 >
                   {piechartPresets.map(p => (
@@ -397,7 +518,7 @@ export default function VideoGeneratorPage() {
                   ))}
                 </select>
               </div>
-            ) : (
+            ) : videoFormat === "combo" ? (
               <div>
                 <label className="block text-sm font-bold text-red-400 mb-2 uppercase tracking-widest flex items-center gap-2">
                   <Sparkles className="w-4 h-4" />
@@ -406,7 +527,7 @@ export default function VideoGeneratorPage() {
                 <select 
                   value={selectedComboId}
                   onChange={(e) => setSelectedComboId(e.target.value)}
-                  className="w-full bg-black/50 border border-neutral-700 rounded-xl p-4 text-xl focus:border-red-400 focus:ring-1 focus:ring-red-400 outline-none transition-all text-white"
+                  className="relative z-50 w-full bg-black/50 border border-neutral-700 rounded-xl p-4 text-xl focus:border-red-400 focus:ring-1 focus:ring-red-400 outline-none transition-all text-white"
                   disabled={isLoading}
                 >
                   {comboPresets.map(p => (
@@ -414,12 +535,30 @@ export default function VideoGeneratorPage() {
                   ))}
                 </select>
               </div>
+            ) : (
+              <div>
+                <label className="block text-sm font-bold text-emerald-400 mb-2 uppercase tracking-widest flex items-center gap-2">
+                  <Sparkles className="w-4 h-4" />
+                  お題を選択（スライド画像 4枚）
+                </label>
+                <select 
+                  value={selectedSlideId}
+                  onChange={(e) => setSelectedSlideId(e.target.value)}
+                  className="relative z-50 w-full bg-black/50 border border-neutral-700 rounded-xl p-4 text-xl focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 outline-none transition-all text-white"
+                  disabled={isLoading}
+                >
+                  {slidePresets.map(p => (
+                    <option key={p.id} value={p.id}>{p.title}</option>
+                  ))}
+                </select>
+              </div>
             )}
 
             <button 
+              type="button"
               onClick={handleGenerate}
               disabled={isLoading}
-              className={`w-full py-4 rounded-xl font-black text-lg flex items-center justify-center gap-3 transition-all ${
+              className={`relative z-50 w-full py-4 rounded-xl font-black text-lg flex items-center justify-center gap-3 transition-all ${
                 isLoading
                   ? "bg-neutral-800 text-neutral-500 cursor-not-allowed" 
                   : "bg-cyan-500 hover:bg-cyan-400 text-black shadow-[0_0_20px_rgba(6,182,212,0.4)] hover:shadow-[0_0_30px_rgba(6,182,212,0.6)]"
@@ -458,6 +597,43 @@ export default function VideoGeneratorPage() {
             {errorMSG && (
               <div className="mt-6 p-4 bg-red-500/20 text-red-400 rounded-xl border border-red-500/30 flex items-center gap-3">
                 <span className="font-bold">⚠️ {lang === "en" ? "Error" : "エラー"}:</span> {errorMSG}
+              </div>
+            )}
+
+            {/* 完成した画像リストの表示（スライド画像用） */}
+            {imageUrls && imageUrls.length > 0 && !isLoading && (
+              <div className="mt-10 p-8 border border-emerald-500/30 rounded-3xl bg-black/40 animate-fade-in-up">
+                <h2 className="text-2xl font-bold text-center mb-6">
+                  <span className="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
+                    {lang === "en" ? "Generated Slide Images" : "生成されたスライド画像"}
+                  </span>
+                </h2>
+
+                {zipExportPath && (
+                  <div className="mb-8 p-4 bg-emerald-500/10 border border-emerald-500/30 rounded-xl text-center">
+                    <p className="text-emerald-400 font-bold mb-1">✅ デスクトップにZIPを直接保存しました！</p>
+                    <p className="text-xs text-neutral-400">保存先: {zipExportPath}</p>
+                    <p className="text-xs text-neutral-400 mt-2">このフォルダをGoogleドライブと同期させることで、スマホからすぐに使えます。</p>
+                  </div>
+                )}
+                
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  {imageUrls.map((url, index) => (
+                    <div key={index} className="flex flex-col gap-3">
+                      <div className="relative w-full aspect-[9/16] rounded-xl overflow-hidden border-2 border-neutral-700 shadow-xl">
+                        <img src={url} alt={`Slide ${index + 1}`} className="w-full h-full object-cover" />
+                      </div>
+                      <a
+                        href={url}
+                        download={`slide_${index + 1}.png`}
+                        className="bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-bold py-3 rounded-lg text-center transition-colors shadow-lg flex items-center justify-center gap-2"
+                      >
+                        <Download className="w-4 h-4" />
+                        {lang === "en" ? `Save ${index + 1}` : `保存 ${index + 1}`}
+                      </a>
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
 

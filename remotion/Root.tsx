@@ -7,6 +7,10 @@ import { SmartphoneScreenVideo } from "./SmartphoneScreenVideo";
 import { ReactionPOVVideo } from "./ReactionPOVVideo";
 import { PieChartVideo } from "./PieChartVideo";
 import { HellishComboVideo } from "./HellishComboVideo";
+import { StaticInfographicVideo } from "./StaticInfographicVideo";
+import { SingleSlideImage } from "./SingleSlideImage";
+import { SlideTitleImage } from "./SlideTitleImage";
+import { SlideSummaryImage } from "./SlideSummaryImage";
 import React from "react";
 import "../app/globals.css";
 
@@ -229,6 +233,78 @@ export const RemotionRoot: React.FC = () => {
               ]
             }
           ]
+        }}
+      />
+      {/* 1枚絵まとめフォーマット (StaticInfographicVideo) - 過去互換のため残す */}
+      <Composition
+        id="StaticInfographicVideo"
+        component={StaticInfographicVideo as React.FC<any>}
+        durationInFrames={300}
+        fps={30}
+        width={1080}
+        height={1920}
+        defaultProps={{
+          theme: "紫タイプ（分析家）の脈ありサイン",
+          groupColor: "purple",
+          items: []
+        }}
+      />
+
+      {/* スライド用静止画フォーマット (キャラ詳細 1枚絵) */}
+      <Composition
+        id="SingleSlideImage"
+        component={SingleSlideImage as React.FC<any>}
+        durationInFrames={1}
+        fps={30}
+        width={1080}
+        height={1920}
+        defaultProps={{
+          mbtiType: "INTJ",
+          catchphrase: "INTJの脈ありサイン",
+          groupColor: "purple",
+          points: [
+            "徹底的な身辺調査でデータを収集する",
+            "視線は合うが、すぐに逸らして平常心を装う",
+            "相手の悩みに対して全力で解決策を提案する",
+            "自分の貴重な「一人の時間」を割いてくれる"
+          ]
+        }}
+      />
+
+      {/* スライド用静止画フォーマット (タイトル) */}
+      <Composition
+        id="SlideTitleImage"
+        component={SlideTitleImage as React.FC<any>}
+        durationInFrames={1}
+        fps={30}
+        width={1080}
+        height={1920}
+        defaultProps={{
+          mainTitle: "紫（NT）タイプの脈ありサイン",
+          subTitle: "最後のページにまとめがあるよ！",
+          groupColor: "purple",
+          lang: "ja"
+        }}
+      />
+
+      {/* スライド用静止画フォーマット (まとめ) */}
+      <Composition
+        id="SlideSummaryImage"
+        component={SlideSummaryImage as React.FC<any>}
+        durationInFrames={1}
+        fps={30}
+        width={1080}
+        height={1920}
+        defaultProps={{
+          summaryTitle: "紫タイプ（NT）のまとめ",
+          groupColor: "purple",
+          items: [
+            { mbtiType: "INTJ", summaryText: "行動が全て！密かに分析しつつ尽くす" },
+            { mbtiType: "INTP", summaryText: "不器用ながらも必死に近づいてくる" },
+            { mbtiType: "ENTJ", summaryText: "ストレートな問題解決と時間投資" },
+            { mbtiType: "ENTP", summaryText: "からかいつつも完全にロックオン" }
+          ],
+          lang: "ja"
         }}
       />
     </>
