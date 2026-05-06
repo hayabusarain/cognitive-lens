@@ -22,6 +22,9 @@ export default function Footer() {
         <Link href={`/${lang}/privacy`} className="text-slate-500 hover:text-slate-800 transition-colors underline underline-offset-4">
           {lang === "en" ? "Privacy Policy" : "プライバシーポリシー"}
         </Link>
+        <a href="https://x.com/CognitiveLens_" target="_blank" rel="noopener noreferrer" className="text-slate-500 hover:text-slate-800 transition-colors underline underline-offset-4">
+          {lang === "en" ? "Contact Us" : "お問い合わせ"}
+        </a>
       </div>
       <p className="text-[10px] text-slate-400">
         © 2025 CognitiveLens — Interpersonal Friction Analytics. All rights reserved.

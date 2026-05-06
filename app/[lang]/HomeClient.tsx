@@ -117,8 +117,8 @@ export default function HomeClient({ dict, lang }: { dict: any, lang: string }) 
                   </h3>
                   <p className="text-[10px] md:text-xs text-slate-500 leading-relaxed">
                     {lang === "en"
-                      ? "Scan their MBTI and pulse rate simply by tapping the target's common behaviors."
-                      : "気になる相手の「あるある行動」をタップするだけで、MBTIと脈あり度をスキャン。"}
+                      ? "Scan their 16 type and pulse rate simply by tapping the target's common behaviors."
+                      : "気になる相手の「あるある行動」をタップするだけで、16タイプと脈あり度をスキャン。"}
                   </p>
                 </div>
                 <div className="shrink-0 pl-1">
