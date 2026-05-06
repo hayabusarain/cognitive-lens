@@ -20,6 +20,7 @@ import {
 import { PROTOCOLS_JA } from "@/lib/protocols-ja";
 import { TYPE_INFO, DEFAULT_TYPE } from "@/lib/type-info";
 import { getTypeInfo, getCompatibility } from "@/lib/data-provider";
+import { STATIC_PROFILES_JA, STATIC_PROFILES_EN } from "@/lib/static-profiles";
 import AdSenseUnit from "@/app/components/ads/AdSenseUnit";
 
 // ── Chart colors (modern fixed) ───────────────────────────────
@@ -325,248 +326,66 @@ function ShareButton({
   );
 }
 
-// ── Section parser ────────────────────────────────────────────
-
-interface ProfileSection { title: string; content: string }
-
-function parseSections(text: string): ProfileSection[] {
-  const result: ProfileSection[] = [];
-  const parts = text.split(/(?=【[^】]+】)/);
-  for (const part of parts) {
-    if (!part.trim()) continue;
-    const m = part.match(/^【([^】]+)】\s*([\s\S]*)$/);
-    if (m) result.push({ title: m[1].trim(), content: m[2].trim() });
-  }
-  return result;
-}
-
-// ── プレースホルダー削除のため省略（AdSenseUnitへ移行） ──
-
-// ── レートリミット待機画面 ─────────────────────────────────────
-
-function RateLimitedCard() {
-  return (
-    <div className="rounded-3xl border p-6 text-center space-y-3" style={{ borderColor: "rgba(251,191,36,0.18)", background: "rgba(251,191,36,0.08)" }}>
-      <div className="text-3xl">⏳</div>
-      <p className="font-bold text-sm" >解析エンジンが混雑しています</p>
-      <p className="text-xs leading-relaxed" >
-        現在、アクセスが集中しています。<br />
-        <strong>10分後に再スキャン可能です。</strong><br />
-        しばらく経ってから、また分析を試しに来てください。
-      </p>
-      <div className="flex items-center justify-center gap-1.5 pt-1">
-        {[0, 1, 2].map((i) => (
-          <div
-            key={i}
-            className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-bounce"
-            style={{ animationDelay: `${i * 150}ms` }}
-          />
-        ))}
-      </div>
-    </div>
-  );
-}
-
 // ── 4段構成セクションのスタイル定義 ─────────────────────────────
 
 const SECTION_STYLES = [
-  { badge: "bg-amber-400/10 text-amber-400 border-amber-400/20", bar: "bg-amber-400", text: "" },
-  { badge: "bg-rose-400/10 text-rose-400 border-rose-400/20",   bar: "bg-rose-400",   text: "" },
-  { badge: "bg-teal-400/10 text-teal-400 border-teal-400/20",   bar: "bg-teal-400",   text: "" },
-  { badge: "bg-violet-400/10 text-violet-400 border-violet-400/20", bar: "bg-violet-400", text: "" },
+  { badge: "bg-amber-400/10 text-amber-400 border-amber-400/20", bar: "bg-amber-400" },
+  { badge: "bg-rose-400/10 text-rose-400 border-rose-400/20",   bar: "bg-rose-400" },
+  { badge: "bg-violet-400/10 text-violet-400 border-violet-400/20", bar: "bg-violet-400" },
 ];
 
-// ── ストリーミングセクション ──────────────────────────────────
+// ── 静的AIプロファイリングセクション ────────────
 
-function StreamingSection({
-  section, styleIndex, isCurrent,
-}: { section: ProfileSection; styleIndex: number; isCurrent: boolean }) {
-  const style = SECTION_STYLES[styleIndex] ?? SECTION_STYLES[0];
-  const paragraphs = section.content.split(/\n+/).filter(p => p.trim() !== "");
+function AiProfileSection({ typeKey, lang }: { typeKey: string; lang: string }) {
+  const profileData = lang === "en" ? STATIC_PROFILES_EN[typeKey] : STATIC_PROFILES_JA[typeKey];
+  
+  if (!profileData) return null;
 
-  return (
-    <div className="rounded-3xl border p-5 space-y-4" style={{ background: "rgba(0,0,0,0.06)", borderColor: "rgba(0,0,0,0.06)" }}>
-      <div className="flex items-center gap-2 mb-2">
-        <div className={`h-3.5 w-0.5 rounded-full ${style.bar}`} />
-        <span className={`text-[10px] font-bold tracking-wide px-2 py-0.5 rounded-full border ${style.badge}`}>
-          {section.title}
-        </span>
-      </div>
-      <div className="text-sm leading-[1.85] pl-3 space-y-4">
-        {paragraphs.map((para, idx) => (
-          <Fragment key={idx}>
-            <p>
-              {para}
-              {isCurrent && idx === paragraphs.length - 1 && (
-                <span className="inline-block w-0.5 h-[1em] ml-0.5 animate-pulse align-text-bottom" style={{ background: "#64748b" }} />
-              )}
-            </p>
-            {/* Insert Ad after every 2 paragraphs (when index is odd) */}
-            {idx % 2 === 1 && idx !== paragraphs.length - 1 && (
-              <AdSenseUnit id={`adsense-para-${styleIndex}-${idx}`} slotId="4444444444" />
-            )}
-          </Fragment>
-        ))}
-        {paragraphs.length === 0 && isCurrent && (
-          <span className="inline-block w-0.5 h-[1em] ml-0.5 animate-pulse align-text-bottom" style={{ background: "#64748b" }} />
-        )}
-      </div>
-    </div>
-  );
-}
-
-// ── AIプロファイリングセクション（ストリーミング版） ────────────
-
-function AiProfileSection({ typeKey, rawAnswers, lang }: { typeKey: string; rawAnswers: string; lang: string }) {
-  const [sections, setSections] = useState<ProfileSection[]>([]);
-  const [isStreaming, setIsStreaming] = useState(false);
-  const [generated, setGenerated] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [rateLimited, setRateLimited] = useState(false);
-
-  const generate = async () => {
-    setSections([]);
-    setError(null);
-    setRateLimited(false);
-    setIsStreaming(true);
-    setGenerated(false);
-
-    try {
-      const res = await fetch("/api/profile", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ type: typeKey, answers: rawAnswers, lang }),
-      });
-
-      if (res.status === 429) {
-        setRateLimited(true);
-        setIsStreaming(false);
-        return;
-      }
-
-      if (!res.ok) {
-        const data = await res.json();
-        setError(data.error ?? "生成に失敗しました");
-        setIsStreaming(false);
-        return;
-      }
-
-      const reader = res.body!.getReader();
-      const decoder = new TextDecoder();
-      let fullText = "";
-
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        fullText += decoder.decode(value, { stream: true });
-        setSections(parseSections(fullText));
-      }
-
-      // 最後のバッファをフラッシュして文字化けを防止
-      fullText += decoder.decode();
-      setSections(parseSections(fullText));
-      setGenerated(true);
-    } catch {
-      setError("ネットワークエラーが発生しました");
-    }
-    setIsStreaming(false);
-  };
-
-  if (!rawAnswers || rawAnswers.length < 4) return null;
+  const sections = [
+    profileData.section1,
+    profileData.section2,
+    profileData.section3,
+  ];
 
   return (
     <>
-      {!generated && !isStreaming && !rateLimited && !error && (
-        <div className="rounded-3xl border overflow-hidden" style={{ background: "rgba(0,0,0,0.06)", borderColor: "rgba(139,92,246,0.18)" }}>
-          <div className="flex items-center gap-3 px-5 py-4" style={{ background: "rgba(139,92,246,0.08)" }}>
-            <span className="flex items-center justify-center w-8 h-8 rounded-2xl flex-shrink-0" style={{ background: "rgba(139,92,246,0.15)", color: "#a78bfa" }}>
-              <Brain size={16} />
-            </span>
-            <div className="flex-1">
-              <p className="font-semibold text-sm" >{lang === "en" ? "AI Personal Profiling" : "AI個別プロファイリング"}</p>
-              <p className="text-xs" >{lang === "en" ? "Complete Manual — 4 Sections" : "完全取扱説明書 — 4段構成"}</p>
+      <div className="flex items-center gap-3 px-2 py-2 mb-2">
+        <span className="flex items-center justify-center w-8 h-8 rounded-2xl flex-shrink-0" style={{ background: "rgba(139,92,246,0.15)", color: "#a78bfa" }}>
+          <Brain size={16} />
+        </span>
+        <div className="flex-1">
+          <p className="font-semibold text-sm" >{lang === "en" ? "True Nature Profile" : "本性プロファイル"}</p>
+          <p className="text-xs text-slate-500" >{lang === "en" ? "Toxic & Honest Analysis" : "16タイプ別・取扱説明書"}</p>
+        </div>
+      </div>
+
+      {sections.map((sec, i) => {
+        const style = SECTION_STYLES[i % SECTION_STYLES.length];
+        return (
+          <div key={i} className="rounded-3xl border p-5 space-y-4 mb-6 shadow-sm" style={{ background: "rgba(0,0,0,0.06)", borderColor: "rgba(0,0,0,0.06)" }}>
+            <div className="flex items-center gap-2 mb-2">
+              <div className={`h-3.5 w-0.5 rounded-full ${style.bar}`} />
+              <span className={`text-[10px] font-bold tracking-wide px-2 py-0.5 rounded-full border ${style.badge}`}>
+                {sec.title}
+              </span>
             </div>
-          </div>
-          <div className="px-5 py-5 text-center space-y-3">
-            <p className="text-xs leading-relaxed" >
-              {lang === "en" ? (
-                <>Talents, weaknesses, strategies, and triggers—<br />AI will generate your complete personal manual.</>
-              ) : (
-                <>才能・弱点・攻略法・理解の言葉——<br />あなただけの完全取扱説明書をAIが生成します。</>
-              )}
-            </p>
-            <button
-              onClick={generate}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl active:scale-[0.98] text-white text-xs font-bold transition-all duration-150"
-              style={{ background: "#7c3aed" }}
-              onMouseEnter={(e) => (e.currentTarget.style.background = "#6d28d9")}
-              onMouseLeave={(e) => (e.currentTarget.style.background = "#7c3aed")}
-            >
-              <Sparkles size={13} />
-              {lang === "en" ? "Run Profiling" : "プロファイリングを実行する"}
-            </button>
-          </div>
-        </div>
-      )}
-
-      {rateLimited && <RateLimitedCard />}
-
-      {error && (
-        <div className="rounded-2xl border px-4 py-3" style={{ background: "rgba(244,63,94,0.08)", borderColor: "rgba(244,63,94,0.18)" }}>
-          <p className="text-xs" >{error}</p>
-          <button onClick={generate} className="mt-2 text-xs underline underline-offset-2" >
-            再試行
-          </button>
-        </div>
-      )}
-
-      {isStreaming && sections.length === 0 && (
-        <div className="rounded-3xl border p-6 text-center space-y-2" style={{ background: "rgba(0,0,0,0.06)", borderColor: "rgba(139,92,246,0.18)" }}>
-          <div className="flex items-center justify-center gap-1.5">
-            {[0, 1, 2].map((i) => (
-              <div
-                key={i}
-                className="w-1.5 h-1.5 rounded-full bg-violet-400 animate-bounce"
-                style={{ animationDelay: `${i * 150}ms` }}
-              />
-            ))}
-          </div>
-          <p className="text-xs" >AIが分析中...</p>
-        </div>
-      )}
-
-      {sections.map((sec, i) => (
-        <Fragment key={i}>
-          <StreamingSection
-            section={sec}
-            styleIndex={i}
-            isCurrent={isStreaming && i === sections.length - 1}
-          />
-          {(i < sections.length - 1 || (!isStreaming && generated && i < 3)) && (
-            <div className="my-8 glass-card rounded-3xl p-4 min-h-[250px] w-full flex flex-col items-center justify-center border border-white/40 shadow-sm relative overflow-hidden transition-all hover:shadow-md">
-              <div className="w-full text-left mb-2">
-                <span className="text-[10px] text-slate-400 font-bold tracking-[0.2em] uppercase">Sponsored</span>
-              </div>
-              <div className="relative z-10 w-full flex-1 flex items-center justify-center overflow-hidden">
-                <AdSenseUnit id={`adsense-slot-${i + 2}`} slotId="5555555555" />
-              </div>
+            <div className="text-sm leading-[1.85] pl-3 space-y-4 font-medium text-slate-800">
+              <p>{sec.content}</p>
             </div>
-          )}
-        </Fragment>
-      ))}
-
-      {generated && !isStreaming && (
-        <button
-          onClick={generate}
-          className="w-full py-2 text-xs transition-colors underline underline-offset-2"
-          
-          onMouseEnter={(e) => (e.currentTarget.style.color = "#a78bfa")}
-          onMouseLeave={(e) => (e.currentTarget.style.color = "#64748b")}
-        >
-          {/* generate label */}
-          Generate another pattern
-        </button>
-      )}
+            {/* Insert AdSense after section 2 */}
+            {i === 1 && (
+              <div className="mt-6 glass-card rounded-3xl p-4 w-full flex flex-col items-center justify-center border border-white/40 shadow-sm relative overflow-hidden transition-all hover:shadow-md">
+                <div className="w-full text-left mb-2">
+                  <span className="text-[10px] text-slate-400 font-bold tracking-[0.2em] uppercase">Sponsored</span>
+                </div>
+                <div className="relative z-10 w-full flex-1 flex items-center justify-center overflow-hidden">
+                  <AdSenseUnit id={`adsense-static-para-${i}`} slotId="4444444444" />
+                </div>
+              </div>
+            )}
+          </div>
+        );
+      })}
     </>
   );
 }
@@ -822,7 +641,7 @@ export default function ResultContent({ lang = "ja" }: { lang?: string }) {
         <AdSenseUnit id="adsense-slot-1" slotId="6666666666" />
 
         {/* AI Profiling */}
-        <AiProfileSection typeKey={typeKey} rawAnswers={rawAnswers} lang={lang} />
+        <AiProfileSection typeKey={typeKey} lang={lang} />
 
         {/* Accordions */}
         {sectionsList.map((section) => (
