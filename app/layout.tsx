@@ -21,6 +21,7 @@ export default function RootLayout({
     <html lang="ja">
       <head>
         <meta name="google-adsense-account" content="ca-pub-7201202773518258" />
+        <meta name="google-site-verification" content="02VLoI4MqeIcdR9cY5RqXokNW1jGqKaevkoERxU5yXU" />
         <Script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7201202773518258"
