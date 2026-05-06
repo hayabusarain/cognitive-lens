@@ -504,7 +504,8 @@ function CareerSection({ typeKey, lang }: { typeKey: string, lang: string }) {
           <p className="text-xs text-amber-900/80 leading-relaxed">{career.cheatCode}</p>
         </div>
 
-        {/* アフィリエイトCTA（仮） */}
+        {/* アフィリエイトCTA（一時非表示） */}
+        {/*
         <div className="pt-2 text-center">
           <p className="text-[10px] text-slate-500 mb-2 font-bold">＼ {career.survivalRoute}の求人を探す ／</p>
           <button className="w-full relative overflow-hidden group bg-slate-900 text-white font-bold text-sm py-3.5 rounded-xl shadow-lg transition-all hover:-translate-y-0.5 hover:shadow-xl active:scale-[0.98]">
@@ -519,6 +520,7 @@ function CareerSection({ typeKey, lang }: { typeKey: string, lang: string }) {
             </span>
           </button>
         </div>
+        */}
       </div>
     </div>
   );
@@ -650,8 +652,8 @@ export default function ResultContent({ lang = "ja" }: { lang?: string }) {
         {/* Compatibility */}
         <CompatibilitySection typeKey={typeKey} lang={lang} />
 
-        {/* Career & Affiliate (一時非表示) */}
-        {/* <CareerSection typeKey={typeKey} lang={lang} /> */}
+        {/* Career & Affiliate */}
+        <CareerSection typeKey={typeKey} lang={lang} />
 
         {/* Romance Column Selector */}
         <div className="pt-8 pb-4">
