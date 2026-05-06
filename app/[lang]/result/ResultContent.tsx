@@ -474,7 +474,6 @@ function CareerSection({ typeKey, lang }: { typeKey: string, lang: string }) {
           <Briefcase size={18} />
           {typeKey}の「適職」と「絶対にやってはいけない職業」
         </h2>
-        <p className="text-[10px] opacity-80 mt-1">※アフィリエイト誘導用プレビュー</p>
       </div>
       
       <div className="p-5 space-y-5">
