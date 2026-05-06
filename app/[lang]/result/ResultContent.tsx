@@ -650,8 +650,8 @@ export default function ResultContent({ lang = "ja" }: { lang?: string }) {
         {/* Compatibility */}
         <CompatibilitySection typeKey={typeKey} lang={lang} />
 
-        {/* Career & Affiliate */}
-        <CareerSection typeKey={typeKey} lang={lang} />
+        {/* Career & Affiliate (一時非表示) */}
+        {/* <CareerSection typeKey={typeKey} lang={lang} /> */}
 
         {/* Romance Column Selector */}
         <div className="pt-8 pb-4">

@@ -130,10 +130,10 @@ export default async function ArticlePage({ params }: { params: Promise<{ lang: 
               </section>
             )}
 
-            {/* ── マッチングアプリアフィリエイト誘導用コンポーネント（プレビュー） ── */}
+            {/* ── マッチングアプリアフィリエイト誘導用コンポーネント（一時非表示） ── */}
+            {/*
             <div className="mt-12 overflow-hidden relative rounded-3xl bg-gradient-to-br from-pink-500 to-rose-400 p-[2px] shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
               <div className="bg-white/95 backdrop-blur-sm rounded-[22px] p-6 sm:p-8 relative overflow-hidden">
-                {/* 装飾用背景 */}
                 <Heart className="absolute -right-8 -bottom-8 w-40 h-40 text-pink-50 -rotate-12 pointer-events-none" />
                 <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-pink-400 via-rose-400 to-pink-400" />
                 
@@ -174,7 +174,6 @@ export default async function ArticlePage({ params }: { params: Promise<{ lang: 
                     )}
                   </p>
                   
-                  {/* アフィリエイトリンク先（あとで実際のURLに書き換えてください） */}
                   <a 
                     href="#" 
                     target="_blank" 
@@ -192,6 +191,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ lang: 
                 </div>
               </div>
             </div>
+            */}
             {/* ──────────────────────────────────────────────── */}
           </div>
         </article>
