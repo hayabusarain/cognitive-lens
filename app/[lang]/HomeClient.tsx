@@ -131,26 +131,6 @@ export default function HomeClient({ dict, lang }: { dict: any, lang: string }) 
                 <AdSenseUnit id="adsense-home-mid" slotId="1111111111" />
               </div>
 
-              {/* 3. コミュニケーション翻訳 */}
-              <Link
-                href={`/${lang}/translate`}
-                className="flex items-center gap-4 p-4 md:p-5 glass-card rounded-3xl hover:-translate-y-1 hover:shadow-lg transition-all group border-l-4 border-blue-400 bg-white/80"
-              >
-                <div className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 bg-gradient-to-br from-blue-400 to-indigo-500 text-white shadow-md">
-                  <Languages size={20} />
-                </div>
-                <div className="flex-1 text-left">
-                  <h3 className="font-extrabold text-sm md:text-lg text-slate-800 mb-1">
-                    {dict.home.translate_title}
-                  </h3>
-                  <p className="text-[10px] md:text-xs text-slate-500 leading-relaxed">
-                    {dict.home.translate_desc}
-                  </p>
-                </div>
-                <div className="shrink-0 pl-1">
-                  <ArrowRight size={18} className="text-slate-300 group-hover:text-blue-500 group-hover:translate-x-1 transition-all" />
-                </div>
-              </Link>
 
               {/* 4. ターゲット攻略判定 */}
               <Link
