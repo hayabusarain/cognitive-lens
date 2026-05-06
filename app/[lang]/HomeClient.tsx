@@ -31,8 +31,23 @@ export default function HomeClient({ dict, lang }: { dict: any, lang: string }) 
         </nav>
 
         {/* Hero */}
-        <section className="flex flex-col items-center px-6 pt-8 pb-12 text-center">
-          <div className="max-w-2xl mx-auto w-full">
+        <section className="relative flex flex-col items-center px-6 pt-12 md:pt-20 pb-12 text-center overflow-hidden">
+          
+          {/* Floating Characters (Decorations) */}
+          <div className="absolute top-12 left-2 md:left-[10%] w-24 h-24 md:w-36 md:h-36 opacity-80 hover:opacity-100 transition-all duration-300 drop-shadow-2xl animate-float pointer-events-none z-0" style={{ animationDelay: "0s", transform: "rotate(-10deg)" }}>
+            <Image src="/characters/ENFP.png" alt="ENFP" fill className="object-contain" priority sizes="(max-width: 640px) 96px, 144px" />
+          </div>
+          <div className="absolute top-4 right-2 md:right-[10%] w-20 h-20 md:w-32 md:h-32 opacity-80 hover:opacity-100 transition-all duration-300 drop-shadow-2xl animate-float pointer-events-none z-0" style={{ animationDelay: "1.5s", transform: "rotate(15deg)" }}>
+            <Image src="/characters/INFP.png" alt="INFP" fill className="object-contain" priority sizes="(max-width: 640px) 80px, 128px" />
+          </div>
+          <div className="absolute top-48 left-[-10px] md:left-[5%] w-16 h-16 md:w-24 md:h-24 opacity-60 hover:opacity-100 transition-all duration-300 drop-shadow-xl animate-float pointer-events-none z-0" style={{ animationDelay: "2.5s", transform: "rotate(-25deg)" }}>
+            <Image src="/characters/ESFP.png" alt="ESFP" fill className="object-contain" sizes="(max-width: 640px) 64px, 96px" />
+          </div>
+          <div className="absolute top-40 right-[-10px] md:right-[5%] w-24 h-24 md:w-32 md:h-32 opacity-70 hover:opacity-100 transition-all duration-300 drop-shadow-2xl animate-float pointer-events-none z-0" style={{ animationDelay: "0.8s", transform: "rotate(20deg)" }}>
+            <Image src="/characters/ENTP.png" alt="ENTP" fill className="object-contain" sizes="(max-width: 640px) 96px, 128px" />
+          </div>
+
+          <div className="max-w-2xl mx-auto w-full relative z-10">
 
             {/* Badge */}
             <div className="bubble mb-8">
