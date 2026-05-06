@@ -10,8 +10,8 @@ export const metadata: Metadata = {
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_BASE_URL ?? "https://cognitive-lens.com"
   ),
-  title: "CognitiveLens | 対人課題解決プラットフォーム",
-  description: "16の認知機能モデルによる対人摩擦の最適化",
+  title: "CognitiveLens (コグニティブレンズ) | 16タイプ別 恋愛・対人課題解決プラットフォーム",
+  description: "CognitiveLens (コグニティブレンズ) は、MBTIなど16の認知機能モデルを用いて、恋愛やコミュニケーションのすれ違いを最適化・解剖する次世代の診断プラットフォームです。",
 };
 
 export default function RootLayout({
