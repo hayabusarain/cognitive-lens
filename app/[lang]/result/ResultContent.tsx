@@ -372,17 +372,6 @@ function AiProfileSection({ typeKey, lang }: { typeKey: string; lang: string }) 
             <div className="text-sm leading-[1.85] pl-3 space-y-4 font-medium text-slate-800">
               <p>{sec.content}</p>
             </div>
-            {/* Insert AdSense after section 2 */}
-            {i === 1 && (
-              <div className="mt-6 glass-card rounded-3xl p-4 w-full flex flex-col items-center justify-center border border-white/40 shadow-sm relative overflow-hidden transition-all hover:shadow-md">
-                <div className="w-full text-left mb-2">
-                  <span className="text-[10px] text-slate-400 font-bold tracking-[0.2em] uppercase">Sponsored</span>
-                </div>
-                <div className="relative z-10 w-full flex-1 flex items-center justify-center overflow-hidden">
-                  <AdSenseUnit id={`adsense-static-para-${i}`} slotId="4444444444" />
-                </div>
-              </div>
-            )}
           </div>
         );
       })}
