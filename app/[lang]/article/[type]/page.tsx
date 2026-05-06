@@ -80,13 +80,8 @@ export default async function ArticlePage({ params }: { params: Promise<{ lang: 
             </section>
 
             {/* AdSense In-Article */}
-            <div className="my-8 glass-card rounded-3xl p-4 min-h-[250px] w-full flex flex-col items-center justify-center border border-white/40 shadow-sm relative overflow-hidden bg-white/40">
-              <div className="w-full text-left mb-2">
-                <span className="text-[10px] text-slate-400 font-bold tracking-[0.2em] uppercase">Sponsored</span>
-              </div>
-              <div className="relative z-10 w-full flex-1 flex items-center justify-center overflow-hidden">
-                <AdSenseUnit id="adsense-article-mid" slotId="8888888888" />
-              </div>
+            <div className="my-8 w-full flex flex-col items-center justify-center overflow-hidden">
+              <AdSenseUnit id="adsense-article-mid" slotId="8888888888" />
             </div>
 
             <section>
@@ -202,13 +197,8 @@ export default async function ArticlePage({ params }: { params: Promise<{ lang: 
         </article>
 
         {/* AdSense Space (Bottom) */}
-        <div className="mt-8 rounded-3xl p-4 bg-white/40 border border-white/40 flex flex-col items-center justify-center min-h-[250px] relative overflow-hidden backdrop-blur-md">
-          <div className="w-full text-left mb-2 relative z-10">
-            <span className="text-[10px] text-slate-500 font-bold tracking-[0.2em] uppercase">Sponsored</span>
-          </div>
-          <div className="relative z-10 w-full flex-1 flex items-center justify-center overflow-hidden">
-            <AdSenseUnit id="adsense-article-bottom" slotId="3333333333" />
-          </div>
+        <div className="mt-8 w-full flex flex-col items-center justify-center overflow-hidden">
+          <AdSenseUnit id="adsense-article-bottom" slotId="3333333333" />
         </div>
 
         <div className="mt-12 text-center">

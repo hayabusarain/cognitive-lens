@@ -234,13 +234,8 @@ export default function RomanceCheckerClient({ lang }: { lang: string }) {
           </div>
 
           {/* AdSense Space */}
-          <div className="mb-8 rounded-3xl p-4 bg-slate-900 border border-slate-800 flex flex-col items-center justify-center min-h-[250px] relative overflow-hidden">
-            <div className="w-full text-left mb-2 relative z-10">
-              <span className="text-[10px] text-slate-500 font-bold tracking-[0.2em] uppercase">Sponsored</span>
-            </div>
-            <div className="relative z-10 w-full flex-1 flex items-center justify-center overflow-hidden">
-              <AdSenseUnit id="adsense-romance-result" slotId="9999999999" />
-            </div>
+          <div className="mb-8 w-full flex items-center justify-center overflow-hidden">
+            <AdSenseUnit id="adsense-romance-result" slotId="9999999999" />
           </div>
 
           <div className="mt-8 text-center">
@@ -382,13 +377,8 @@ export default function RomanceCheckerClient({ lang }: { lang: string }) {
         </div>
 
         {/* AdSense Space */}
-        <div className="mb-8 rounded-3xl p-4 bg-slate-50 border border-slate-200 flex flex-col items-center justify-center min-h-[250px] relative overflow-hidden">
-          <div className="w-full text-left mb-2 relative z-10">
-            <span className="text-[10px] text-slate-400 font-bold tracking-[0.2em] uppercase">Sponsored</span>
-          </div>
-          <div className="relative z-10 w-full flex-1 flex items-center justify-center overflow-hidden">
-            <AdSenseUnit id="adsense-romance-select" slotId="8888888888" />
-          </div>
+        <div className="mb-8 w-full flex items-center justify-center overflow-hidden">
+          <AdSenseUnit id="adsense-romance-select" slotId="8888888888" />
         </div>
       </div>
     </main>

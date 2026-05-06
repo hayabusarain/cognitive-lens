@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, Sparkles, Languages, FlaskConical, Zap, Shield, BarChart2, Video, Heart } from "lucide-react";
+import { ArrowRight, Sparkles, Languages, FlaskConical, Zap, Shield, BarChart2, Video, Heart, BookOpen } from "lucide-react";
 import AdSenseUnit from "@/app/components/ads/AdSenseUnit";
 import { useEffect, useState } from "react";
 import LanguageSwitcher from "@/app/components/LanguageSwitcher";
@@ -24,9 +24,6 @@ export default function HomeClient({ dict, lang }: { dict: any, lang: string }) 
           </span>
           <div className="flex items-center gap-3">
             <LanguageSwitcher />
-            <span className="text-[10px] px-3 py-1 rounded-full font-bold tracking-widest badge-neon">
-              β BETA
-            </span>
           </div>
         </nav>
 
@@ -130,13 +127,8 @@ export default function HomeClient({ dict, lang }: { dict: any, lang: string }) 
               </Link>
 
               {/* AdSense Space (Mid List) */}
-              <div className="my-2 rounded-3xl p-4 bg-slate-50 border border-slate-200 flex flex-col items-center justify-center min-h-[250px] relative overflow-hidden">
-                <div className="w-full text-left mb-2 relative z-10">
-                  <span className="text-[10px] text-slate-400 font-bold tracking-[0.2em] uppercase">Sponsored</span>
-                </div>
-                <div className="relative z-10 w-full flex-1 flex items-center justify-center overflow-hidden">
-                  <AdSenseUnit id="adsense-home-mid" slotId="1111111111" />
-                </div>
+              <div className="w-full flex items-center justify-center overflow-hidden">
+                <AdSenseUnit id="adsense-home-mid" slotId="1111111111" />
               </div>
 
               {/* 3. コミュニケーション翻訳 */}
@@ -178,6 +170,27 @@ export default function HomeClient({ dict, lang }: { dict: any, lang: string }) 
                 </div>
                 <div className="shrink-0 pl-1">
                   <ArrowRight size={18} className="text-slate-300 group-hover:text-violet-500 group-hover:translate-x-1 transition-all" />
+                </div>
+              </Link>
+
+              {/* 5. コラム・記事一覧 */}
+              <Link
+                href={`/${lang}/articles`}
+                className="flex items-center gap-4 p-4 md:p-5 glass-card rounded-3xl hover:-translate-y-1 hover:shadow-lg transition-all group border-l-4 border-emerald-400 bg-white/80"
+              >
+                <div className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 bg-gradient-to-br from-emerald-400 to-teal-500 text-white shadow-md">
+                  <BookOpen size={20} />
+                </div>
+                <div className="flex-1 text-left">
+                  <h3 className="font-extrabold text-sm md:text-lg text-slate-800 mb-1">
+                    {lang === "en" ? "16 Types Romance & Communication Columns" : "16タイプ別 恋愛・対人コラム一覧"}
+                  </h3>
+                  <p className="text-[10px] md:text-xs text-slate-500 leading-relaxed">
+                    {lang === "en" ? "Deep dive into each personality type's tendencies and communication habits." : "全16タイプの無意識のクセや人間関係の傾向を深く解剖した記事まとめ。"}
+                  </p>
+                </div>
+                <div className="shrink-0 pl-1">
+                  <ArrowRight size={18} className="text-slate-300 group-hover:text-emerald-500 group-hover:translate-x-1 transition-all" />
                 </div>
               </Link>
             </div>
