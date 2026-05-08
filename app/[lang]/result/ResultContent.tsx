@@ -16,6 +16,7 @@ import {
   Share2,
   Brain,
   Heart,
+  Download,
 } from "lucide-react";
 import { PROTOCOLS_JA } from "@/lib/protocols-ja";
 import { TYPE_INFO, DEFAULT_TYPE } from "@/lib/type-info";
@@ -326,6 +327,57 @@ function ShareButton({
   );
 }
 
+// ── ストーリーズ用シェア画像 ──────────────────────────────────────────
+
+function StoryShareCard({ typeKey, lang }: { typeKey: string; lang: string }) {
+  const imageUrl = `/api/story-card?type=${typeKey}`;
+
+  const handleDownload = async () => {
+    try {
+      const response = await fetch(imageUrl);
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `CognitiveLens_${typeKey}_Story.png`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (err) {
+      console.error("Download failed:", err);
+      alert(lang === "en" ? "Failed to download image." : "画像の保存に失敗しました。");
+    }
+  };
+
+  return (
+    <div className="mt-4 p-5 rounded-3xl bg-slate-900 border border-slate-700 shadow-xl overflow-hidden relative group">
+      <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
+      <h3 className="text-white font-bold mb-4 text-center tracking-wider text-sm flex items-center justify-center gap-2">
+        <span className="w-2 h-2 rounded-full bg-pink-500 animate-pulse" />
+        {lang === "en" ? "Instagram Story Card" : "インスタ用 結果カード"}
+      </h3>
+      
+      <div className="flex justify-center mb-5">
+        <div className="relative w-40 aspect-[9/16] rounded-xl overflow-hidden border-2 border-slate-700 shadow-2xl transition-transform duration-300 group-hover:scale-105 group-hover:border-slate-500">
+          <img src={imageUrl} alt="Story Card" className="w-full h-full object-cover" />
+        </div>
+      </div>
+      
+      <button
+        onClick={handleDownload}
+        className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl bg-white text-slate-900 font-bold text-sm hover:bg-slate-200 active:scale-95 transition-all"
+      >
+        <Download size={16} />
+        {lang === "en" ? "Save Image" : "画像を端末に保存する"}
+      </button>
+      <p className="text-center text-[10px] text-slate-500 mt-3">
+        {lang === "en" ? "Download and share to your Instagram Story" : "長押しでも保存できます。ストーリーズでシェアしよう！"}
+      </p>
+    </div>
+  );
+}
+
 // ── 4段構成セクションのスタイル定義 ─────────────────────────────
 
 const SECTION_STYLES = [
@@ -626,6 +678,9 @@ export default function ResultContent({ lang = "ja" }: { lang?: string }) {
           hardestMatchType={compat.hardestMatch.type}
           lang={lang}
         />
+
+        {/* Story Share */}
+        <StoryShareCard typeKey={typeKey} lang={lang} />
 
         {/* 広告枠1 */}
         <AdSenseUnit id="adsense-slot-1" slotId="6666666666" />
