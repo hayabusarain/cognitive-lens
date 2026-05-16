@@ -10,7 +10,7 @@ declare global {
   var bundleVersion: number | undefined;
 }
 
-const CURRENT_BUNDLE_VERSION = 19; // Incremented for milder toxic texts
+const CURRENT_BUNDLE_VERSION = 25; // Force rebuild for Z-gen language rewrite
 
 export async function POST(req: Request) {
   try {

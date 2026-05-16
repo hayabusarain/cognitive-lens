@@ -44,9 +44,9 @@ export default function RomanceCheckerClient({ lang }: { lang: string }) {
     cautionTitle: lang === "en" ? "Warning / Red Flags" : "要注意・地雷行動",
     readMore: lang === "en" ? "Read deeper romance tendencies →" : "さらに詳しい恋愛傾向を読む →",
     recallActions: lang === "en" ? "Recall their actions" : "あの人の行動を思い出して",
-    checkerTitle: lang === "en" ? "Romance Reverse-Lookup Checker" : "脈あり・恋愛逆引きチェッカー",
+    checkerTitle: lang === "en" ? "Target's Pulse Scanner" : "あの人の「脈あり度」スキャン",
     selectTarget: lang === "en" ? "Select the Target's MBTI" : "ターゲットのMBTIを選んでください",
-    selectDesc: lang === "en" ? "Accurately scans their 'pulse rate' towards you through 10 questions tailored to their type." : "相手のタイプに特化した10個の質問から、あなたへの「脈あり度」を正確にスキャンします。",
+    selectDesc: lang === "en" ? "Accurately scans their 'pulse rate' towards you through 20 questions tailored to their type." : "相手のタイプに特化した20個の質問から、あなたへの「脈あり度」を正確にスキャンします。",
     dontKnow: lang === "en" ? "Don't know their MBTI?" : "相手のMBTIがわからない？",
     uncoverType: lang === "en" ? "Uncover their 16 type profile →" : "あの人の16タイプを丸裸にする →"
   };
@@ -113,10 +113,10 @@ export default function RomanceCheckerClient({ lang }: { lang: string }) {
       setYesQuestions((prev) => [...prev, ROMANCE_DATA[targetMBTI].questions[currentQIndex]]);
     }
 
-    if (currentQIndex < 9) {
+    if (currentQIndex < ROMANCE_DATA[targetMBTI].questions.length - 1) {
       setCurrentQIndex((prev) => prev + 1);
     } else {
-      // 10問終了
+      // 終了
       setStep("CALCULATING");
       fetchAiAnalysis(isYes);
     }
@@ -149,7 +149,7 @@ export default function RomanceCheckerClient({ lang }: { lang: string }) {
 
   if (step === "RESULT" && targetMBTI) {
     const data = ROMANCE_DATA[targetMBTI];
-    const matchPercentage = Math.round((yesCount / 10) * 100);
+    const matchPercentage = Math.round((yesCount / data.questions.length) * 100);
 
     return (
       <main className="min-h-screen bg-slate-950 text-white relative pb-20">
@@ -254,7 +254,8 @@ export default function RomanceCheckerClient({ lang }: { lang: string }) {
   if (step === "QUESTIONS" && targetMBTI) {
     const questions = ROMANCE_DATA[targetMBTI].questions;
     const currentQ = questions[currentQIndex];
-    const progressPercentage = ((currentQIndex) / 10) * 100;
+    const totalQ = questions.length;
+    const progressPercentage = ((currentQIndex) / totalQ) * 100;
 
     return (
       <main className="min-h-screen bg-slate-50 text-slate-800 relative pb-28 flex flex-col">
@@ -262,7 +263,7 @@ export default function RomanceCheckerClient({ lang }: { lang: string }) {
         <div className="fixed top-0 left-0 w-full h-1.5 bg-slate-200 z-50">
           <motion.div 
             className="h-full bg-gradient-to-r from-fuchsia-500 to-purple-500"
-            initial={{ width: `${((currentQIndex - 1) / 10) * 100}%` }}
+            initial={{ width: `${((currentQIndex - 1) / totalQ) * 100}%` }}
             animate={{ width: `${progressPercentage}%` }}
             transition={{ duration: 0.3, ease: "easeOut" }}
           />
@@ -273,7 +274,7 @@ export default function RomanceCheckerClient({ lang }: { lang: string }) {
             <ArrowLeft size={20} />
           </button>
           <span className="text-xs font-bold text-slate-400 tracking-widest">
-            {currentQIndex + 1} / 10
+            {currentQIndex + 1} / {totalQ}
           </span>
         </nav>
 

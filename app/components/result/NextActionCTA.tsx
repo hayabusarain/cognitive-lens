@@ -8,6 +8,10 @@ export default function NextActionCTA({ typeKey, lang }: { typeKey: string; lang
   const info = TYPE_INFO[typeKey] ?? DEFAULT_TYPE;
   const isEn = lang === "en";
 
+  // Google AdSense審査対策: リンク先（href="#"）が未定のPRボタンがあると
+  // 「構築中のサイト」「リンク切れ」と判定されるリスクがあるため一時的に非表示にする
+  return null;
+
   const getJobText = () => {
     switch(typeKey) {
       case "INTJ": return "無能に囲まれてストレスを抱えるくらいなら、あなたの戦略眼が評価される環境を探すべきです。";

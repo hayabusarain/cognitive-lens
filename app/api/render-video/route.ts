@@ -39,7 +39,8 @@ export async function POST(req: Request) {
       "ReactionPOVVideo", 
       "PieChartVideo", 
       "HellishComboVideo",
-      "StaticInfographicVideo"
+      "StaticInfographicVideo",
+      "SlideShowVideo"
     ];
     if (!noEntriesComps.includes(compositionId) && !inputProps.entries) {
       return NextResponse.json({ error: "inputProps.entries が必要です" }, { status: 400 });

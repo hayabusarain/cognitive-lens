@@ -30,6 +30,9 @@ const WINDOW_MS = 10 * 60 * 1000;
 const MAX_REQUESTS = 3;
 
 function checkRateLimit(ip: string): { allowed: boolean; retryAfter: number } {
+  if (process.env.NODE_ENV === "development" || ip === "127.0.0.1" || ip === "::1" || ip === "unknown") {
+    return { allowed: true, retryAfter: 0 };
+  }
   const now = Date.now();
   const prev = (requestLog.get(ip) ?? []).filter((t) => now - t < WINDOW_MS);
   if (prev.length >= MAX_REQUESTS) {

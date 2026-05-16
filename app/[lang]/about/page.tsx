@@ -47,8 +47,12 @@ export default async function AboutPage({ params }: { params: Promise<{ lang: st
               <dt className="text-slate-500 font-semibold">{lang === "en" ? "Contact" : "お問い合わせ"}</dt>
               <dd>
                 {lang === "en" 
-                  ? "For inquiries regarding the service, advertising placements, or other matters, please contact us via the feedback feature within the app or DM us on our official social media accounts."
-                  : "サービスに関するお問い合わせ、広告掲載のご相談等は、サービス内のフィードバック機能または公式SNSアカウントへのDMにて承ります。"}
+                  ? "For inquiries regarding the service, advertising placements, or other matters, please contact us via the feedback feature within the app, DM us on our official social media accounts, or email us at contact@cognitivelens.com."
+                  : "サービスに関するお問い合わせ、広告掲載のご相談等は、サービス内のフィードバック機能、公式SNSアカウントへのDM、または下記メールアドレスまでお願いいたします。"}
+                <br />
+                <a href="mailto:contact@cognitivelens.com" className="text-cyan-600 font-bold hover:text-cyan-700 underline mt-1 inline-block">
+                  contact@cognitivelens.com
+                </a>
               </dd>
             </dl>
           </div>

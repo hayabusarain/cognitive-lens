@@ -9,6 +9,9 @@ const MAX_REQUESTS = 5;
 const WINDOW_MS = 10 * 60 * 1000; // 10分
 
 function checkRateLimit(ip: string): boolean {
+  if (process.env.NODE_ENV === "development" || ip === "127.0.0.1" || ip === "::1" || ip === "unknown") {
+    return true;
+  }
   const now = Date.now();
   const record = ipRateLimitMap.get(ip);
   if (!record || record.expiresAt < now) {
@@ -72,7 +75,8 @@ export async function POST(req: NextRequest) {
 
 【Z世代対応・ターゲット設定】
 読者は16歳〜24歳（高校生・大学生・20代前半）です。
-説教臭い言葉や、堅苦しい学術用語は使わず、エモくて直感的、少し毒舌だが親身なトーンで記述してください。
+説教臭い言葉や、堅苦しい学術用語は使わず、IT・スマホ・SNSメタファー（バグ、アプデ、ログ、通知など）を自然に散りばめ、エモくて直感的かつ、人間らしい揺らぎ（〜だよね、〜しがち等）を加えたトーンで記述してください。
+直接的な侮蔑や過剰に攻撃的な言葉（コミュ障、ポンコツなど）は絶対に使わず、少し辛口でも愛のあるマイルドな表現に調整してください。
 
 以下の3つをJSON形式で返してください。
 

@@ -5,155 +5,107 @@ import { COLOR_MAP } from "./SingleSlideImage";
 export type SlideSummaryImageProps = {
   summaryTitle: string;
   groupColor: "purple" | "green" | "blue" | "yellow";
-  items: {
-    mbtiType: string;
-    summaryText: string;
-  }[];
+  items: { mbtiType: string; summaryText: string; }[];
   lang?: string;
 };
 
 export const SlideSummaryImage: React.FC<SlideSummaryImageProps> = ({
-  summaryTitle = "紫タイプ（NT）のまとめ",
-  groupColor = "purple",
+  summaryTitle = "紫タイプ（NT）のまとめ", groupColor = "purple",
   items = [
-    { mbtiType: "INTJ", summaryText: "行動が全て！密かに分析しつつ尽くす" },
-    { mbtiType: "INTP", summaryText: "不器用ながらも必死に近づいてくる" },
-    { mbtiType: "ENTJ", summaryText: "ストレートな問題解決と時間投資" },
-    { mbtiType: "ENTP", summaryText: "からかいつつも完全にロックオン" }
-  ],
-  lang = "ja"
+    { mbtiType: "INTJ", summaryText: "冷徹な戦略家が見せる素顔" },
+    { mbtiType: "INTP", summaryText: "誰よりも深く愛している" },
+    { mbtiType: "ENTJ", summaryText: "二人きりで見せる大型犬" },
+    { mbtiType: "ENTP", summaryText: "たった一人への深い執着" }
+  ], lang = "ja"
 }) => {
   const colors = COLOR_MAP[groupColor] || COLOR_MAP.purple;
   const isEnglish = lang === "en";
-  const searchPrompt = isEnglish ? "🔍 Search 'CognitiveLens' for deeper match test" : "🔍 詳しい相性診断は『対人課題解決プラットフォーム』で検索！";
+  const searchPrompt = isEnglish ? "Search 'CognitiveLens'!" : "🔍 あなたのタイプも検索して診断！";
+
+  const scatterPositions = [
+    { top: "5%", left: "5%", transform: "rotate(-10deg) scale(0.9)" },
+    { top: "15%", right: "8%", transform: "rotate(15deg) scale(1)" },
+    { top: "45%", left: "4%", transform: "rotate(-5deg) scale(0.85)" },
+    { top: "50%", right: "5%", transform: "rotate(12deg) scale(0.95)" },
+    { bottom: "10%", left: "8%", transform: "rotate(-20deg) scale(1.1)" },
+    { bottom: "5%", right: "10%", transform: "rotate(10deg) scale(0.8)" },
+    { top: "85%", left: "45%", transform: "rotate(5deg) scale(0.9)" },
+    { top: "5%", right: "45%", transform: "rotate(-8deg) scale(1)" }
+  ];
 
   return (
-    <AbsoluteFill style={{ background: colors.bg, fontFamily: "'Noto Sans JP', sans-serif" }}>
-      {/* 背景ノイズ */}
-      <div style={{
-        position: "absolute",
-        top: 0, left: 0, width: "100%", height: "100%",
-        backgroundImage: "url('/noise.png')",
-        opacity: 0.15,
-        mixBlendMode: "overlay"
-      }} />
+    <AbsoluteFill style={{ backgroundColor: "#f3f4f6", fontFamily: "'Noto Sans JP', sans-serif" }}>
+      
+      {/* Scattered Chibi-style Characters in Background */}
+      {items.map((item, i) => (
+        <React.Fragment key={i}>
+          {scatterPositions[i * 2] && (
+            <Img src={staticFile(`/characters/${item.mbtiType}.png`)} style={{
+              position: "absolute",
+              top: scatterPositions[i * 2].top, left: scatterPositions[i * 2].left, right: scatterPositions[i * 2].right, bottom: scatterPositions[i * 2].bottom,
+              transform: scatterPositions[i * 2].transform,
+              width: "130px", height: "130px", objectFit: "contain", opacity: 0.35, zIndex: 1, pointerEvents: "none", filter: "drop-shadow(0 5px 10px rgba(0,0,0,0.05))"
+            }} />
+          )}
+          {scatterPositions[i * 2 + 1] && (
+            <Img src={staticFile(`/characters/${item.mbtiType}.png`)} style={{
+              position: "absolute",
+              top: scatterPositions[i * 2 + 1].top, left: scatterPositions[i * 2 + 1].left, right: scatterPositions[i * 2 + 1].right, bottom: scatterPositions[i * 2 + 1].bottom,
+              transform: scatterPositions[i * 2 + 1].transform,
+              width: "130px", height: "130px", objectFit: "contain", opacity: 0.35, zIndex: 1, pointerEvents: "none", filter: "drop-shadow(0 5px 10px rgba(0,0,0,0.05))"
+            }} />
+          )}
+        </React.Fragment>
+      ))}
 
-      <AbsoluteFill style={{ padding: "250px 40px 350px 40px", display: "flex", flexDirection: "column" }}>
+      {/* Safe zones implemented: top 250px, bottom 400px */}
+      <AbsoluteFill style={{ padding: "250px 40px 420px 40px", display: "flex", flexDirection: "column", zIndex: 10 }}>
         
-        {/* タイトル */}
+        {/* Title Board */}
         <div style={{
-          textAlign: "center",
-          marginBottom: "40px",
-          marginTop: "20px"
+          textAlign: "center", marginBottom: "50px",
+          display: "flex", flexDirection: "column", alignItems: "center", gap: "20px"
         }}>
-          <h1 style={{
-            fontSize: "64px",
-            fontWeight: 900,
-            color: "#ffffff",
-            margin: 0,
-            textShadow: `0 0 30px ${colors.shadow}`,
-          }}>
+          <h1 style={{ fontSize: "56px", fontWeight: 800, color: "#1f2937", margin: 0 }}>
             {summaryTitle}
           </h1>
-          <div style={{
-            width: "150px",
-            height: "8px",
-            backgroundColor: colors.primary,
-            borderRadius: "4px",
-            margin: "20px auto 0",
-            boxShadow: `0 0 20px ${colors.primary}`
-          }} />
+          <div style={{ width: "80px", height: "8px", backgroundColor: colors.primary, borderRadius: "4px" }} />
         </div>
 
-        {/* 2x2 グリッド */}
-        <div style={{
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr",
-          gap: "30px",
-          flex: 1,
-          marginBottom: "40px"
-        }}>
+        {/* 2x2 Grid Clean Cards */}
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "30px", flex: 1, marginBottom: "40px" }}>
           {items.map((item, index) => (
             <div key={index} style={{
-              backgroundColor: "rgba(0,0,0,0.4)",
-              borderRadius: "40px",
-              border: `2px solid ${colors.primary}66`,
-              boxShadow: `0 15px 30px rgba(0,0,0,0.5)`,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              padding: "30px",
-              position: "relative",
-              overflow: "hidden"
+              backgroundColor: "#fff", borderRadius: "32px",
+              boxShadow: "0 15px 30px -10px rgba(0,0,0,0.1)", display: "flex", flexDirection: "column",
+              alignItems: "center", justifyContent: "center", padding: "40px", position: "relative"
             }}>
-              {/* 背景の光 */}
-              <div style={{
-                position: "absolute",
-                top: "30%", left: "50%", transform: "translate(-50%, -50%)",
-                width: "150px", height: "150px",
-                background: `radial-gradient(circle, ${colors.primary}55 0%, transparent 70%)`,
-                zIndex: 0
-              }} />
+              <div style={{ zIndex: 1, position: "relative", display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }}>
+                {/* Type Badge (Pill) */}
+                <div style={{
+                  backgroundColor: colors.primary, color: colors.text,
+                  fontWeight: 800, fontSize: "40px", padding: "12px 48px", borderRadius: "9999px",
+                  marginBottom: "40px", boxShadow: `0 4px 12px ${colors.primary}40`,
+                  letterSpacing: "0.05em"
+                }}>
+                  {item.mbtiType}
+                </div>
 
-              {/* キャラ画像 */}
-              <Img 
-                src={staticFile(`/characters/${item.mbtiType}.png`)}
-                style={{
-                  width: "160px",
-                  height: "160px",
-                  objectFit: "contain",
-                  zIndex: 1,
-                  filter: `drop-shadow(0 10px 15px ${colors.shadow})`
-                }}
-              />
-              
-              {/* MBTI名 */}
-              <div style={{
-                backgroundColor: colors.primary,
-                color: "#fff",
-                fontWeight: 900,
-                fontSize: "32px",
-                padding: "8px 30px",
-                borderRadius: "100px",
-                marginTop: "-20px",
-                zIndex: 2,
-                boxShadow: `0 5px 15px ${colors.shadow}`,
-              }}>
-                {item.mbtiType}
+                {/* Summary Text */}
+                <p style={{ color: "#4b5563", fontSize: "32px", fontWeight: 700, textAlign: "center", margin: 0, lineHeight: 1.5 }}>
+                  {item.summaryText}
+                </p>
               </div>
-
-              {/* 総括テキスト */}
-              <p style={{
-                color: "#fff",
-                fontSize: "26px",
-                fontWeight: 700,
-                textAlign: "center",
-                marginTop: "30px",
-                lineHeight: 1.5,
-                zIndex: 2
-              }}>
-                {item.summaryText}
-              </p>
             </div>
           ))}
         </div>
 
-        {/* サイト誘導 (CTA) */}
+        {/* CTA Banner Clean */}
         <div style={{
-          backgroundColor: "#ffffff",
-          borderRadius: "60px",
-          padding: "30px",
-          textAlign: "center",
-          boxShadow: `0 20px 40px rgba(0,0,0,0.6), 0 0 60px ${colors.shadow}`,
-          border: `6px solid ${colors.primary}`
+          backgroundColor: "#fff", borderRadius: "9999px", padding: "30px", textAlign: "center",
+          boxShadow: "0 10px 25px -5px rgba(0,0,0,0.05)", border: `2px solid ${colors.light}`
         }}>
-          <p style={{
-            color: "#000",
-            fontSize: "34px",
-            fontWeight: 900,
-            margin: 0,
-            letterSpacing: "0.02em"
-          }}>
+          <p style={{ color: colors.primary, fontSize: "40px", fontWeight: 800, margin: 0 }}>
             {searchPrompt}
           </p>
         </div>

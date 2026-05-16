@@ -94,8 +94,8 @@ export default function HomeClient({ dict, lang }: { dict: any, lang: string }) 
                   </h3>
                   <p className="text-[10px] md:text-xs text-slate-500 leading-relaxed">
                     {lang === "en" 
-                      ? "Uncover your deep psychology and interpersonal friction habits using the 16 cognitive function models." 
-                      : "16の認知機能モデルから、あなたの深層心理と対人摩擦のクセを暴き出します。"}
+                      ? "Analyze your brain's OS and communication protocol across 16 system architectures." 
+                      : "あなたの脳の\"OS仕様\"と\"通信プロトコル\"を16パターンに分類して解析します。"}
                   </p>
                 </div>
                 <div className="shrink-0 pl-1">
@@ -113,16 +113,39 @@ export default function HomeClient({ dict, lang }: { dict: any, lang: string }) 
                 </div>
                 <div className="flex-1 text-left">
                   <h3 className="font-extrabold text-sm md:text-lg text-slate-800 mb-1">
-                    {lang === "en" ? "Romance Reverse-Lookup Checker" : "脈あり・恋愛逆引きチェッカー"}
+                    {lang === "en" ? "Target's Pulse Scanner" : "気になるあの人の「脈あり度」スキャン"}
                   </h3>
                   <p className="text-[10px] md:text-xs text-slate-500 leading-relaxed">
                     {lang === "en"
-                      ? "Scan their 16 type and pulse rate simply by tapping the target's common behaviors."
-                      : "気になる相手の「あるある行動」をタップするだけで、16タイプと脈あり度をスキャン。"}
+                      ? "Tap their common behaviors to reverse-scan their affection level."
+                      : "相手の「あるある行動」をタップするだけで、あなたへの脈あり度（接続希望度）をスキャン。"}
                   </p>
                 </div>
                 <div className="shrink-0 pl-1">
                   <ArrowRight size={18} className="text-slate-300 group-hover:text-fuchsia-500 group-hover:translate-x-1 transition-all" />
+                </div>
+              </Link>
+
+              {/* 3. MBTIビンゴ */}
+              <Link
+                href={`/${lang}/bingo`}
+                className="flex items-center gap-4 p-4 md:p-5 glass-card rounded-3xl hover:-translate-y-1 hover:shadow-lg transition-all group border-l-4 border-cyan-400 bg-white/80"
+              >
+                <div className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 bg-gradient-to-br from-cyan-400 to-blue-500 text-white shadow-md">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><path d="M3 9h18"/><path d="M3 15h18"/><path d="M9 3v18"/><path d="M15 3v18"/></svg>
+                </div>
+                <div className="flex-1 text-left">
+                  <h3 className="font-extrabold text-sm md:text-lg text-slate-800 mb-1">
+                    {lang === "en" ? "Biased MBTI Bingo" : "偏見だらけのMBTIビンゴ"}
+                  </h3>
+                  <p className="text-[10px] md:text-xs text-slate-500 leading-relaxed">
+                    {lang === "en"
+                      ? "Check off the relatable traits for your type and share your bingo card!"
+                      : "「あるある」をタップしてビンゴを作ろう！完成したカードは画像として保存してSNSにシェアできます。"}
+                  </p>
+                </div>
+                <div className="shrink-0 pl-1">
+                  <ArrowRight size={18} className="text-slate-300 group-hover:text-cyan-500 group-hover:translate-x-1 transition-all" />
                 </div>
               </Link>
 
@@ -163,10 +186,10 @@ export default function HomeClient({ dict, lang }: { dict: any, lang: string }) 
                 </div>
                 <div className="flex-1 text-left">
                   <h3 className="font-extrabold text-sm md:text-lg text-slate-800 mb-1">
-                    {lang === "en" ? "16 Types Romance & Communication Columns" : "16タイプ別 恋愛・対人コラム一覧"}
+                    {lang === "en" ? "16 System Architecture Deep Dive" : "16タイプ別 OS仕様＆通信プロトコル解析コラム"}
                   </h3>
                   <p className="text-[10px] md:text-xs text-slate-500 leading-relaxed">
-                    {lang === "en" ? "Deep dive into each personality type's tendencies and communication habits." : "全16タイプの無意識のクセや人間関係の傾向を深く解剖した記事まとめ。"}
+                    {lang === "en" ? "Deep dive into each type's system architecture, hidden specs, and communication protocols." : "全16タイプの隠れたスペックや通信の癖を、IT比喩で知的に深掘りした記事まとめ。"}
                   </p>
                 </div>
                 <div className="shrink-0 pl-1">

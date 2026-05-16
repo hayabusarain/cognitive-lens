@@ -10,104 +10,78 @@ export type SlideTitleImageProps = {
 };
 
 export const SlideTitleImage: React.FC<SlideTitleImageProps> = ({
-  mainTitle = "紫（NT）タイプの脈ありサイン",
-  subTitle = "最後のページにまとめがあるよ！",
+  mainTitle = "紫（NT）タイプの\n思わず悶絶するギャップ",
+  subTitle = "最後のページにまとめがあるよ\n共感したらフォローしてね🤍",
   groupColor = "purple",
   lang = "ja"
 }) => {
   const colors = COLOR_MAP[groupColor] || COLOR_MAP.purple;
 
   return (
-    <AbsoluteFill style={{ background: colors.bg, fontFamily: "'Noto Sans JP', sans-serif" }}>
-      {/* 背景ノイズ */}
+    <AbsoluteFill style={{ backgroundColor: "#f3f4f6", fontFamily: "'Noto Sans JP', sans-serif" }}>
+      {/* 16P style decorative top border/wave */}
       <div style={{
-        position: "absolute",
-        top: 0, left: 0, width: "100%", height: "100%",
-        backgroundImage: "url('/noise.png')",
-        opacity: 0.15,
-        mixBlendMode: "overlay"
-      }} />
-
-      {/* 装飾用背景サークル */}
-      <div style={{
-        position: "absolute",
-        top: "-10%", left: "-20%", width: "800px", height: "800px",
-        background: `radial-gradient(circle, ${colors.primary}44 0%, transparent 70%)`,
-        zIndex: 0
-      }} />
-      <div style={{
-        position: "absolute",
-        bottom: "-10%", right: "-20%", width: "1000px", height: "1000px",
-        background: `radial-gradient(circle, ${colors.primary}44 0%, transparent 70%)`,
+        position: "absolute", top: 0, left: 0, right: 0, height: "30%",
+        backgroundColor: colors.primary,
+        borderBottomLeftRadius: "50% 20%", borderBottomRightRadius: "50% 20%",
         zIndex: 0
       }} />
 
       <AbsoluteFill style={{ 
-        display: "flex", 
-        flexDirection: "column", 
-        alignItems: "center", 
-        justifyContent: "center",
-        padding: "250px 60px 400px 60px"
+        display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", 
+        padding: "300px 60px 450px 60px", zIndex: 10
       }}>
-        
-        {/* メインタイトル */}
+        {/* Main Card */}
         <div style={{
-          backgroundColor: "rgba(0,0,0,0.4)",
-          backdropFilter: "blur(20px)",
-          padding: "80px 60px",
-          borderRadius: "60px",
-          border: `4px solid ${colors.primary}88`,
-          boxShadow: `0 30px 60px rgba(0,0,0,0.6), 0 0 100px ${colors.shadow}`,
-          textAlign: "center",
+          backgroundColor: "#fff",
           width: "100%",
-          zIndex: 10
+          padding: "80px 60px",
+          borderRadius: "32px",
+          boxShadow: "0 25px 50px -12px rgba(0,0,0,0.1), 0 0 20px rgba(0,0,0,0.05)",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: "40px"
         }}>
           {mainTitle.split("の").map((part, i, arr) => (
             <React.Fragment key={i}>
               <h1 style={{
-                fontSize: i === 0 ? "80px" : "110px",
-                fontWeight: 900,
-                color: "#ffffff",
-                margin: i === 0 ? "0 0 20px 0" : "20px 0 0 0",
-                lineHeight: 1.2,
-                textShadow: `0 0 40px ${colors.shadow}`,
+                fontSize: i === 0 ? "70px" : "85px",
+                fontWeight: 800,
+                color: i === 0 ? colors.primary : "#1f2937",
+                margin: 0,
+                lineHeight: 1.3,
+                textAlign: "center",
+                letterSpacing: "-0.02em"
               }}>
-                {part}{i !== arr.length - 1 && "の"}
+                {part}{i !== arr.length - 1 && <span style={{fontSize: "55px", color: "#6b7280", fontWeight: 600}}>の</span>}
               </h1>
               {i === 0 && (
                 <div style={{
-                  width: "200px",
-                  height: "12px",
-                  backgroundColor: colors.primary,
-                  borderRadius: "6px",
-                  margin: "0 auto",
-                  boxShadow: `0 0 30px ${colors.primary}`
+                  width: "100px", height: "8px", backgroundColor: colors.light, borderRadius: "4px"
                 }} />
               )}
             </React.Fragment>
           ))}
         </div>
 
-        {/* サブタイトル（まとめがある旨） */}
+        {/* Subtitle / CTA Badge */}
         <div style={{
-          marginTop: "100px",
-          backgroundColor: "#ffffff",
-          color: colors.primary,
+          marginTop: "80px",
+          backgroundColor: "#fff",
           padding: "30px 60px",
-          borderRadius: "100px",
-          fontSize: "48px",
-          fontWeight: 900,
-          boxShadow: `0 20px 40px rgba(0,0,0,0.4), 0 0 50px ${colors.light}88`,
-          display: "flex",
-          alignItems: "center",
-          gap: "20px",
-          zIndex: 10
+          borderRadius: "9999px", // Pill shape
+          border: `4px solid ${colors.primary}40`,
+          color: "#4b5563",
+          fontSize: "40px",
+          fontWeight: 700,
+          textAlign: "center",
+          whiteSpace: "pre-wrap",
+          lineHeight: 1.5,
+          boxShadow: "0 10px 25px -5px rgba(0,0,0,0.05)"
         }}>
-          <span>✨</span>
           {subTitle}
-          <span>✨</span>
         </div>
-
       </AbsoluteFill>
     </AbsoluteFill>
   );

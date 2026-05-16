@@ -38,7 +38,7 @@ export default function VideoGeneratorPage() {
   const [zipExportPath, setZipExportPath] = useState<string | null>(null);
   const [errorMSG, setErrorMSG] = useState<string | null>(null);
 
-  const [videoFormat, setVideoFormat] = useState<"ranking" | "pov" | "smartphone" | "reaction" | "piechart" | "combo" | "infographic">("ranking");
+  const [videoFormat, setVideoFormat] = useState<"ranking" | "pov" | "smartphone" | "reaction" | "piechart" | "combo" | "infographic" | "slideshow">("ranking");
   const [selectedPovType, setSelectedPovType] = useState("INFP");
   const [selectedSmartphoneId, setSelectedSmartphoneId] = useState(smartphonePresets[0].id);
   const [selectedReactionId, setSelectedReactionId] = useState(reactionPresets[0].id);
@@ -234,6 +234,37 @@ export default function VideoGeneratorPage() {
           setStatus(lang === "en" ? "Completed!" : "完成しました！");
           setIsLoading(false);
           return;
+        } else if (videoFormat === "slideshow") {
+          const preset = slidePresets.find(p => p.id === selectedSlideId);
+          if (!preset) throw new Error("プリセットが見つかりません");
+
+          compositionId = "SlideShowVideo";
+          presetId = preset.id;
+          presetTitle = preset.title;
+          inputProps = {
+            titleSlide: {
+              mainTitle: preset.titleSlide.mainTitle,
+              subTitle: preset.titleSlide.subTitle,
+              groupColor: preset.groupColor,
+              lang: lang
+            },
+            slides: preset.items.map(item => ({
+              mbtiType: item.mbtiType,
+              catchphrase: item.catchphrase,
+              groupColor: preset.groupColor,
+              points: item.points,
+              lang: lang
+            })),
+            summarySlide: {
+              summaryTitle: preset.summarySlide.title,
+              groupColor: preset.groupColor,
+              items: preset.summarySlide.items,
+              lang: lang
+            },
+            slideDuration: 150,
+            transitionDuration: 20
+          };
+          caption = "";
         }
 
         setGeneratedEntries([{ mbtiType: "ALL", tier: videoFormat, comment: `「${presetTitle}」のプリセットで生成中` } as any]);
@@ -407,6 +438,17 @@ export default function VideoGeneratorPage() {
               >
                 1枚絵まとめ
               </button>
+              <button
+                type="button"
+                onClick={() => setVideoFormat("slideshow")}
+                className={`relative z-40 shrink-0 whitespace-nowrap px-6 py-3 rounded-xl font-bold transition-all text-sm active:scale-95 ${
+                  videoFormat === "slideshow" 
+                    ? "bg-amber-500 text-black shadow-[0_0_15px_rgba(245,158,11,0.4)]" 
+                    : "bg-white/5 text-neutral-400 hover:bg-white/10"
+                }`}
+              >
+                📽️ スライドショー動画
+              </button>
             </div>
 
             {/* スマホ用フォーマット選択ドロップダウン（絶対動くネイティブUI） */}
@@ -427,6 +469,7 @@ export default function VideoGeneratorPage() {
                 <option value="piechart">🧠 脳内円グラフ</option>
                 <option value="combo">🔥 会話劇コンボ</option>
                 <option value="infographic">🖼️ 1枚絵まとめ (画像生成)</option>
+                <option value="slideshow">📽️ スライドショー動画</option>
               </select>
             </div>
 
@@ -535,11 +578,11 @@ export default function VideoGeneratorPage() {
                   ))}
                 </select>
               </div>
-            ) : (
+            ) : videoFormat === "infographic" ? (
               <div>
                 <label className="block text-sm font-bold text-emerald-400 mb-2 uppercase tracking-widest flex items-center gap-2">
                   <Sparkles className="w-4 h-4" />
-                  お題を選択（スライド画像 4枚）
+                  お題を選択（スライド画像 6枚）
                 </label>
                 <select 
                   value={selectedSlideId}
@@ -551,6 +594,24 @@ export default function VideoGeneratorPage() {
                     <option key={p.id} value={p.id}>{p.title}</option>
                   ))}
                 </select>
+              </div>
+            ) : (
+              <div>
+                <label className="block text-sm font-bold text-amber-400 mb-2 uppercase tracking-widest flex items-center gap-2">
+                  <Sparkles className="w-4 h-4" />
+                  お題を選択（スライドショー動画）
+                </label>
+                <select 
+                  value={selectedSlideId}
+                  onChange={(e) => setSelectedSlideId(e.target.value)}
+                  className="relative z-50 w-full bg-black/50 border border-neutral-700 rounded-xl p-4 text-xl focus:border-amber-400 focus:ring-1 focus:ring-amber-400 outline-none transition-all text-white"
+                  disabled={isLoading}
+                >
+                  {slidePresets.map(p => (
+                    <option key={p.id} value={p.id}>{p.title}</option>
+                  ))}
+                </select>
+                <p className="mt-3 text-xs text-neutral-400">※ 6枚の画像（タイトル＋4キャラ＋まとめ）をスライドショー動画（MP4）に変換します</p>
               </div>
             )}
 

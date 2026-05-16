@@ -454,7 +454,7 @@ function CompatibilitySection({ typeKey, lang }: { typeKey: string, lang: string
 
       <div className="rounded-3xl border overflow-hidden" style={{ background: "rgba(0,0,0,0.06)", borderColor: "rgba(20,184,166,0.18)" }}>
         <button
-          onClick={() => router.push(`/result?type=${compat.bestPartner.type}`)}
+          onClick={() => router.push(`/${lang}/result?type=${compat.bestPartner.type}`)}
           className="w-full text-left"
         >
           <div className="flex items-center gap-3 px-5 py-3 transition-colors" style={{ background: "rgba(20,184,166,0.08)" }}
@@ -481,7 +481,7 @@ function CompatibilitySection({ typeKey, lang }: { typeKey: string, lang: string
 
       <div className="rounded-3xl border overflow-hidden" style={{ background: "rgba(0,0,0,0.06)", borderColor: "rgba(244,63,94,0.18)" }}>
         <button
-          onClick={() => router.push(`/result?type=${compat.hardestMatch.type}`)}
+          onClick={() => router.push(`/${lang}/result?type=${compat.hardestMatch.type}`)}
           className="w-full text-left"
         >
           <div className="flex items-center gap-3 px-5 py-3 transition-colors" style={{ background: "rgba(244,63,94,0.08)" }}

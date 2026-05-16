@@ -11,6 +11,7 @@ import { StaticInfographicVideo } from "./StaticInfographicVideo";
 import { SingleSlideImage } from "./SingleSlideImage";
 import { SlideTitleImage } from "./SlideTitleImage";
 import { SlideSummaryImage } from "./SlideSummaryImage";
+import { SlideShowVideo } from "./SlideShowVideo";
 import React from "react";
 import "../app/globals.css";
 
@@ -305,6 +306,42 @@ export const RemotionRoot: React.FC = () => {
             { mbtiType: "ENTP", summaryText: "からかいつつも完全にロックオン" }
           ],
           lang: "ja"
+        }}
+      />
+
+      {/* スライドショー動画（6枚の画像を動画化） */}
+      <Composition
+        id="SlideShowVideo"
+        component={SlideShowVideo as React.FC<any>}
+        durationInFrames={900}
+        fps={30}
+        width={1080}
+        height={1920}
+        calculateMetadata={({ props }) => {
+          const p = props as any;
+          const slideCount = (p.slides?.length || 0) + 2; // +2 for title and summary
+          const slideDuration = p.slideDuration || 150;
+          const transitionDuration = p.transitionDuration || 20;
+          return {
+            durationInFrames: slideCount * slideDuration - (slideCount - 1) * transitionDuration
+          };
+        }}
+        defaultProps={{
+          titleSlide: {
+            mainTitle: "紫（NT）タイプの\n沼るギャップ特集",
+            subTitle: "最後にまとめあるよ💜\n共感したらフォローしてね🫶",
+            groupColor: "purple",
+            lang: "ja"
+          },
+          slides: [],
+          summarySlide: {
+            summaryTitle: "紫タイプ（NT）まとめ",
+            groupColor: "purple",
+            items: [],
+            lang: "ja"
+          },
+          slideDuration: 150,
+          transitionDuration: 20
         }}
       />
     </>
