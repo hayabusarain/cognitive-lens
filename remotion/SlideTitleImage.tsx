@@ -75,7 +75,7 @@ export const SlideTitleImage: React.FC<SlideTitleImageProps> = ({
           fontSize: "36px",
           fontWeight: 800,
           letterSpacing: "0.05em",
-          boxShadow: `0 10px 25px ${colors.shadow}`,
+          boxShadow: `0 10px 25px ${colors.primary}40`,
           display: "flex",
           alignItems: "center",
           gap: "12px"

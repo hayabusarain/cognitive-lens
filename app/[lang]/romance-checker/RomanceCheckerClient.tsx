@@ -113,7 +113,7 @@ export default function RomanceCheckerClient({ lang }: { lang: string }) {
       setYesQuestions((prev) => [...prev, ROMANCE_DATA[targetMBTI].questions[currentQIndex]]);
     }
 
-    if (currentQIndex < ROMANCE_DATA[targetMBTI].questions.length - 1) {
+    if (currentQIndex < ROMANCE_DATA[targetMBTI!].questions.length - 1) {
       setCurrentQIndex((prev) => prev + 1);
     } else {
       // 終了

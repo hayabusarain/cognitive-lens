@@ -19,6 +19,7 @@ import {
   Download,
 } from "lucide-react";
 import { PROTOCOLS_JA } from "@/lib/protocols-ja";
+import { PROTOCOLS_EN } from "@/lib/protocols-en";
 import { TYPE_INFO, DEFAULT_TYPE } from "@/lib/type-info";
 import { getTypeInfo, getCompatibility } from "@/lib/data-provider";
 import { STATIC_PROFILES_JA, STATIC_PROFILES_EN } from "@/lib/static-profiles";
@@ -609,7 +610,7 @@ export default function ResultContent({ lang = "ja" }: { lang?: string }) {
 
   const byCategory = (cat: DbCategory) => {
     const list = currentTypeProtocols[cat] || [];
-    return list.map((content, i) => ({
+    return list.map((content: string, i: number) => ({
       id: `${cat}-${i}`,
       target_type: typeKey,
       category: cat,
