@@ -100,6 +100,21 @@ export const StaticInfographicVideo: React.FC<StaticInfographicProps> = ({
             margin: "20px auto 0",
             boxShadow: `0 0 20px ${colors.primary}`
           }} />
+
+          <div style={{
+            marginTop: "30px",
+            display: "inline-flex",
+            alignItems: "center",
+            backgroundColor: "rgba(0,0,0,0.5)",
+            border: `2px solid ${colors.primary}`,
+            borderRadius: "100px",
+            padding: "12px 30px",
+            boxShadow: `0 10px 20px rgba(0,0,0,0.3)`
+          }}>
+             <span style={{ color: "#fff", fontSize: "28px", fontWeight: "bold", letterSpacing: "0.05em" }}>
+               {isEnglish ? "🔍 Search 'CognitiveLens'" : "🔍 詳細は『CognitiveLens』で検索"}
+             </span>
+          </div>
         </div>
 
         {/* 2x2 グリッド */}

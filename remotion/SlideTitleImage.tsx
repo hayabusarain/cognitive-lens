@@ -65,6 +65,24 @@ export const SlideTitleImage: React.FC<SlideTitleImageProps> = ({
           ))}
         </div>
 
+        {/* サイト誘導バッジ (追加) */}
+        <div style={{
+          marginTop: "40px",
+          backgroundColor: colors.primary,
+          color: "#fff",
+          padding: "16px 40px",
+          borderRadius: "100px",
+          fontSize: "36px",
+          fontWeight: 800,
+          letterSpacing: "0.05em",
+          boxShadow: `0 10px 25px ${colors.shadow}`,
+          display: "flex",
+          alignItems: "center",
+          gap: "12px"
+        }}>
+          🔍 診断は『CognitiveLens』で検索
+        </div>
+
         {/* Subtitle / CTA Badge */}
         <div style={{
           marginTop: "80px",
