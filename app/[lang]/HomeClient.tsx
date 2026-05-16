@@ -213,7 +213,8 @@ export default function HomeClient({ dict, lang }: { dict: any, lang: string }) 
                   CognitiveLens（コグニティブレンズ）とは？
                 </h2>
                 <p className="text-sm text-slate-600 leading-relaxed font-medium">
-                  CognitiveLensは、マイヤーズ・ブリッグス・タイプ指標（MBTI）をベースとした16の性格分類を、Z世代向けのIT・スマホメタファーで再解釈した「対人課題解決プラットフォーム」です。人間の性格や行動パターンを「OSの基本仕様」や「通信プロトコル（意思疎通の規格）」に見立てることで、日常で発生する「なぜかあの人と話が通じない」「相手の考えていることが分からない」といった無意識のバグ（すれ違い）を論理的にデバッグ（解消）します。
+                  そもそも人間の性格って、複雑すぎてめんどくさいですよね？ CognitiveLensは、ユングの心理学的類型論（認知機能モデル）をベースとした16タイプの性格分類を、Z世代向けのIT・スマホメタファーで「再解釈」した対人課題解決プラットフォームです。<br/>
+                  人間の性格や行動パターンを「OSの基本仕様」や「通信プロトコル（意思疎通の規格）」に見立てることで、日常でよくある「なんでこの人、こんなに話が通じないの？」といった無意識のバグ（すれ違い）を、感情論抜きで論理的にデバッグ（解消）しちゃおう、というコンセプトで作られています。
                 </p>
               </div>
 
@@ -223,7 +224,8 @@ export default function HomeClient({ dict, lang }: { dict: any, lang: string }) 
                   なぜ性格診断に「ITメタファー」が必要なのか
                 </h3>
                 <p className="text-sm text-slate-600 leading-relaxed font-medium">
-                  従来の心理学的な解説は専門用語が多く、実際の対人関係（学校、職場、恋愛など）で直感的に活用するのが困難でした。当サイトでは「外向的感情（Fe）」を「広域Wi-Fiルーター（常に周囲の空気を探知）」、「内向的思考（Ti）」を「ローカル内での厳密なコンパイル（自分の中の論理整合性）」といった独自の言語体系に翻訳しています。これにより、自分と相手の「互換性のなさ」を感情論ではなく「ただのOSの違い」として客観視でき、メンタルヘルスを保つための自己理解ツールとして機能します。
+                  従来の心理学的な解説って、専門用語ばかりで実際の対人関係（学校、職場、恋愛など）でパッと使うにはちょっとハードルが高いんです。そこで当サイトでは、「外向的感情（Fe）」を『広域Wi-Fiルーター（常に周囲の空気を探知）』、「内向的思考（Ti）」を『ローカル内での厳密なコンパイル（自分の中の論理整合性）』といった独自の言語体系に翻訳しました。<br/>
+                  これによって、自分と相手の「どうしても合わない部分」を、「あいつ性格悪いな」ではなく「単にOSが違うだけか」と客観視できるようになり、メンタルヘルスを保つための実用的な自己理解ツールとして機能します。
                 </p>
               </div>
 
@@ -235,11 +237,11 @@ export default function HomeClient({ dict, lang }: { dict: any, lang: string }) 
                 <ul className="text-sm text-slate-600 leading-relaxed font-medium space-y-3 list-none pl-0">
                   <li className="relative pl-4 before:content-[''] before:absolute before:left-0 before:top-2 before:w-1.5 before:h-1.5 before:bg-slate-400 before:rounded-full">
                     <strong className="text-slate-700">脈あり度（接続希望度）スキャン：</strong>
-                    相手の些細な行動や言動（例：LINEの返信速度、視線の動き）から、MBTIの認知機能（心理機能）に基づいた「あなたへの関心度」をAIが逆算分析します。表面的な好意ではなく、そのタイプ特有の「不器用なサイン」を見逃さないための診断ツールです。
+                    相手の些細な言動（LINEの返信速度、視線の動きなど）から、認知機能に基づいた「あなたへの関心度」をAIが逆算分析します。分かりやすい好意だけでなく、そのタイプ特有の「不器用すぎるアプローチ」を見逃さないための診断ツールです。
                   </li>
                   <li className="relative pl-4 before:content-[''] before:absolute before:left-0 before:top-2 before:w-1.5 before:h-1.5 before:bg-slate-400 before:rounded-full">
-                    <strong className="text-slate-700">偏見だらけのMBTIビンゴ：</strong>
-                    各タイプの「あるある行動（ステレオタイプ）」を24個のセルに配置したエンタメ機能。自分がどれだけそのタイプの「基本スペック」に忠実かを可視化し、SNSでのアイデンティティ共有（仲間探し）を促進します。
+                    <strong className="text-slate-700">偏見だらけの16タイプビンゴ：</strong>
+                    各タイプの「あるある行動（ステレオタイプ）」を24個のセルに配置したエンタメ機能。自分がどれだけそのタイプの「基本スペック」に忠実か、あるいは例外的なバグを持っているかを可視化します。
                   </li>
                   <li className="relative pl-4 before:content-[''] before:absolute before:left-0 before:top-2 before:w-1.5 before:h-1.5 before:bg-slate-400 before:rounded-full">
                     <strong className="text-slate-700">16タイプ別 OS仕様解析コラム：</strong>
@@ -250,7 +252,7 @@ export default function HomeClient({ dict, lang }: { dict: any, lang: string }) 
               
               <div className="pt-4 border-t border-slate-100">
                 <p className="text-xs text-slate-400 leading-relaxed">
-                  ※本サイトの診断結果およびAI生成コンテンツは、自己理解を深めるためのエンターテインメント・参考情報として提供されています。医療的診断を代行するものではありません。
+                  ※本サイト（CognitiveLens）は、マイヤーズ・ブリッグス財団や公式のMBTI®テストとは一切関係のない独立したエンターテインメント・自己理解プラットフォームです。診断結果およびAI生成コンテンツは参考情報として提供されており、医療的診断を代行するものではありません。
                 </p>
               </div>
             </article>
