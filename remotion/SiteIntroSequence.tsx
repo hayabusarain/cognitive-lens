@@ -71,7 +71,9 @@ export const SiteIntroSequence: React.FC<SiteIntroProps> = ({ theme, accentColor
             color: "transparent",
             letterSpacing: "0.05em",
           }}>
-            CognitiveLens
+            {/[\u3000-\u303f\u3040-\u309f\u30a0-\u30ff\u4e00-\u9faf\u3400-\u4dbf]/.test(theme) 
+              ? "コグニティブレンズ" 
+              : "CognitiveLens"}
           </span>
           <p style={{
             color: "rgba(255, 255, 255, 0.6)",
@@ -82,7 +84,7 @@ export const SiteIntroSequence: React.FC<SiteIntroProps> = ({ theme, accentColor
             textAlign: "center",
           }}>
             {/[\u3000-\u303f\u3040-\u309f\u30a0-\u30ff\u4e00-\u9faf\u3400-\u4dbf]/.test(theme) 
-              ? "🔍「対人課題解決プラットフォーム」で検索" 
+              ? "🔍「コグニティブレンズ」で検索" 
               : "🔍 Search 'CognitiveLens'"}
           </p>
         </div>

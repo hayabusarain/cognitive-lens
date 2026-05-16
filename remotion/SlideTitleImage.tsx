@@ -80,7 +80,7 @@ export const SlideTitleImage: React.FC<SlideTitleImageProps> = ({
           alignItems: "center",
           gap: "12px"
         }}>
-          🔍 診断は『CognitiveLens』で検索
+          🔍 診断は『コグニティブレンズ』で検索
         </div>
 
         {/* Subtitle / CTA Badge */}

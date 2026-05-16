@@ -152,7 +152,7 @@ export const TierListVideo: React.FC<TierListVideoProps> = ({
                   {lang === "en" ? "For the real 16 Type test," : "無料のガチ16タイプ診断は"}
                 </span>
                 <span style={{ color: "#00ffff", fontSize: "36px", fontWeight: "900", fontFamily: "sans-serif", textShadow: "0 0 15px rgba(0,255,255,0.6)" }}>
-                  {lang === "en" ? "Search 'CognitiveLens'" : "「対人課題解決プラットフォーム」で検索"}
+                  {lang === "en" ? "Search 'CognitiveLens'" : "「コグニティブレンズ」で検索"}
                 </span>
               </div>
             </div>

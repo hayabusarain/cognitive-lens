@@ -148,7 +148,7 @@ const Outro: React.FC<{ mbtiType: string; lang?: string }> = ({ mbtiType, lang =
   });
 
   const headingText = lang === "en" ? `The truth behind ${mbtiType}'s "fatal bug"` : `${mbtiType}の「致命的バグ」の正体`;
-  const btnText = lang === "en" ? `Explained at the link in bio (CognitiveLens)` : `プロフのリンク（CognitiveLens）で解説中`;
+  const btnText = lang === "en" ? `Explained at the link in bio (CognitiveLens)` : `プロフのリンク（コグニティブレンズ）で解説中`;
 
   return (
     <AbsoluteFill style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", opacity, transform: `scale(${scale})`, padding: "280px 80px 400px 80px" }}>

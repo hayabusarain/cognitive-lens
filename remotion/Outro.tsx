@@ -68,13 +68,13 @@ export const Outro: React.FC<{ lang?: string }> = ({ lang = "ja" }) => {
       >
         <span style={{ fontSize: "50px", marginRight: "20px" }}>🔍</span>
         <span style={{ 
-          fontSize: "65px", 
+          fontSize: lang === "en" ? "65px" : "55px", 
           fontWeight: "bold", 
           fontFamily: "sans-serif",
           color: "#333",
           letterSpacing: "0.05em"
         }}>
-          CognitiveLens
+          {lang === "en" ? "CognitiveLens" : "コグニティブレンズ"}
         </span>
         {/* カーソルの点滅表現 */}
         <span style={{

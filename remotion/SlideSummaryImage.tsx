@@ -20,7 +20,7 @@ export const SlideSummaryImage: React.FC<SlideSummaryImageProps> = ({
 }) => {
   const colors = COLOR_MAP[groupColor] || COLOR_MAP.purple;
   const isEnglish = lang === "en";
-  const searchPrompt = isEnglish ? "Search 'CognitiveLens'!" : "🔍 あなたのタイプも検索して診断！";
+  const searchPrompt = isEnglish ? "Search 'CognitiveLens'!" : "🔍 『コグニティブレンズ』で診断！";
 
   const scatterPositions = [
     { top: "5%", left: "5%", transform: "rotate(-10deg) scale(0.9)" },

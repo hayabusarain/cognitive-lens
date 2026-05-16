@@ -58,7 +58,7 @@ export const StaticInfographicVideo: React.FC<StaticInfographicProps> = ({
   const ctaScale = spring({ frame: frame - 20, fps, config: { damping: 12, mass: 0.5 } });
 
   const isEnglish = !/[\u3000-\u303f\u3040-\u309f\u30a0-\u30ff\u4e00-\u9faf\u3400-\u4dbf]/.test(theme);
-  const searchPrompt = isEnglish ? "🔍 Search 'CognitiveLens'" : "🔍 詳しい相性診断は『対人課題解決プラットフォーム』で検索";
+  const searchPrompt = isEnglish ? "🔍 Search 'CognitiveLens'" : "🔍 詳しい相性診断は『コグニティブレンズ』で検索";
 
   return (
     <AbsoluteFill style={{ background: colors.bg, fontFamily: "'Noto Sans JP', sans-serif" }}>
@@ -112,7 +112,7 @@ export const StaticInfographicVideo: React.FC<StaticInfographicProps> = ({
             boxShadow: `0 10px 20px rgba(0,0,0,0.3)`
           }}>
              <span style={{ color: "#fff", fontSize: "28px", fontWeight: "bold", letterSpacing: "0.05em" }}>
-               {isEnglish ? "🔍 Search 'CognitiveLens'" : "🔍 詳細は『CognitiveLens』で検索"}
+               {isEnglish ? "🔍 Search 'CognitiveLens'" : "🔍 詳細は『コグニティブレンズ』で検索"}
              </span>
           </div>
         </div>

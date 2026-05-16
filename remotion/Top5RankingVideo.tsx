@@ -79,7 +79,7 @@ export const Top5RankingVideo: React.FC<Top5RankingVideoProps> = ({
               {lang === "en" ? "For the real 16 Type test," : "ガチ16タイプ診断は"}
             </span>
             <span style={{ color: "#ff0066", fontSize: "30px", fontWeight: "900", fontFamily: "sans-serif", textShadow: "0 0 15px rgba(255,0,100,0.6)" }}>
-              {lang === "en" ? "Search 'CognitiveLens'" : "「対人課題解決プラットフォーム」で検索"}
+              {lang === "en" ? "Search 'CognitiveLens'" : "「コグニティブレンズ」で検索"}
             </span>
           </div>
         </div>
@@ -205,7 +205,7 @@ const RankingSlide: React.FC<{ entry: RankingEntry, isLast: boolean, fps: number
           {lang === "en" ? (
             <>To prevent deletion, full analysis on my site.<br/>Search 'CognitiveLens'</>
           ) : (
-            <>削除対策のため自作サイトで公開中<br/>「対人課題解決プラットフォーム」で検索</>
+            <>削除対策のため自作サイトで公開中<br/>「コグニティブレンズ」で検索</>
           )}
         </div>
       )}

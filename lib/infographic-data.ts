@@ -19,7 +19,7 @@ export const INFOGRAPHIC_PRESETS: InfographicPreset[] = [
   {
     id: "info_crush_purple",
     title: "💜 紫（分析家）の接続要求（脈あり）サイン",
-    tiktokCaption: "【紫タイプ】分析家たちの接続要求（脈あり）サイン💜\nあまのじゃくすぎない…？😂\n\n詳しい相性診断は『対人課題解決プラットフォーム CognitiveLens』で検索🔍\n\n#16タイプ #脈ありサイン #INTJ #INTP #ENTJ #ENTP",
+    tiktokCaption: "【紫タイプ】分析家たちの接続要求（脈あり）サイン💜\nあまのじゃくすぎない…？😂\n\n詳しい相性診断は『対人課題解決プラットフォーム コグニティブレンズ』で検索🔍\n\n#16タイプ #脈ありサイン #INTJ #INTP #ENTJ #ENTP",
     inputProps: {
       theme: "紫（分析家）の接続要求（脈あり）サイン",
       groupColor: "purple",
@@ -50,7 +50,7 @@ export const INFOGRAPHIC_PRESETS: InfographicPreset[] = [
   {
     id: "info_crush_green",
     title: "💚 緑（外交官）の接続要求（脈あり）サイン",
-    tiktokCaption: "【緑タイプ】外交官たちの接続要求（脈あり）サイン💚\n感情ダダ漏れ？それとも隠す？🥺\n\n詳しい相性診断は『対人課題解決プラットフォーム CognitiveLens』で検索🔍\n\n#16タイプ #脈ありサイン #INFJ #INFP #ENFJ #ENFP",
+    tiktokCaption: "【緑タイプ】外交官たちの接続要求（脈あり）サイン💚\n感情ダダ漏れ？それとも隠す？🥺\n\n詳しい相性診断は『対人課題解決プラットフォーム コグニティブレンズ』で検索🔍\n\n#16タイプ #脈ありサイン #INFJ #INFP #ENFJ #ENFP",
     inputProps: {
       theme: "緑（外交官）の接続要求（脈あり）サイン",
       groupColor: "green",
@@ -81,7 +81,7 @@ export const INFOGRAPHIC_PRESETS: InfographicPreset[] = [
   {
     id: "info_crush_blue",
     title: "💙 青（番人）の接続要求（脈あり）サイン",
-    tiktokCaption: "【青タイプ】番人たちの接続要求（脈あり）サイン💙\n分かりやすくて誠実すぎる！✨\n\n詳しい相性診断は『対人課題解決プラットフォーム CognitiveLens』で検索🔍\n\n#16タイプ #脈ありサイン #ISTJ #ISFJ #ESTJ #ESFJ",
+    tiktokCaption: "【青タイプ】番人たちの接続要求（脈あり）サイン💙\n分かりやすくて誠実すぎる！✨\n\n詳しい相性診断は『対人課題解決プラットフォーム コグニティブレンズ』で検索🔍\n\n#16タイプ #脈ありサイン #ISTJ #ISFJ #ESTJ #ESFJ",
     inputProps: {
       theme: "青（番人）の接続要求（脈あり）サイン",
       groupColor: "blue",
@@ -112,7 +112,7 @@ export const INFOGRAPHIC_PRESETS: InfographicPreset[] = [
   {
     id: "info_crush_yellow",
     title: "💛 黄（探検家）の接続要求（脈あり）サイン",
-    tiktokCaption: "【黄タイプ】探検家たちの接続要求（脈あり）サイン💛\n直感と行動力で勝負！🔥\n\n詳しい相性診断は『対人課題解決プラットフォーム CognitiveLens』で検索🔍\n\n#16タイプ #脈ありサイン #ISTP #ISFP #ESTP #ESFP",
+    tiktokCaption: "【黄タイプ】探検家たちの接続要求（脈あり）サイン💛\n直感と行動力で勝負！🔥\n\n詳しい相性診断は『対人課題解決プラットフォーム コグニティブレンズ』で検索🔍\n\n#16タイプ #脈ありサイン #ISTP #ISFP #ESTP #ESFP",
     inputProps: {
       theme: "黄（探検家）の接続要求（脈あり）サイン",
       groupColor: "yellow",
