@@ -21,6 +21,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/target-diagnosis",
     "/articles",
     "/romance-checker",
+    "/bingo",
   ];
 
   languages.forEach((lang) => {

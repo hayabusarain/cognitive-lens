@@ -109,6 +109,40 @@ export default function BingoClient({ lang }: { lang: string }) {
             </button>
           ))}
         </div>
+
+        {/* SEO & Context Article Block (for Google AdSense / Crawlers) */}
+        <article className="mt-16 max-w-2xl text-left space-y-8 bg-slate-900/50 p-8 rounded-3xl border border-slate-800">
+          <div className="space-y-4">
+            <h3 className="text-lg font-extrabold text-white flex items-center gap-2">
+              <span className="text-fuchsia-400">#</span>
+              偏見だらけのMBTIビンゴとは？
+            </h3>
+            <p className="text-sm text-slate-400 leading-relaxed">
+              CognitiveLensが提供する「偏見だらけのMBTIビンゴ」は、16の性格タイプ（MBTI）それぞれにありがちな「ステレオタイプ（偏見）」や「あるある行動」を可視化するためのエンターテインメント・ツールです。一般的な心理学の枠組みを超え、Z世代やネット上のミーム文化でよく語られる「各タイプの極端な行動パターン」を24個のセルに配置しています。自分がどれだけそのタイプの「基本スペック」に忠実か（あるいは例外的なバグを抱えているか）を遊び感覚でチェックできます。
+            </p>
+          </div>
+
+          <div className="space-y-4">
+            <h3 className="text-lg font-bold text-white flex items-center gap-2">
+              <span className="text-cyan-400">#</span>
+              なぜ「あるある行動」が当たるのか？
+            </h3>
+            <p className="text-sm text-slate-400 leading-relaxed">
+              MBTIビンゴの項目が「異常に当たる」と感じる理由は、単なるバーナム効果（誰にでも当てはまることを自分にだけ当てはまると錯覚する心理）だけではありません。カール・ユングの心理学的類型論に基づく「8つの認知機能（Te, Ti, Fe, Fi, Se, Si, Ne, Ni）」の組み合わせが、日常の無意識の選択やストレス時の反応パターン（劣等機能の暴走）として如実に表れるためです。本ツールでは、そうした認知機能の働きを「連絡の遅さ」「単独行動の多さ」「無駄なことへの執着」といった具体的な日常行動に翻訳（デコード）して出題しています。
+            </p>
+          </div>
+
+          <div className="space-y-4">
+            <h3 className="text-lg font-bold text-white flex items-center gap-2">
+              <span className="text-violet-400">#</span>
+              ビンゴ結果の活用法と注意点
+            </h3>
+            <p className="text-sm text-slate-400 leading-relaxed">
+              ビンゴがたくさん揃ったからといって「優れた人間」というわけではありません。むしろビンゴの項目は「あなたの社会生活におけるバグ（弱点やコミュニケーションの癖）」を示していることが多いため、「自分が無意識に周囲へ与えている印象」を客観視する自己分析ツールとして活用してください。また、当サイトで提供する診断および解説は、自己理解を深めるためのエンターテインメント目的であり、学術的・医療的な性格診断を代行するものではありません。
+            </p>
+          </div>
+        </article>
+
       </main>
     );
   }
@@ -251,6 +285,39 @@ export default function BingoClient({ lang }: { lang: string }) {
           画像をつけたい場合は保存ボタンからダウンロードし、ポストに手動で貼り付けてください。
         </p>
       </div>
+
+      {/* SEO & Context Article Block (for Google AdSense / Crawlers) */}
+      <article className="mt-24 max-w-2xl text-left space-y-8 bg-slate-900/50 p-8 rounded-3xl border border-slate-800">
+        <div className="space-y-4">
+          <h3 className="text-lg font-extrabold text-white flex items-center gap-2">
+            <span className="text-fuchsia-400">#</span>
+            偏見だらけのMBTIビンゴとは？
+          </h3>
+          <p className="text-sm text-slate-400 leading-relaxed">
+            CognitiveLensが提供する「偏見だらけのMBTIビンゴ」は、16の性格タイプ（MBTI）それぞれにありがちな「ステレオタイプ（偏見）」や「あるある行動」を可視化するためのエンターテインメント・ツールです。一般的な心理学の枠組みを超え、Z世代やネット上のミーム文化でよく語られる「各タイプの極端な行動パターン」を24個のセルに配置しています。自分がどれだけそのタイプの「基本スペック」に忠実か（あるいは例外的なバグを抱えているか）を遊び感覚でチェックできます。
+          </p>
+        </div>
+
+        <div className="space-y-4">
+          <h3 className="text-lg font-bold text-white flex items-center gap-2">
+            <span className="text-cyan-400">#</span>
+            なぜ「あるある行動」が当たるのか？
+          </h3>
+          <p className="text-sm text-slate-400 leading-relaxed">
+            MBTIビンゴの項目が「異常に当たる」と感じる理由は、単なるバーナム効果（誰にでも当てはまることを自分にだけ当てはまると錯覚する心理）だけではありません。カール・ユングの心理学的類型論に基づく「8つの認知機能（Te, Ti, Fe, Fi, Se, Si, Ne, Ni）」の組み合わせが、日常の無意識の選択やストレス時の反応パターン（劣等機能の暴走）として如実に表れるためです。本ツールでは、そうした認知機能の働きを「連絡の遅さ」「単独行動の多さ」「無駄なことへの執着」といった具体的な日常行動に翻訳（デコード）して出題しています。
+          </p>
+        </div>
+
+        <div className="space-y-4">
+          <h3 className="text-lg font-bold text-white flex items-center gap-2">
+            <span className="text-violet-400">#</span>
+            ビンゴ結果の活用法と注意点
+          </h3>
+          <p className="text-sm text-slate-400 leading-relaxed">
+            ビンゴがたくさん揃ったからといって「優れた人間」というわけではありません。むしろビンゴの項目は「あなたの社会生活におけるバグ（弱点やコミュニケーションの癖）」を示していることが多いため、「自分が無意識に周囲へ与えている印象」を客観視する自己分析ツールとして活用してください。また、当サイトで提供する診断および解説は、自己理解を深めるためのエンターテインメント目的であり、学術的・医療的な性格診断を代行するものではありません。
+          </p>
+        </div>
+      </article>
     </main>
   );
 }

@@ -205,6 +205,56 @@ export default function HomeClient({ dict, lang }: { dict: any, lang: string }) 
               <AdSenseUnit id="adsense-bottom" slotId="2222222222" />
             </div>
 
+            {/* SEO & Context Article Block (for Google AdSense / Crawlers) */}
+            <article className="mt-16 text-left space-y-8 bg-white/60 backdrop-blur-md p-8 rounded-3xl border border-slate-200/60 shadow-sm">
+              <div className="space-y-4">
+                <h2 className="text-xl font-extrabold text-slate-800 tracking-tight flex items-center gap-2">
+                  <span className="w-1.5 h-6 bg-cyan-500 rounded-full inline-block"></span>
+                  CognitiveLens（コグニティブレンズ）とは？
+                </h2>
+                <p className="text-sm text-slate-600 leading-relaxed font-medium">
+                  CognitiveLensは、マイヤーズ・ブリッグス・タイプ指標（MBTI）をベースとした16の性格分類を、Z世代向けのIT・スマホメタファーで再解釈した「対人課題解決プラットフォーム」です。人間の性格や行動パターンを「OSの基本仕様」や「通信プロトコル（意思疎通の規格）」に見立てることで、日常で発生する「なぜかあの人と話が通じない」「相手の考えていることが分からない」といった無意識のバグ（すれ違い）を論理的にデバッグ（解消）します。
+                </p>
+              </div>
+
+              <div className="space-y-4">
+                <h3 className="text-lg font-bold text-slate-800 flex items-center gap-2">
+                  <span className="w-1.5 h-5 bg-fuchsia-400 rounded-full inline-block"></span>
+                  なぜ性格診断に「ITメタファー」が必要なのか
+                </h3>
+                <p className="text-sm text-slate-600 leading-relaxed font-medium">
+                  従来の心理学的な解説は専門用語が多く、実際の対人関係（学校、職場、恋愛など）で直感的に活用するのが困難でした。当サイトでは「外向的感情（Fe）」を「広域Wi-Fiルーター（常に周囲の空気を探知）」、「内向的思考（Ti）」を「ローカル内での厳密なコンパイル（自分の中の論理整合性）」といった独自の言語体系に翻訳しています。これにより、自分と相手の「互換性のなさ」を感情論ではなく「ただのOSの違い」として客観視でき、メンタルヘルスを保つための自己理解ツールとして機能します。
+                </p>
+              </div>
+
+              <div className="space-y-4">
+                <h3 className="text-lg font-bold text-slate-800 flex items-center gap-2">
+                  <span className="w-1.5 h-5 bg-violet-400 rounded-full inline-block"></span>
+                  各ツールの独自アルゴリズムと活用方法
+                </h3>
+                <ul className="text-sm text-slate-600 leading-relaxed font-medium space-y-3 list-none pl-0">
+                  <li className="relative pl-4 before:content-[''] before:absolute before:left-0 before:top-2 before:w-1.5 before:h-1.5 before:bg-slate-400 before:rounded-full">
+                    <strong className="text-slate-700">脈あり度（接続希望度）スキャン：</strong>
+                    相手の些細な行動や言動（例：LINEの返信速度、視線の動き）から、MBTIの認知機能（心理機能）に基づいた「あなたへの関心度」をAIが逆算分析します。表面的な好意ではなく、そのタイプ特有の「不器用なサイン」を見逃さないための診断ツールです。
+                  </li>
+                  <li className="relative pl-4 before:content-[''] before:absolute before:left-0 before:top-2 before:w-1.5 before:h-1.5 before:bg-slate-400 before:rounded-full">
+                    <strong className="text-slate-700">偏見だらけのMBTIビンゴ：</strong>
+                    各タイプの「あるある行動（ステレオタイプ）」を24個のセルに配置したエンタメ機能。自分がどれだけそのタイプの「基本スペック」に忠実かを可視化し、SNSでのアイデンティティ共有（仲間探し）を促進します。
+                  </li>
+                  <li className="relative pl-4 before:content-[''] before:absolute before:left-0 before:top-2 before:w-1.5 before:h-1.5 before:bg-slate-400 before:rounded-full">
+                    <strong className="text-slate-700">16タイプ別 OS仕様解析コラム：</strong>
+                    各タイプの思考回路、行動原理、適職、そして「絶対にやってはいけないNG行動（地雷）」を網羅した詳細な解説記事です。
+                  </li>
+                </ul>
+              </div>
+              
+              <div className="pt-4 border-t border-slate-100">
+                <p className="text-xs text-slate-400 leading-relaxed">
+                  ※本サイトの診断結果およびAI生成コンテンツは、自己理解を深めるためのエンターテインメント・参考情報として提供されています。医療的診断を代行するものではありません。
+                </p>
+              </div>
+            </article>
+
           </div>
         </section>
       </main>
