@@ -291,4 +291,294 @@ export const SLIDE_PRESETS_EN: SlidePreset[] = [
       }
     ]
   }
+  ,
+  {
+    id: 'slide_en_home_purple',
+    title: '💜 Purple Types After Coming Home',
+    groupColor: 'purple',
+    titleSlide: {
+      mainTitle: 'Purple (NT) Types\nAfter Coming Home',
+      subTitle: 'Summary on the last page!'
+    },
+    summarySlide: {
+      title: 'Purple (NT) Types Summary',
+      items: [
+        { mbtiType: 'INTJ', summaryText: 'System Reboot mode. Locks the door and analyzes the day\'s inefficiencies.' },
+        { mbtiType: 'INTP', summaryText: 'Immediately collapses into bed. Opens 50 Wikipedia tabs for a random rabbit hole.' },
+        { mbtiType: 'ENTJ', summaryText: 'Starts their Evening Productivity Routine. Cannot relax until tasks are done.' },
+        { mbtiType: 'ENTP', summaryText: 'Starts debates on Twitter. Randomly decides to learn a new skill at 11 PM.' }
+      ]
+    },
+    items: [
+      {
+        mbtiType: 'INTJ',
+        catchphrase: 'INTJ After Coming Home',
+        points: [
+          'Instantly switches into isolation mode the second the door closes',
+          'Systematically removes all outside clothes to decontaminate themselves',
+          'Replays every conversation from the day to find logical flaws',
+          'Creates an aggressively optimized schedule for their \'relaxing\' time',
+          'Ignores all texts because their social battery is officially at 0%',
+          'Falls down a 3-hour YouTube documentary rabbit hole about black holes',
+          'Stares at the wall silently recharging like a malfunctioning robot'
+        ]
+      },
+      {
+        mbtiType: 'INTP',
+        catchphrase: 'INTP After Coming Home',
+        points: [
+          'Collapses onto the nearest soft surface without taking off their jacket',
+          'Brain instantly deletes all real-world responsibilities from RAM',
+          'Opens 40 different browser tabs and gets lost in obscure Wikipedia pages',
+          'Forgets to eat dinner because they are hyper-fixated on a random topic',
+          'Leaves everyone on delivered for 5 business days',
+          'Converses with their own inner monologue more than actual humans',
+          'Somehow ends up awake at 4 AM watching speedruns of a game they don\'t play'
+        ]
+      },
+      {
+        mbtiType: 'ENTJ',
+        catchphrase: 'ENTJ After Coming Home',
+        points: [
+          'Treats relaxing like a competitive sport that they must win',
+          'Immediately starts planning their hostile takeover of tomorrow',
+          'Listens to a business podcast on 2x speed while making dinner',
+          'Gets annoyed if someone interrupts their highly structured evening routine',
+          'Judges themselves if they spend more than 15 minutes doing nothing',
+          'Delegates household chores to anyone unfortunate enough to live with them',
+          'Falls asleep aggressively to maximize their REM cycle efficiency'
+        ]
+      },
+      {
+        mbtiType: 'ENTP',
+        catchphrase: 'ENTP After Coming Home',
+        points: [
+          'Loudly announces they are home to an empty room',
+          'Immediately opens Twitter/Reddit to start a pointless argument',
+          'Gets a sudden burst of motivation at 11 PM to start a new business',
+          'Paces around the room talking out loud about a theory they just invented',
+          'Leaves a trail of chaos: keys on the fridge, jacket on the floor',
+          'Starts 5 different activities and finishes absolutely none of them',
+          'Binge-watches random conspiracy theories until their brain short-circuits'
+        ]
+      }
+    ]
+  },
+  {
+    id: 'slide_en_home_green',
+    title: '💚 Green Types After Coming Home',
+    groupColor: 'green',
+    titleSlide: {
+      mainTitle: 'Green (NF) Types\nAfter Coming Home',
+      subTitle: 'Summary on the last page!'
+    },
+    summarySlide: {
+      title: 'Green (NF) Types Summary',
+      items: [
+        { mbtiType: 'INFJ', summaryText: 'Needs 3 hours of complete silence to decompress their social battery.' },
+        { mbtiType: 'INFP', summaryText: 'Burrito-rolls in a blanket. Creates fake scenarios about their crush.' },
+        { mbtiType: 'ENFJ', summaryText: 'Texts 5 different people to make sure they got home safe.' },
+        { mbtiType: 'ENFP', summaryText: 'Aggressive energy burst. Instantly facetimes a friend while snacking.' }
+      ]
+    },
+    items: [
+      {
+        mbtiType: 'INFJ',
+        catchphrase: 'INFJ After Coming Home',
+        points: [
+          'Sighs deeply the moment they lock the door, shedding their fake persona',
+          'Requires exactly 3 hours of absolute silence to cleanse their aura',
+          'Overanalyzes a tiny interaction from 2 PM where they sounded slightly weird',
+          'Lights a ridiculously expensive candle to set the perfect melancholic vibe',
+          'Writes a highly emotional journal entry that belongs in a museum',
+          'Silently absorbs the emotions of fictional characters in a sad movie',
+          'Ignores texts but mentally sends telepathic love to their friends'
+        ]
+      },
+      {
+        mbtiType: 'INFP',
+        catchphrase: 'INFP After Coming Home',
+        points: [
+          'Immediately swaddles themselves in a blanket like an emotional burrito',
+          'Stares at the ceiling and creates elaborate fake scenarios in their head',
+          'Listens to a playlist titled \'songs that make me feel like I\'m floating\'',
+          'Mentally argues with someone and wins the shower argument flawlessly',
+          'Scrolls aesthetic Pinterest boards to escape from cold hard reality',
+          'Gets a sudden urge to completely reinvent their aesthetic at midnight',
+          'Cries over a cute cat video because their empathy is broken'
+        ]
+      },
+      {
+        mbtiType: 'ENFJ',
+        catchphrase: 'ENFJ After Coming Home',
+        points: [
+          'Immediately texts 5 different people to make sure they got home safe',
+          'Mentally exhausted from fixing everyone else\'s problems all day',
+          'Still trying to act like the main character even when nobody is watching',
+          'Plans a group hangout for next weekend while making a healthy dinner',
+          'Gives themselves a motivational pep talk in the bathroom mirror',
+          'Forgets to take care of their own needs because they are too busy caring',
+          'Falls asleep instantly because their social battery is deeply in the red'
+        ]
+      },
+      {
+        mbtiType: 'ENFP',
+        catchphrase: 'ENFP After Coming Home',
+        points: [
+          'Bursts through the door with massive Golden Retriever energy',
+          'Instantly facetimes a friend while aggressively raiding the fridge',
+          'Leaves their bag, shoes, and jacket in three entirely different rooms',
+          'Has a solo dance party to burn off the weird residual energy of the day',
+          'Promises to go to sleep early but stays up until 3 AM watching TikToks',
+          'Starts a creative project with intense passion and abandons it in 10 minutes',
+          'Texts you a random hyper-specific meme completely out of context'
+        ]
+      }
+    ]
+  },
+  {
+    id: 'slide_en_home_blue',
+    title: '💙 Blue Types After Coming Home',
+    groupColor: 'blue',
+    titleSlide: {
+      mainTitle: 'Blue (SJ) Types\nAfter Coming Home',
+      subTitle: 'Summary on the last page!'
+    },
+    summarySlide: {
+      title: 'Blue (SJ) Types Summary',
+      items: [
+        { mbtiType: 'ISTJ', summaryText: 'System Restore. Puts everything in its exact place and preps tomorrow.' },
+        { mbtiType: 'ISFJ', summaryText: 'Cannot sit down until chores are done. Cleans to avoid stress.' },
+        { mbtiType: 'ESTJ', summaryText: 'Checks family\'s task completion. Updates their calendar aggressively.' },
+        { mbtiType: 'ESFJ', summaryText: 'Complains about the day while simultaneously taking care of everyone.' }
+      ]
+    },
+    items: [
+      {
+        mbtiType: 'ISTJ',
+        catchphrase: 'ISTJ After Coming Home',
+        points: [
+          'Executes their flawless 15-step post-work decontamination routine',
+          'Places their keys and wallet in their exact, geometrically perfect spots',
+          'Immediately preps tomorrow\'s lunch to maintain optimal efficiency',
+          'Checks their bank account and updates an unnecessarily complex spreadsheet',
+          'Reads exactly one chapter of a non-fiction book before sleeping',
+          'Gets mildly annoyed if a family member disrupts their scheduled silence',
+          'Sleeps at exactly 10:30 PM like a well-programmed android'
+        ]
+      },
+      {
+        mbtiType: 'ISFJ',
+        catchphrase: 'ISFJ After Coming Home',
+        points: [
+          'Literally physically incapable of sitting down until all chores are done',
+          'Quietly cleans the entire kitchen just to achieve inner peace',
+          'Checks on everyone in the house like a worried mother hen',
+          'Rewatches the exact same comfort show they have seen 14 times already',
+          'Mentally catalogs everyone\'s slight mood changes from the day',
+          'Sighs while folding laundry but secretly enjoys the predictability',
+          'Sends a thoughtful \'goodnight\' text with exactly 3 emojis'
+        ]
+      },
+      {
+        mbtiType: 'ESTJ',
+        catchphrase: 'ESTJ After Coming Home',
+        points: [
+          'Enters the house like a CEO doing a hostile takeover of the living room',
+          'Demands a status update on household chores from family members',
+          'Aggressively updates their Google Calendar for the next 3 weeks',
+          'Complains about incompetent coworkers while power-walking on a treadmill',
+          'Watches the news just to get angry at the state of the world',
+          'Sorts the mail with ruthless efficiency, throwing away 90% of it instantly',
+          'Goes to bed early because sleep is a strategic requirement for success'
+        ]
+      },
+      {
+        mbtiType: 'ESFJ',
+        catchphrase: 'ESFJ After Coming Home',
+        points: [
+          'Loudly announces their arrival expecting a hero\'s welcome',
+          'Vents about drama from work while simultaneously cooking a 3-course meal',
+          'Needs constant verbal validation that they did a good job today',
+          'Scrolls Instagram just to leave aggressive compliments on friends\' posts',
+          'Cannot relax if there is even one dirty dish in the sink',
+          'Forces everyone in the house to sit down and do a family debrief',
+          'Spends an hour doing a 12-step skincare routine while gossiping on speakerphone'
+        ]
+      }
+    ]
+  },
+  {
+    id: 'slide_en_home_yellow',
+    title: '💛 Yellow Types After Coming Home',
+    groupColor: 'yellow',
+    titleSlide: {
+      mainTitle: 'Yellow (SP) Types\nAfter Coming Home',
+      subTitle: 'Summary on the last page!'
+    },
+    summarySlide: {
+      title: 'Yellow (SP) Types Summary',
+      items: [
+        { mbtiType: 'ISTP', summaryText: 'Silent mode. Plugs in headphones, boots up a game, and ignores the world.' },
+        { mbtiType: 'ISFP', summaryText: 'Sets the aesthetic Vibe. Lights a candle, puts on music, and zones out.' },
+        { mbtiType: 'ESTP', summaryText: 'Literally cannot sit still. Orders food and immediately texts plans for the night.' },
+        { mbtiType: 'ESFP', summaryText: 'Still in Party Mode. Has a solo fashion show or karaoke session in their room.' }
+      ]
+    },
+    items: [
+      {
+        mbtiType: 'ISTP',
+        catchphrase: 'ISTP After Coming Home',
+        points: [
+          'Activates stealth mode to avoid talking to anyone in the hallway',
+          'Immediately plugs in headphones to block out the existence of reality',
+          'Boots up a competitive game and completely ignores their bodily needs',
+          'Eats cold pizza over the sink because heating it up takes too much effort',
+          'Leaves their tools or hobby gear scattered everywhere like a chaotic genius',
+          'Responds to \'how was your day?\' with a single emotionless grunt',
+          'Stays up until 3 AM fixing something that wasn\'t even broken'
+        ]
+      },
+      {
+        mbtiType: 'ISFP',
+        catchphrase: 'ISFP After Coming Home',
+        points: [
+          'Immediately changes into the softest, most oversized hoodie they own',
+          'Spends 20 minutes curating the perfect aesthetic playlist for the evening',
+          'Lights incense and lies on the floor doing absolutely nothing for an hour',
+          'Avoids looking at their phone because notifications give them anxiety',
+          'Gets a sudden urge to paint, draw, or rearrange their entire bedroom',
+          'Snacks on random things instead of making an actual nutritional dinner',
+          'Falls asleep watching aesthetic vloggers living their best lives'
+        ]
+      },
+      {
+        mbtiType: 'ESTP',
+        catchphrase: 'ESTP After Coming Home',
+        points: [
+          'Literally physically incapable of sitting still for more than 5 minutes',
+          'Orders UberEats while doing pushups in the middle of the living room',
+          'Texts 3 different group chats trying to find out where the afterparty is',
+          'Leaves a trail of destruction: shoes kicked off, bag thrown across the room',
+          'Watches a movie but skips through it because their attention span is zero',
+          'Randomly decides to go for a night drive just to feel the adrenaline',
+          'Crashes hard and falls asleep with their clothes still on'
+        ]
+      },
+      {
+        mbtiType: 'ESFP',
+        catchphrase: 'ESFP After Coming Home',
+        points: [
+          'The party doesn\'t stop just because they are home alone',
+          'Blasts pop music and has a full-blown concert in front of the mirror',
+          'Records 15 different TikTok drafts but decides to post none of them',
+          'Impulse buys clothes online because they felt a sudden void in their soul',
+          'Facetimes a friend just to show them an outfit they are trying on',
+          'Complains about being exhausted but still agrees to go out again at 10 PM',
+          'Eats snacks in bed while aggressively scrolling through Instagram drama'
+        ]
+      }
+    ]
+  }
+
 ];
