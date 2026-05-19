@@ -387,34 +387,42 @@ export default function RomanceCheckerClient({ lang }: { lang: string }) {
           <div className="space-y-3">
             <h2 className="text-lg font-extrabold text-slate-800 flex items-center gap-2">
               <span className="text-fuchsia-500">♥</span>
-              脈あり度（接続希望度）スキャンとは？
+              {lang === "en" ? "What is the Pulse (Connection Request) Scanner?" : "脈あり度（接続希望度）スキャンとは？"}
             </h2>
             <p className="text-xs text-slate-600 leading-relaxed font-medium">
-              気になるあの人の16タイプを選択し、最近の「あるある行動」をチェックするだけで、AIがあなたへの「脈あり度（接続希望度）」を精密にスキャンするツールです。<br/>
-              世の中に溢れる一般的な恋愛占いとは違い、ユングの認知機能（心理機能）モデルをベースに「なぜそのタイプは、好意を持った時にそんな不器用な行動をとってしまうのか？」という深層ロジックを解析します。
+              {lang === "en" ? (
+                <>Select their 16-type and check off their recent "common behaviors", and our AI will precisely scan their "Pulse (Connection Request Level)" towards you.<br/>Unlike standard romance horoscopes, this tool relies on Jungian cognitive function models to decode the underlying logic of "why does that specific type act so awkwardly when they have a crush?"</>
+              ) : (
+                <>気になるあの人の16タイプを選択し、最近の「あるある行動」をチェックするだけで、AIがあなたへの「脈あり度（接続希望度）」を精密にスキャンするツールです。<br/>世の中に溢れる一般的な恋愛占いとは違い、ユングの認知機能（心理機能）モデルをベースに「なぜそのタイプは、好意を持った時にそんな不器用な行動をとってしまうのか？」という深層ロジックを解析します。</>
+              )}
             </p>
           </div>
 
           <div className="space-y-3">
             <h3 className="text-base font-bold text-slate-800 flex items-center gap-2">
               <span className="text-cyan-500">⚙</span>
-              16タイプ別の「好意のバグ」を見抜く
+              {lang === "en" ? "Spotting 'Affection Bugs' by 16 Types" : "16タイプ別の「好意のバグ」を見抜く"}
             </h3>
             <p className="text-xs text-slate-600 leading-relaxed font-medium">
-              恋愛における「好意のサイン」って、実は全人類共通じゃありません。<br/>
-              例えば外向的感情（Fe）が強いタイプは分かりやすく世話を焼いてくれますが、内向的思考（Ti）が強いタイプの場合は「あなたのためだけに時間を割いて、超・非効率な論理的議論に付き合ってくれる」ことが最大の好意（接続要求）だったりするんです。<br/>
-              本ツールは、そういった「一見するとそっけないけど、実は彼らなりの最大級のアプローチ」を見逃さないための翻訳機（デコーダー）として機能します。
+              {lang === "en" ? (
+                <>Signs of affection in romance aren't actually universal to all humans.<br/>For example, types with strong Extraverted Feeling (Fe) will visibly take care of you, but for types with strong Introverted Thinking (Ti), "sacrificing their time just for you to engage in a highly inefficient logical debate" might actually be their ultimate sign of affection (connection request).<br/>This tool functions as a decoder so you never miss those "seemingly cold, but actually maximum effort" approaches.</>
+              ) : (
+                <>恋愛における「好意のサイン」って、実は全人類共通じゃありません。<br/>例えば外向的感情（Fe）が強いタイプは分かりやすく世話を焼いてくれますが、内向的思考（Ti）が強いタイプの場合は「あなたのためだけに時間を割いて、超・非効率な論理的議論に付き合ってくれる」ことが最大の好意（接続要求）だったりするんです。<br/>本ツールは、そういった「一見するとそっけないけど、実は彼らなりの最大級のアプローチ」を見逃さないための翻訳機（デコーダー）として機能します。</>
+              )}
             </p>
           </div>
 
           <div className="space-y-3">
             <h3 className="text-base font-bold text-slate-800 flex items-center gap-2">
               <span className="text-violet-500">⚠</span>
-              スキャン結果の取り扱い注意点
+              {lang === "en" ? "Scanner Results Warning" : "スキャン結果の取り扱い注意点"}
             </h3>
             <p className="text-xs text-slate-600 leading-relaxed font-medium">
-              本ツールが算出する「接続希望度」は絶対的なものではありません。相手が仕事などで極度なストレス状態（グリップ状態）にある場合、本来の心理機能とは真逆の行動パターンを示すことがあります。あくまで「相手の基本OSの仕様から推測される現状のステータス」として参考にしつつ、実際のリアルな対話を深めるためのエンターテインメントとしてお楽しみください。<br/><br/>
-              ※本ツールはユング心理学の概念を応用した独自のエンタメ機能であり、公式のMBTI®テストとは無関係です。
+              {lang === "en" ? (
+                <>The "Connection Request Level" calculated by this tool is not absolute. If the person is under extreme stress (grip state), they might show behavior patterns completely opposite to their normal cognitive functions. Please use this as a fun reference point based on their "base OS specs" to help you deepen real-world communication.<br/><br/>*This tool is an entertainment feature applying Jungian psychology concepts and is unrelated to the official MBTI® test.</>
+              ) : (
+                <>本ツールが算出する「接続希望度」は絶対的なものではありません。相手が仕事などで極度なストレス状態（グリップ状態）にある場合、本来の心理機能とは真逆の行動パターンを示すことがあります。あくまで「相手の基本OSの仕様から推測される現状のステータス」として参考にしつつ、実際のリアルな対話を深めるためのエンターテインメントとしてお楽しみください。<br/><br/>※本ツールはユング心理学の概念を応用した独自のエンタメ機能であり、公式のMBTI®テストとは無関係です。</>
+              )}
             </p>
           </div>
         </article>

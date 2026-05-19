@@ -1,12 +1,16 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, Download, AlertTriangle, Copyright } from "lucide-react";
+import { getTypeInfo } from "@/lib/data-provider";
 import { TYPE_INFO } from "@/lib/type-info";
 
-export const metadata = {
-  title: "キャラクター素材ダウンロード | CognitiveLens",
-  description: "全16タイプのキャラクター画像をフリー素材として配布しています。",
-};
+export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }) {
+  const { lang } = await params;
+  return {
+    title: lang === "en" ? "Character Assets Download | CognitiveLens" : "キャラクター素材ダウンロード | CognitiveLens",
+    description: lang === "en" ? "Distributing free character assets for all 16 personality types." : "全16タイプのキャラクター画像をフリー素材として配布しています。",
+  };
+}
 
 // Next.js 14 の場合、オブジェクトのキーを配列として取得
 const ALL_TYPES = Object.keys(TYPE_INFO);
@@ -92,7 +96,7 @@ export default async function DownloadsPage({ params }: { params: Promise<{ lang
         {/* Gallery */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
           {ALL_TYPES.map((type) => {
-            const info = TYPE_INFO[type];
+            const info = getTypeInfo(lang)[type];
             // 画像パスがない場合はスキップ（今回は全タイプある前提）
             if (!info.imageUrl) return null;
 

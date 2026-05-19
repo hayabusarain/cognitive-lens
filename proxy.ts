@@ -95,7 +95,9 @@ export function proxy(request: NextRequest): NextResponse {
   const { pathname } = request.nextUrl;
 
   // ⓪ 管理者専用ルート（ジェネレーター画面＆裏API）へのBasic認証
-  if (pathname.startsWith('/video-gen') || pathname.startsWith('/api/render-video') || pathname.startsWith('/api/video-gen')) {
+  const isVideoGenPage = pathname.match(/^\/(ja|en)\/video-gen/);
+  const isAdminPage = pathname.match(/^\/(ja|en)\/admin/);
+  if (isVideoGenPage || isAdminPage || pathname.startsWith('/api/render-video') || pathname.startsWith('/api/render-images') || pathname.startsWith('/api/video-gen') || pathname.startsWith('/api/youtube-dl')) {
     const basicAuth = request.headers.get('authorization');
     if (!basicAuth) {
       return new NextResponse('Authentication Required.', { status: 401, headers: { 'WWW-Authenticate': 'Basic realm="Secure Area"' } });

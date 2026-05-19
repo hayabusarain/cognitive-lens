@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import ResultContent from "./ResultContent";
-import { getTypeInfo } from "@/lib/data-provider";
-import { TYPE_INFO, DEFAULT_TYPE } from "@/lib/type-info";
+import { getTypeInfo, getDefaultType } from "@/lib/data-provider";
 
 type Props = {
   params: Promise<{ lang: string }>;
@@ -14,11 +13,11 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
   const { type = "INTP" } = await searchParams;
   const typeKey = type.toUpperCase().slice(0, 4);
   const typeInfoMap = getTypeInfo(lang);
-  const info = typeInfoMap[typeKey] ?? typeInfoMap["INTP"] ?? DEFAULT_TYPE;
+  const info = typeInfoMap[typeKey] ?? typeInfoMap["INTP"] ?? getDefaultType(lang);
   const ogImageUrl = `/api/og?type=${typeKey}&lang=${lang}`;
 
   return {
-    title: `${typeKey} ${info.name} — 深層心理プロファイリング | CognitiveLens`,
+    title: lang === "en" ? `${typeKey} ${info.name} — Deep Psychological Profiling | CognitiveLens` : `${typeKey} ${info.name} — 深層心理プロファイリング | CognitiveLens`,
     description: info.tagline,
     openGraph: {
       title: `${typeKey} — ${info.name}`,
@@ -44,7 +43,7 @@ export default async function ResultPage({ params }: { params: Promise<{ lang: s
             <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ background: "rgba(20,184,166,0.1)" }}>
               <div className="w-5 h-5 border-2 rounded-full animate-spin" style={{ borderColor: "rgba(20,184,166,0.3)", borderTopColor: "#14b8a6" }} />
             </div>
-            <p className="text-xs" >プロファイリング処理中...</p>
+            <p className="text-xs">{lang === "en" ? "Processing profiling..." : "プロファイリング処理中..."}</p>
           </div>
         </div>
       }

@@ -10,8 +10,10 @@ import { COMPATIBILITY } from "./compatibility";
 import { COMPATIBILITY_EN } from "./compatibility-en";
 import { generateRelationshipTimeline } from "./relationship";
 import { generateRelationshipTimelineEn } from "./relationship-en";
-import { TYPE_INFO } from "./type-info";
-import { TYPE_INFO_EN } from "./type-info-en";
+import { TYPE_INFO, DEFAULT_TYPE } from "./type-info";
+import { TYPE_INFO_EN, DEFAULT_TYPE_EN } from "./type-info-en";
+import { BINGO_DATA } from "./bingo-data-ja";
+import { BINGO_DATA_EN } from "./bingo-data-en";
 
 export function getArticleData(lang: string) {
   return lang === "en" ? ARTICLE_DATA_EN : ARTICLE_DATA;
@@ -37,8 +39,16 @@ export function getTypeInfo(lang: string) {
   return lang === "en" ? TYPE_INFO_EN : TYPE_INFO;
 }
 
+export function getDefaultType(lang: string) {
+  return lang === "en" ? DEFAULT_TYPE_EN : DEFAULT_TYPE;
+}
+
 export function getRelationshipTimeline(lang: string, typeA: string, typeB: string) {
   return lang === "en" 
     ? generateRelationshipTimelineEn(typeA, typeB) 
     : generateRelationshipTimeline(typeA, typeB);
+}
+
+export function getBingoData(lang: string) {
+  return lang === "en" ? BINGO_DATA_EN : BINGO_DATA;
 }

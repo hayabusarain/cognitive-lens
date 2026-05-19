@@ -16,7 +16,8 @@ const TYPES_GRID = [
   ["ISTP", "ISFP", "ESTP", "ESFP"],
 ] as const;
 
-const AXIS_LABELS = ["NT — 分析系", "NF — 理想主義系", "SJ — 管理系", "SP — 探索系"];
+const AXIS_LABELS_JA = ["NT — 分析系", "NF — 理想主義系", "SJ — 管理系", "SP — 探索系"];
+const AXIS_LABELS_EN = ["NT — Analysts", "NF — Idealists", "SJ — Sentinels", "SP — Explorers"];
 
 interface ProfileSection {
   title: string;
@@ -82,6 +83,8 @@ export default function SkipPathPage({ params }: { params: Promise<{ lang: strin
   const { lang } = use(params);
   const router = useRouter();
 
+  const AXIS_LABELS = lang === "en" ? AXIS_LABELS_EN : AXIS_LABELS_JA;
+  
   const [selectedType, setSelectedType] = useState<string>("");
   const [failurePattern, setFailurePattern] = useState<string>("");
   const [sections, setSections] = useState<ProfileSection[]>([]);
@@ -120,7 +123,7 @@ export default function SkipPathPage({ params }: { params: Promise<{ lang: strin
 
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
-        setError(data.error ?? "生成に失敗しました");
+        setError(data.error ?? (lang === "en" ? "Generation failed" : "生成に失敗しました"));
         setIsStreaming(false);
         return;
       }
@@ -139,7 +142,7 @@ export default function SkipPathPage({ params }: { params: Promise<{ lang: strin
       setSections(parseSections(fullText));
       setIsGenerated(true);
     } catch {
-      setError("ネットワークエラーが発生しました");
+      setError(lang === "en" ? "Network error occurred" : "ネットワークエラーが発生しました");
     }
 
     setIsStreaming(false);

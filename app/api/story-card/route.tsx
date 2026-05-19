@@ -1,7 +1,6 @@
 import { ImageResponse } from "next/og";
 import type { NextRequest } from "next/server";
-import { TYPE_INFO, DEFAULT_TYPE } from "@/lib/type-info";
-import { ARTICLE_DATA } from "@/lib/article-data";
+import { getTypeInfo, getDefaultType, getArticleData } from "@/lib/data-provider";
 
 export const runtime = "edge";
 
@@ -9,12 +8,15 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const typeParam = searchParams.get("type") ?? "INTJ";
+    const lang = searchParams.get("lang") ?? "ja";
+    const TYPE_INFO_MAP = getTypeInfo(lang);
+    const ARTICLE_DATA_MAP = getArticleData(lang);
     const typeKey = typeParam.toUpperCase().slice(0, 4);
-    const info = TYPE_INFO[typeKey] ?? DEFAULT_TYPE;
-    const article = ARTICLE_DATA[typeKey];
+    const info = TYPE_INFO_MAP[typeKey] ?? getDefaultType(lang);
+    const article = ARTICLE_DATA_MAP[typeKey];
 
     // toxicなテキストを抽出
-    const toxicText = article?.weakness || "自分の弱点から目を背け続ける、プライドの塊。";
+    const toxicText = article?.weakness || (lang === "en" ? "A ball of pride who keeps looking away from their weaknesses." : "自分の弱点から目を背け続ける、プライドの塊。");
 
     return new ImageResponse(
       (
@@ -127,7 +129,7 @@ export async function GET(request: NextRequest) {
                 marginBottom: "20px",
               }}
             >
-              【あなたのヤバい本性】
+              【{lang === "en" ? "Your Toxic Nature" : "あなたのヤバい本性"}】
             </div>
 
             {/* タイプ名 */}
@@ -202,7 +204,7 @@ export async function GET(request: NextRequest) {
                 marginBottom: "16px",
               }}
             >
-              自分のタイプも暴いてみる？👇
+              {lang === "en" ? "Wanna expose your own type? 👇" : "自分のタイプも暴いてみる？👇"}
             </div>
             <div
               style={{

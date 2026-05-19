@@ -20,7 +20,7 @@ import {
 } from "lucide-react";
 import { PROTOCOLS_JA } from "@/lib/protocols-ja";
 import { PROTOCOLS_EN } from "@/lib/protocols-en";
-import { TYPE_INFO, DEFAULT_TYPE } from "@/lib/type-info";
+import { getDefaultType } from "@/lib/data-provider";
 import { getTypeInfo, getCompatibility } from "@/lib/data-provider";
 import { STATIC_PROFILES_JA, STATIC_PROFILES_EN } from "@/lib/static-profiles";
 import AdSenseUnit from "@/app/components/ads/AdSenseUnit";
@@ -161,9 +161,9 @@ function ProtocolSkeleton() {
 // ── アコーディオンセクション ──────────────────────────────────
 
 function AccordionSection({
-  section, protocols, loading, open, onToggle,
+  section, protocols, loading, open, onToggle, lang
 }: {
-  section: Section; protocols: Protocol[]; loading: boolean; open: boolean; onToggle: () => void;
+  section: Section; protocols: Protocol[]; loading: boolean; open: boolean; onToggle: () => void; lang: string;
 }) {
   return (
     <div className={`rounded-3xl border overflow-hidden transition-shadow duration-200 ${section.border}`} style={{ background: "rgba(0,0,0,0.06)" }}>
@@ -187,7 +187,7 @@ function AccordionSection({
           {loading ? (
             <ProtocolSkeleton />
           ) : protocols.length === 0 ? (
-            <p className="px-5 py-4 text-xs" >{/* lang prop is not easily accessible here but we can assume 'No data available.' is fine */ "No data available."}</p>
+            <p className="px-5 py-4 text-xs" >{lang === "en" ? "No data available." : "データがありません。"}</p>
           ) : (
             <ul className="divide-y" style={{ borderColor: "rgba(0,0,0,0.06)" }}>
               {protocols.map((p, i) => (
@@ -208,7 +208,7 @@ function AccordionSection({
 
 // ── NGワードセクション ────────────────────────────────────────
 
-function NgWordsSection({ protocols, loading }: { protocols: Protocol[]; loading: boolean }) {
+function NgWordsSection({ protocols, loading, lang }: { protocols: Protocol[]; loading: boolean; lang: string }) {
   const [open, setOpen] = useState(false);
   const words = protocols.flatMap((p) => p.ng_words);
   if (!loading && words.length === 0) return null;
@@ -224,7 +224,7 @@ function NgWordsSection({ protocols, loading }: { protocols: Protocol[]; loading
         <span className="flex items-center justify-center w-8 h-8 rounded-2xl flex-shrink-0" style={{ background: "rgba(244,63,94,0.08)", color: "#fb7185" }}>
           <AlertTriangle size={16} />
         </span>
-        <span className="font-semibold text-sm flex-1" >{/* NG words label */} Red Flags & Triggers</span>
+        <span className="font-semibold text-sm flex-1" >{lang === "en" ? "Red Flags & Triggers" : "絶対にやってはいけないNG行動（地雷）"}</span>
         {!loading && (
           <span className="text-xs px-2 py-0.5 rounded-full font-medium" style={{ background: "rgba(244,63,94,0.08)", color: "#fb7185" }}>{words.length}</span>
         )}
@@ -444,8 +444,8 @@ function CompatibilitySection({ typeKey, lang }: { typeKey: string, lang: string
   const TYPE_INFO_MAP = getTypeInfo(lang);
   const compat = COMPATIBILITY_MAP[typeKey as keyof typeof COMPATIBILITY_MAP];
   if (!compat) return null;
-  const bestInfo = TYPE_INFO_MAP[compat.bestPartner.type] ?? DEFAULT_TYPE;
-  const hardInfo = TYPE_INFO_MAP[compat.hardestMatch.type] ?? DEFAULT_TYPE;
+  const bestInfo = TYPE_INFO_MAP[compat.bestPartner.type] ?? getDefaultType(lang);
+  const hardInfo = TYPE_INFO_MAP[compat.hardestMatch.type] ?? getDefaultType(lang);
 
   return (
     <div className="space-y-3">
@@ -589,7 +589,7 @@ export default function ResultContent({ lang = "ja" }: { lang?: string }) {
   const TYPE_INFO_MAP = getTypeInfo(lang);
   const COMPATIBILITY_MAP = getCompatibility(lang);
   
-  const info = TYPE_INFO_MAP[typeKey] ?? DEFAULT_TYPE;
+  const info = TYPE_INFO_MAP[typeKey] ?? getDefaultType(lang);
   const compat = COMPATIBILITY_MAP[typeKey as keyof typeof COMPATIBILITY_MAP] ?? COMPATIBILITY_MAP["INTP"];
 
   const sectionsList = lang === "en" ? SECTIONS_EN : SECTIONS_JA;
@@ -637,17 +637,17 @@ export default function ResultContent({ lang = "ja" }: { lang?: string }) {
             className="flex items-center gap-1.5 text-xs font-medium transition-colors"
           >
             <ArrowLeft size={14} />
-            ホーム
+            {lang === "en" ? "Home" : "ホーム"}
           </button>
           <span className="text-xs font-medium" >
-            あなたの取り扱い説明書
+            {lang === "en" ? "Your Manual" : "あなたの取り扱い説明書"}
           </span>
           <button
             onClick={() => router.push("/test")}
             className="flex items-center gap-1 text-xs font-medium transition-colors"
           >
             <RotateCcw size={12} />
-            やり直す
+            {lang === "en" ? "Retake" : "やり直す"}
           </button>
         </div>
 
@@ -667,7 +667,7 @@ export default function ResultContent({ lang = "ja" }: { lang?: string }) {
           <p className="text-xs opacity-60 mt-1">{info.tagline}</p>
           <div className="mt-4 flex items-center justify-center gap-1.5 text-xs opacity-70">
             <Sparkles size={11} />
-            あなたの性格のクセ、全部ここにある
+            {lang === "en" ? "All your personality quirks, fully exposed" : "あなたの性格のクセ、全部ここにある"}
           </div>
         </div>
 
@@ -698,11 +698,12 @@ export default function ResultContent({ lang = "ja" }: { lang?: string }) {
             loading={loading}
             open={openSection === section.key}
             onToggle={() => setOpenSection(openSection === section.key ? null : section.key)}
+            lang={lang}
           />
         ))}
 
         {/* NG Words */}
-        <NgWordsSection protocols={protocols} loading={loading} />
+        <NgWordsSection protocols={protocols} loading={loading} lang={lang} />
 
         {/* Compatibility */}
         <CompatibilitySection typeKey={typeKey} lang={lang} />

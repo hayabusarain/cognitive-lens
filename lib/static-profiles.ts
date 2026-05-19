@@ -1,8 +1,10 @@
 export interface StaticProfile {
-  section1: { title: string; content: string };
-  section2: { title: string; content: string };
-  section3: { title: string; content: string };
+  section1: { title: string; content: string; };
+  section2: { title: string; content: string; };
+  section3: { title: string; content: string; };
 }
+import { STATIC_PROFILES_EN } from './static-profiles-en';
+export { STATIC_PROFILES_EN };
 
 export const STATIC_PROFILES_JA: Record<string, StaticProfile> = {
   INTJ: {
@@ -229,9 +231,4 @@ export const STATIC_PROFILES_JA: Record<string, StaticProfile> = {
       content: "搭載されている「空気の変換機能」、どんな静かな空気でも一瞬で楽しい場所に変えちゃう最強のスペック。あなたが笑っているだけで、周りの人までハッピーになっちゃう。この「周りを巻き込んで幸せにする能力」は、どれだけお金を積んでも手に入らない価値のある才能。あなたは「人を笑顔にする天才」。これだけは自信を持っていい。"
     }
   }
-};
-
-export const STATIC_PROFILES_EN: Record<string, StaticProfile> = {
-  // Fallback to JA for now since site is JA focused
-  ...STATIC_PROFILES_JA
 };

@@ -579,6 +579,164 @@ export const SLIDE_PRESETS_EN: SlidePreset[] = [
         ]
       }
     ]
+  },
+  {
+    id: "slide_en_home_all",
+    title: "🏠 All 16 Types: After Coming Home",
+    groupColor: "purple",
+    titleSlide: {
+      mainTitle: "16 MBTI Types\nRight After Coming Home",
+      subTitle: "Wait for your type! 🏠✨",
+    },
+    summarySlide: {
+      title: "Thanks for watching!",
+      items: []
+    },
+    items: [
+      {
+        mbtiType: "INTJ",
+        catchphrase: "System Reboot Mode",
+        points: [
+          "Literally just completely blocks out the universe the second they get home.",
+          "Mentally replaying the entire day just to point out how inefficient everyone was.",
+          "Won't say a single word until their social battery hits at least 10 percent."
+        ]
+      },
+      {
+        mbtiType: "INTP",
+        catchphrase: "Horizontal Position Acquired",
+        points: [
+          "Flops onto the bed in their outside clothes... criminal, I know.",
+          "Ends up in a 3-hour Wikipedia rabbit hole about random historical events.",
+          "Completely forgets dinner exists because they're way too hyperfixated."
+        ]
+      },
+      {
+        mbtiType: "ENTJ",
+        catchphrase: "Phase 2: Night Grind",
+        points: [
+          "Immediately changes from 'work clothes' to 'work-from-home clothes'.",
+          "Unironically checks emails while waiting for the microwave to beep.",
+          "To them, resting is literally just preparation for tomorrow's success."
+        ]
+      },
+      {
+        mbtiType: "ENTP",
+        catchphrase: "Debate Me Online",
+        points: [
+          "Paces around the room while listening to a podcast on 2x speed.",
+          "Starts an argument on Reddit just because they were bored.",
+          "Leaves their bag exactly on the floor where they dropped it."
+        ]
+      },
+      {
+        mbtiType: "INFJ",
+        catchphrase: "The Silent Decompression",
+        points: [
+          "Stares at the ceiling in complete silence for like 30 minutes straight.",
+          "Overthinks every single social interaction they had today.",
+          "Lights an expensive candle just to cleanse the room's chaotic aura."
+        ]
+      },
+      {
+        mbtiType: "INFP",
+        catchphrase: "Escaping Reality",
+        points: [
+          "Immediately puts on their comfiest pajamas and noise-canceling headphones.",
+          "Makes up fake scenarios in their head while staring blankly at the wall.",
+          "The real world is closed for the day. Fantasy world is now open."
+        ]
+      },
+      {
+        mbtiType: "ENFJ",
+        catchphrase: "Still Caring About Others",
+        points: [
+          "Texts five different people asking 'hey, did you get home safe?'.",
+          "Starts aggressively cleaning because a messy room equals a messy mind.",
+          "Can only finally relax when they know everyone else is doing okay."
+        ]
+      },
+      {
+        mbtiType: "ENFP",
+        catchphrase: "The Chaos Continues",
+        points: [
+          "Comes home hyped up and starts having a full conversation with their pet.",
+          "Starts a brand new hobby project but abandons it 10 minutes later.",
+          "Leaves a literal trail of clothes and keys across the entire floor."
+        ]
+      },
+      {
+        mbtiType: "ISTJ",
+        catchphrase: "The Routine Executor",
+        points: [
+          "Washes hands, unpacks bag, and puts everything exactly where it belongs.",
+          "Eats dinner at the exact same time every single day without fail.",
+          "Chaos is strictly banned in this household, thank you very much."
+        ]
+      },
+      {
+        mbtiType: "ISFJ",
+        catchphrase: "Cozy Mode Activated",
+        points: [
+          "Makes a hot cup of tea and tightly wraps themselves in a blanket burrito.",
+          "Rewatches the exact same comfort show for the tenth time this month.",
+          "Just wants some peace, quiet, and absolutely zero surprise visitors."
+        ]
+      },
+      {
+        mbtiType: "ESTJ",
+        catchphrase: "Life Admin Time",
+        points: [
+          "Immediately starts doing chores before even thinking about sitting down.",
+          "Writes a highly detailed to-do list for tomorrow before relaxing.",
+          "Relaxing? Yeah, that only happens after all tasks are 100 percent completed."
+        ]
+      },
+      {
+        mbtiType: "ESFJ",
+        catchphrase: "The Social Debrief",
+        points: [
+          "Calls their bestie to spill the tea on everything that happened today.",
+          "Makes absolutely sure the whole family has eaten a good dinner.",
+          "Honestly feels super lonely if the house is way too quiet."
+        ]
+      },
+      {
+        mbtiType: "ISTP",
+        catchphrase: "Do Not Disturb",
+        points: [
+          "Throws their bag on the floor and boots up a video game instantly.",
+          "Zero thoughts about tomorrow. Only the present moment matters, bro.",
+          "Responds to all your long texts with a single word. Classic."
+        ]
+      },
+      {
+        mbtiType: "ISFP",
+        catchphrase: "Aesthetic Chill",
+        points: [
+          "Puts on their favorite indie playlist to set the vibe.",
+          "Spends 2 hours scrolling TikTok in the weirdest sitting position possible.",
+          "Snacks on random things in the fridge instead of making an actual dinner."
+        ]
+      },
+      {
+        mbtiType: "ESTP",
+        catchphrase: "Still Full of Energy",
+        points: [
+          "Literally can't sit still, so they decide to do a random home workout.",
+          "Looks at the empty fridge and decides to just go back out for food.",
+          "Boredom is their biggest enemy and they refuse to let it win."
+        ]
+      },
+      {
+        mbtiType: "ESFP",
+        catchphrase: "The Solo Party",
+        points: [
+          "Plays loud music and treats the living room like an exclusive club.",
+          "Sings passionately into their hairbrush while making a late-night snack.",
+          "Constantly checking their phone to see what the next fun plan is."
+        ]
+      }
+    ]
   }
-
 ];

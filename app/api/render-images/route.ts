@@ -14,6 +14,11 @@ const CURRENT_BUNDLE_VERSION = 25; // Force rebuild for Z-gen language rewrite
 
 export async function POST(req: Request) {
   try {
+    // Vercel上では実行不可（Puppeteerとファイルシステム書き込みが必要なため）
+    if (process.env.VERCEL || process.env.NEXT_PUBLIC_VERCEL_ENV) {
+      return NextResponse.json({ error: "画像の生成はローカル環境（npm run dev）専用です。本番環境では実行できません。" }, { status: 403 });
+    }
+
     const { preset, presetId, items, groupColor, lang } = await req.json();
 
     if (!items || !Array.isArray(items)) {

@@ -210,49 +210,57 @@ export default function HomeClient({ dict, lang }: { dict: any, lang: string }) 
               <div className="space-y-4">
                 <h2 className="text-xl font-extrabold text-slate-800 tracking-tight flex items-center gap-2">
                   <span className="w-1.5 h-6 bg-cyan-500 rounded-full inline-block"></span>
-                  CognitiveLens（コグニティブレンズ）とは？
+                  {lang === "en" ? "What is CognitiveLens?" : "CognitiveLens（コグニティブレンズ）とは？"}
                 </h2>
                 <p className="text-sm text-slate-600 leading-relaxed font-medium">
-                  そもそも人間の性格って、複雑すぎてめんどくさいですよね？ CognitiveLensは、ユングの心理学的類型論（認知機能モデル）をベースとした16タイプの性格分類を、Z世代向けのIT・スマホメタファーで「再解釈」した対人課題解決プラットフォームです。<br/>
-                  人間の性格や行動パターンを「OSの基本仕様」や「通信プロトコル（意思疎通の規格）」に見立てることで、日常でよくある「なんでこの人、こんなに話が通じないの？」といった無意識のバグ（すれ違い）を、感情論抜きで論理的にデバッグ（解消）しちゃおう、というコンセプトで作られています。
+                  {lang === "en" ? (
+                    <>Human personality is complicated and exhausting, right? CognitiveLens is an interpersonal friction analytics platform that "reinterprets" the 16 personality types (based on Jung's cognitive function model) into an IT/smartphone metaphor tailored for Gen Z.<br/>By treating human personalities and behavioral patterns as "basic OS specifications" and "communication protocols," it helps you logically debug those unconscious bugs ("Why is this person so hard to talk to?") without getting overly emotional.</>
+                  ) : (
+                    <>そもそも人間の性格って、複雑すぎてめんどくさいですよね？ CognitiveLensは、ユングの心理学的類型論（認知機能モデル）をベースとした16タイプの性格分類を、Z世代向けのIT・スマホメタファーで「再解釈」した対人課題解決プラットフォームです。<br/>人間の性格や行動パターンを「OSの基本仕様」や「通信プロトコル（意思疎通の規格）」に見立てることで、日常でよくある「なんでこの人、こんなに話が通じないの？」といった無意識のバグ（すれ違い）を、感情論抜きで論理的にデバッグ（解消）しちゃおう、というコンセプトで作られています。</>
+                  )}
                 </p>
               </div>
 
               <div className="space-y-4">
                 <h3 className="text-lg font-bold text-slate-800 flex items-center gap-2">
                   <span className="w-1.5 h-5 bg-fuchsia-400 rounded-full inline-block"></span>
-                  なぜ性格診断に「ITメタファー」が必要なのか
+                  {lang === "en" ? "Why use an IT Metaphor for Personality Analysis?" : "なぜ性格診断に「ITメタファー」が必要なのか"}
                 </h3>
                 <p className="text-sm text-slate-600 leading-relaxed font-medium">
-                  従来の心理学的な解説って、専門用語ばかりで実際の対人関係（学校、職場、恋愛など）でパッと使うにはちょっとハードルが高いんです。そこで当サイトでは、「外向的感情（Fe）」を『広域Wi-Fiルーター（常に周囲の空気を探知）』、「内向的思考（Ti）」を『ローカル内での厳密なコンパイル（自分の中の論理整合性）』といった独自の言語体系に翻訳しました。<br/>
-                  これによって、自分と相手の「どうしても合わない部分」を、「あいつ性格悪いな」ではなく「単にOSが違うだけか」と客観視できるようになり、メンタルヘルスを保つための実用的な自己理解ツールとして機能します。
+                  {lang === "en" ? (
+                    <>Traditional psychological explanations are full of jargon, making them hard to quickly apply to real-world relationships (school, work, dating). Therefore, we translated "Extraverted Feeling (Fe)" into a "Wide-Area Wi-Fi Router (constantly scanning the room's vibe)", and "Introverted Thinking (Ti)" into "Strict Local Compilation (internal logical consistency)".<br/>This allows you to view interpersonal clashes objectively ("We just run on different OSs") instead of taking it personally ("They're just a bad person"), functioning as a practical self-understanding tool to maintain your mental health.</>
+                  ) : (
+                    <>従来の心理学的な解説って、専門用語ばかりで実際の対人関係（学校、職場、恋愛など）でパッと使うにはちょっとハードルが高いんです。そこで当サイトでは、「外向的感情（Fe）」を『広域Wi-Fiルーター（常に周囲の空気を探知）』、「内向的思考（Ti）」を『ローカル内での厳密なコンパイル（自分の中の論理整合性）』といった独自の言語体系に翻訳しました。<br/>これによって、自分と相手の「どうしても合わない部分」を、「あいつ性格悪いな」ではなく「単にOSが違うだけか」と客観視できるようになり、メンタルヘルスを保つための実用的な自己理解ツールとして機能します。</>
+                  )}
                 </p>
               </div>
 
               <div className="space-y-4">
                 <h3 className="text-lg font-bold text-slate-800 flex items-center gap-2">
                   <span className="w-1.5 h-5 bg-violet-400 rounded-full inline-block"></span>
-                  各ツールの独自アルゴリズムと活用方法
+                  {lang === "en" ? "Unique Algorithms and Tool Applications" : "各ツールの独自アルゴリズムと活用方法"}
                 </h3>
                 <ul className="text-sm text-slate-600 leading-relaxed font-medium space-y-3 list-none pl-0">
                   <li className="relative pl-4 before:content-[''] before:absolute before:left-0 before:top-2 before:w-1.5 before:h-1.5 before:bg-slate-400 before:rounded-full">
-                    <strong className="text-slate-700">脈あり度（接続希望度）スキャン：</strong>
-                    相手の些細な言動（LINEの返信速度、視線の動きなど）から、認知機能に基づいた「あなたへの関心度」をAIが逆算分析します。分かりやすい好意だけでなく、そのタイプ特有の「不器用すぎるアプローチ」を見逃さないための診断ツールです。
+                    <strong className="text-slate-700">{lang === "en" ? "Target's Pulse Scanner:" : "脈あり度（接続希望度）スキャン："}</strong>
+                    {lang === "en" ? " An AI reverse-engineers their 'interest level' based on their minor behaviors (texting speed, eye contact) using cognitive functions. It decodes not only obvious affection but also the awkward, specific approaches unique to each type." : "相手の些細な言動（LINEの返信速度、視線の動きなど）から、認知機能に基づいた「あなたへの関心度」をAIが逆算分析します。分かりやすい好意だけでなく、そのタイプ特有の「不器用すぎるアプローチ」を見逃さないための診断ツールです。"}
                   </li>
                   <li className="relative pl-4 before:content-[''] before:absolute before:left-0 before:top-2 before:w-1.5 before:h-1.5 before:bg-slate-400 before:rounded-full">
-                    <strong className="text-slate-700">偏見だらけの16タイプビンゴ：</strong>
-                    各タイプの「あるある行動（ステレオタイプ）」を24個のセルに配置したエンタメ機能。自分がどれだけそのタイプの「基本スペック」に忠実か、あるいは例外的なバグを持っているかを可視化します。
+                    <strong className="text-slate-700">{lang === "en" ? "Biased MBTI Bingo:" : "偏見だらけの16タイプビンゴ："}</strong>
+                    {lang === "en" ? " An entertainment feature placing extreme behavioral patterns on a 24-cell bingo card. Visualizes how closely you follow your type's 'basic specs' or if you carry exceptional bugs." : "各タイプの「あるある行動（ステレオタイプ）」を24個のセルに配置したエンタメ機能。自分がどれだけそのタイプの「基本スペック」に忠実か、あるいは例外的なバグを持っているかを可視化します。"}
                   </li>
                   <li className="relative pl-4 before:content-[''] before:absolute before:left-0 before:top-2 before:w-1.5 before:h-1.5 before:bg-slate-400 before:rounded-full">
-                    <strong className="text-slate-700">16タイプ別 OS仕様解析コラム：</strong>
-                    各タイプの思考回路、行動原理、適職、そして「絶対にやってはいけないNG行動（地雷）」を網羅した詳細な解説記事です。
+                    <strong className="text-slate-700">{lang === "en" ? "16 Type OS Specs Columns:" : "16タイプ別 OS仕様解析コラム："}</strong>
+                    {lang === "en" ? " Detailed articles covering thought circuits, behavioral principles, ideal careers, and 'absolute red flag behaviors' you must never do to them." : "各タイプの思考回路、行動原理、適職、そして「絶対にやってはいけないNG行動（地雷）」を網羅した詳細な解説記事です。"}
                   </li>
                 </ul>
               </div>
               
               <div className="pt-4 border-t border-slate-100">
                 <p className="text-xs text-slate-400 leading-relaxed">
-                  ※本サイト（CognitiveLens）は、マイヤーズ・ブリッグス財団や公式のMBTI®テストとは一切関係のない独立したエンターテインメント・自己理解プラットフォームです。診断結果およびAI生成コンテンツは参考情報として提供されており、医療的診断を代行するものではありません。
+                  {lang === "en" 
+                    ? "※This site (CognitiveLens) is an independent entertainment and self-understanding platform, not affiliated with the Myers-Briggs Foundation or the official MBTI® assessment. Results and AI-generated content are provided for reference only and are not a substitute for professional medical diagnosis."
+                    : "※本サイト（CognitiveLens）は、マイヤーズ・ブリッグス財団や公式のMBTI®テストとは一切関係のない独立したエンターテインメント・自己理解プラットフォームです。診断結果およびAI生成コンテンツは参考情報として提供されており、医療的診断を代行するものではありません。"}
                 </p>
               </div>
             </article>

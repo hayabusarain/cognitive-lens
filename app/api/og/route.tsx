@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 import type { NextRequest } from "next/server";
-import { TYPE_INFO, DEFAULT_TYPE } from "@/lib/type-info";
+import { getTypeInfo, getDefaultType } from "@/lib/data-provider";
 
 export const runtime = "edge";
 
@@ -8,8 +8,10 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const typeParam = searchParams.get("type") ?? "INTP";
+    const lang = searchParams.get("lang") ?? "ja";
+    const TYPE_INFO_MAP = getTypeInfo(lang);
     const typeKey = typeParam.toUpperCase().slice(0, 4);
-    const info = TYPE_INFO[typeKey] ?? DEFAULT_TYPE;
+    const info = TYPE_INFO_MAP[typeKey] ?? getDefaultType(lang);
 
     return new ImageResponse(
       (
@@ -114,7 +116,7 @@ export async function GET(request: NextRequest) {
               letterSpacing: "2px",
             }}
           >
-            深層心理プロファイリング結果
+            {lang === "en" ? "Deep Psychological Profiling Result" : "深層心理プロファイリング結果"}
           </div>
         </div>
       ),
@@ -122,6 +124,6 @@ export async function GET(request: NextRequest) {
     );
   } catch (e) {
     console.error(e);
-    return new Response("OGP画像の生成に失敗しました", { status: 500 });
+    return new Response(lang === "en" ? "Failed to generate OGP image" : "OGP画像の生成に失敗しました", { status: 500 });
   }
 }

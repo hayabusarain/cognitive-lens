@@ -1,11 +1,12 @@
 "use client";
 
 import { ExternalLink, Briefcase, HeartPulse } from "lucide-react";
-import { TYPE_INFO, DEFAULT_TYPE } from "@/lib/type-info";
+import { getTypeInfo, getDefaultType } from "@/lib/data-provider";
 import Link from "next/link";
 
 export default function NextActionCTA({ typeKey, lang }: { typeKey: string; lang: string }) {
-  const info = TYPE_INFO[typeKey] ?? DEFAULT_TYPE;
+  const TYPE_INFO_MAP = getTypeInfo(lang);
+  const info = TYPE_INFO_MAP[typeKey] ?? getDefaultType(lang);
   const isEn = lang === "en";
 
   // Google AdSense審査対策: リンク先（href="#"）が未定のPRボタンがあると

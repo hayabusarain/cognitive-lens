@@ -5,7 +5,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, Download, Share2 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-import { BINGO_DATA, MBTIType } from "@/lib/bingo-data-ja";
+import { MBTIType } from "@/lib/bingo-data-ja";
+import { getBingoData } from "@/lib/data-provider";
 import { toPng } from "html-to-image";
 
 const TYPES: MBTIType[] = [
@@ -75,6 +76,15 @@ export default function BingoClient({ lang }: { lang: string }) {
   };
 
   const getBingoTitle = (count: number, type: MBTIType) => {
+    if (lang === "en") {
+      if (count === 0) return `[Fraud] Fake ${type}`;
+      if (count === 1) return `[Noob] Apprentice ${type}`;
+      if (count <= 3) return `[Basic] Average ${type}`;
+      if (count <= 5) return `[Hardcore] Certified ${type}`;
+      if (count <= 8) return `[100% Pure] Born ${type}`;
+      if (count <= 11) return `[Limit Break] Breathing ${type}`;
+      return `[God Tier] Walking ${type} Dictionary`;
+    }
     if (count === 0) return `【MBTI詐称疑惑】エセ${type}`;
     if (count === 1) return `【見習いレベル】駆け出しの${type}`;
     if (count <= 3) return `【量産型】よくいる${type}`;
@@ -94,8 +104,13 @@ export default function BingoClient({ lang }: { lang: string }) {
         </nav>
         
         <div className="max-w-md w-full text-center mb-10">
-          <h1 className="text-3xl font-black mb-4 tracking-tight">偏見だらけの<br/><span className="text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-400 to-cyan-400">MBTIビンゴ</span></h1>
-          <p className="text-slate-400 text-sm">あなたのMBTIを選択して、どれくらい「あるある」が当てはまるかチェックしよう！</p>
+          <h1 className="text-3xl font-black mb-4 tracking-tight">
+            {lang === "en" ? "Biased" : "偏見だらけの"}<br/>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-400 to-cyan-400">{lang === "en" ? "MBTI Bingo" : "MBTIビンゴ"}</span>
+          </h1>
+          <p className="text-slate-400 text-sm">
+            {lang === "en" ? "Select your MBTI and see how many stereotypes you match!" : "あなたのMBTIを選択して、どれくらい「あるある」が当てはまるかチェックしよう！"}
+          </p>
         </div>
 
         <div className="grid grid-cols-4 gap-3 max-w-md w-full">
@@ -115,33 +130,43 @@ export default function BingoClient({ lang }: { lang: string }) {
           <div className="space-y-4">
             <h3 className="text-lg font-extrabold text-white flex items-center gap-2">
               <span className="text-fuchsia-400">#</span>
-              偏見だらけの16タイプビンゴとは？
+              {lang === "en" ? "What is the Biased 16 Type Bingo?" : "偏見だらけの16タイプビンゴとは？"}
             </h3>
             <p className="text-sm text-slate-400 leading-relaxed">
-              CognitiveLensが提供する「偏見だらけの16タイプビンゴ」は、各性格タイプにありがちな「ステレオタイプ（偏見）」や「あるある行動」を可視化するためのエンターテインメント・ツールです。<br/>
-              一般的な心理学の枠組みを超え、Z世代やネット上のミーム文化でよく語られる「各タイプの極端な行動パターン」を24個のセルに配置しました。自分がどれだけそのタイプの「基本スペック」に忠実か（あるいは例外的なバグを抱えているか）を、遊び感覚でサクッとチェックできます。
+              {lang === "en" ? (
+                <>CognitiveLens's "Biased 16 Type Bingo" is an entertainment tool to visualize the stereotypes and relatable behaviors typical of each personality type.<br/>Going beyond standard psychology frameworks, we placed extreme behavioral patterns often talked about in Gen Z internet meme culture across 24 cells. You can quickly and playfully check how strictly you adhere to your type's "basic specs" (or if you carry any exceptional bugs).</>
+              ) : (
+                <>CognitiveLensが提供する「偏見だらけの16タイプビンゴ」は、各性格タイプにありがちな「ステレオタイプ（偏見）」や「あるある行動」を可視化するためのエンターテインメント・ツールです。<br/>一般的な心理学の枠組みを超え、Z世代やネット上のミーム文化でよく語られる「各タイプの極端な行動パターン」を24個のセルに配置しました。自分がどれだけそのタイプの「基本スペック」に忠実か（あるいは例外的なバグを抱えているか）を、遊び感覚でサクッとチェックできます。</>
+              )}
             </p>
           </div>
 
           <div className="space-y-4">
             <h3 className="text-lg font-bold text-white flex items-center gap-2">
               <span className="text-cyan-400">#</span>
-              「え、なんでこんなに当たるの…？」の理由
+              {lang === "en" ? "\"Wait, why is this so accurate...?\"" : "「え、なんでこんなに当たるの…？」の理由"}
             </h3>
             <p className="text-sm text-slate-400 leading-relaxed">
-              このビンゴをやってみて「異常に当たる」と感じる理由は、単なるバーナム効果（誰にでも当てはまることを自分にだけ当てはまると錯覚するアレ）だけではありません。<br/>
-              ユングの心理学的類型論に基づく「8つの認知機能」の組み合わせが、日常の無意識の選択やストレス時の反応パターン（劣等機能の暴走）として如実に表れるためです。本ツールでは、そうした心理的メカニズムを「連絡の遅さ」「単独行動の多さ」「無駄なことへの執着」といった具体的な日常行動に翻訳（デコード）して出題しています。
+              {lang === "en" ? (
+                <>The reason it feels "insanely accurate" isn't just the Forer effect. It's because the combination of Jung's 8 cognitive functions clearly manifests in your daily unconscious choices and stress responses (like your inferior function going out of control). This tool decodes those psychological mechanisms into specific daily behaviors like "replying late," "acting alone," or "obsessing over useless things."</>
+              ) : (
+                <>このビンゴをやってみて「異常に当たる」と感じる理由は、単なるバーナム効果（誰にでも当てはまることを自分にだけ当てはまると錯覚するアレ）だけではありません。<br/>ユングの心理学的類型論に基づく「8つの認知機能」の組み合わせが、日常の無意識の選択やストレス時の反応パターン（劣等機能の暴走）として如実に表れるためです。本ツールでは、そうした心理的メカニズムを「連絡の遅さ」「単独行動の多さ」「無駄なことへの執着」といった具体的な日常行動に翻訳（デコード）して出題しています。</>
+              )}
             </p>
           </div>
 
           <div className="space-y-4">
             <h3 className="text-lg font-bold text-white flex items-center gap-2">
               <span className="text-violet-400">#</span>
-              ビンゴ結果の活用法と注意点
+              {lang === "en" ? "How to use the results & Warnings" : "ビンゴ結果の活用法と注意点"}
             </h3>
             <p className="text-sm text-slate-400 leading-relaxed">
-              ビンゴがたくさん揃ったからといって「優れた人間」というわけではありません。むしろビンゴの項目は「あなたの社会生活におけるバグ（弱点やコミュニケーションの癖）」を示していることが多いため、「あ、自分って無意識にこういう印象を与えてるんだな」と客観視する自己分析ツールとして活用してみてください。<br/><br/>
-              ※当サイトで提供する診断・ビンゴ機能は、ユングの認知機能モデルを独自の解釈でエンタメ化したものであり、公式のMBTI®テストとは一切関係ありません。
+              {lang === "en" ? (
+                <>Getting a lot of bingos doesn't mean you're a "superior human." Rather, the bingo items often point out your "social bugs" (weaknesses or communication habits). Use this as a self-analysis tool to objectively realize, "Ah, so this is the unconscious impression I give off."<br/><br/>*The diagnosis/bingo functions provided on this site are entertainment-based reinterpretations of Jung's cognitive function model and are not affiliated with the official MBTI® test.</>
+              ) : (
+                <>ビンゴがたくさん揃ったからといって「優れた人間」というわけではありません。むしろビンゴの項目は「あなたの社会生活におけるバグ（弱点やコミュニケーションの癖）」を示していることが多いため、「あ、自分って無意識にこういう印象を与えてるんだな」と客観視する自己分析ツールとして活用してみてください。<br/><br/>
+                ※当サイトで提供する診断・ビンゴ機能は、ユングの認知機能モデルを独自の解釈でエンタメ化したものであり、公式のMBTI®テストとは一切関係ありません。</>
+              )}
             </p>
           </div>
         </article>
@@ -150,10 +175,10 @@ export default function BingoClient({ lang }: { lang: string }) {
     );
   }
 
-  const items = BINGO_DATA[selectedMBTI];
+  const items = getBingoData(lang)[selectedMBTI];
   const gridItems = [
     ...items.slice(0, 12),
-    `私は確実に\n${selectedMBTI}だ\n(FREE)`,
+    lang === "en" ? `I am 100%\n${selectedMBTI}\n(FREE)` : `私は確実に\n${selectedMBTI}だ\n(FREE)`,
     ...items.slice(12, 24)
   ];
 
@@ -182,10 +207,14 @@ export default function BingoClient({ lang }: { lang: string }) {
         <div className="flex items-center justify-between mb-6 relative z-10">
           <div className="text-left">
             <p className="text-fuchsia-400 text-[10px] font-bold tracking-widest uppercase mb-1">CognitiveLens BINGO</p>
-            <h2 className="text-xl sm:text-2xl font-black text-white mb-2">偏見だらけの<br/><span className="text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-400 to-cyan-400">{selectedMBTI}</span> ビンゴ</h2>
+            <h2 className="text-xl sm:text-2xl font-black text-white mb-2">
+              {lang === "en" ? "Biased" : "偏見だらけの"}<br/>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-400 to-cyan-400">{selectedMBTI}</span>
+              {lang === "en" ? " Bingo" : " ビンゴ"}
+            </h2>
             <div className="inline-block px-3 py-1 bg-slate-800/80 border border-slate-700 rounded-full">
               <p className="text-xs sm:text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-200 to-yellow-400">
-                称号：{currentTitle}
+                {lang === "en" ? `Title: ${currentTitle}` : `称号：${currentTitle}`}
               </p>
             </div>
           </div>
@@ -251,7 +280,7 @@ export default function BingoClient({ lang }: { lang: string }) {
         </AnimatePresence>
 
         <div className="mt-6 text-center text-[10px] text-slate-600 font-medium">
-          #CognitiveLens #偏見だらけのMBTIビンゴ
+          {lang === "en" ? "#CognitiveLens #BiasedMBTIBingo" : "#CognitiveLens #偏見だらけのMBTIビンゴ"}
         </div>
       </div>
 
@@ -259,14 +288,16 @@ export default function BingoClient({ lang }: { lang: string }) {
         {/* X Share Button */}
         <a
           href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
-            `私は【偏見だらけの${selectedMBTI}ビンゴ】で ${bingoCount} BINGO 達成し、称号『${currentTitle}』を獲得しました！🎯\n\nZ世代向けの辛口MBTI診断サイト『CognitiveLens』で、あなたも自分の「あるある」をチェックしてみよう！\n\n#CognitiveLens #MBTI #MBTIビンゴ #${selectedMBTI}\n`
-          )}&url=${encodeURIComponent(`https://cognitivelens.com/ja/bingo`)}`}
+            lang === "en"
+              ? `I got ${bingoCount} BINGO on the [Biased ${selectedMBTI} Bingo] and earned the title '${currentTitle}'! 🎯\n\nCheck out your own stereotypes on CognitiveLens, the Gen-Z MBTI analytics platform!\n\n#CognitiveLens #MBTIBingo #${selectedMBTI}\n`
+              : `私は【偏見だらけの${selectedMBTI}ビンゴ】で ${bingoCount} BINGO 達成し、称号『${currentTitle}』を獲得しました！🎯\n\nZ世代向けの辛口MBTI診断サイト『CognitiveLens』で、あなたも自分の「あるある」をチェックしてみよう！\n\n#CognitiveLens #MBTI #MBTIビンゴ #${selectedMBTI}\n`
+          )}&url=${encodeURIComponent(`https://cognitivelens.com/${lang}/bingo`)}`}
           target="_blank"
           rel="noopener noreferrer"
           className="w-full py-4 bg-black border border-slate-700 rounded-xl font-bold text-sm shadow-lg flex items-center justify-center gap-2 active:scale-[0.98] transition-transform hover:bg-slate-900"
         >
           <svg viewBox="0 0 24 24" aria-hidden="true" className="w-4 h-4 fill-white"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 22.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>
-          X (Twitter) で結果をポストする
+          {lang === "en" ? "Post result on X" : "X (Twitter) で結果をポストする"}
         </a>
 
         {/* Download Button */}
@@ -276,16 +307,19 @@ export default function BingoClient({ lang }: { lang: string }) {
           className="w-full py-4 bg-gradient-to-r from-fuchsia-600 to-purple-600 rounded-xl font-bold text-sm shadow-lg flex items-center justify-center gap-2 active:scale-[0.98] transition-transform disabled:opacity-50"
         >
           {isExporting ? (
-            <span className="animate-pulse">画像を生成中...</span>
+            <span className="animate-pulse">{lang === "en" ? "Generating image..." : "画像を生成中..."}</span>
           ) : (
             <>
-              <Download size={18} /> ビンゴカードを画像で保存する
+              <Download size={18} /> {lang === "en" ? "Save Bingo Card as Image" : "ビンゴカードを画像で保存する"}
             </>
           )}
         </button>
         <p className="text-[11px] text-slate-500 text-center leading-relaxed">
-          ※Xの仕様上、リンクからの投稿では自動で画像が添付されません。<br/>
-          画像をつけたい場合は保存ボタンからダウンロードし、ポストに手動で貼り付けてください。
+          {lang === "en" ? (
+            <>*Due to X's specifications, images are not attached automatically from the link.<br/>Please download the image using the save button and attach it manually to your post.</>
+          ) : (
+            <>※Xの仕様上、リンクからの投稿では自動で画像が添付されません。<br/>画像をつけたい場合は保存ボタンからダウンロードし、ポストに手動で貼り付けてください。</>
+          )}
         </p>
       </div>
 
@@ -294,33 +328,42 @@ export default function BingoClient({ lang }: { lang: string }) {
         <div className="space-y-4">
           <h3 className="text-lg font-extrabold text-white flex items-center gap-2">
             <span className="text-fuchsia-400">#</span>
-            偏見だらけの16タイプビンゴとは？
+            {lang === "en" ? "What is the Biased 16 Type Bingo?" : "偏見だらけの16タイプビンゴとは？"}
           </h3>
           <p className="text-sm text-slate-400 leading-relaxed">
-            CognitiveLensが提供する「偏見だらけの16タイプビンゴ」は、各性格タイプにありがちな「ステレオタイプ（偏見）」や「あるある行動」を可視化するためのエンターテインメント・ツールです。<br/>
-            一般的な心理学の枠組みを超え、Z世代やネット上のミーム文化でよく語られる「各タイプの極端な行動パターン」を24個のセルに配置しました。自分がどれだけそのタイプの「基本スペック」に忠実か（あるいは例外的なバグを抱えているか）を、遊び感覚でサクッとチェックできます。
+            {lang === "en" ? (
+              <>CognitiveLens's "Biased 16 Type Bingo" is an entertainment tool to visualize the stereotypes and relatable behaviors typical of each personality type.<br/>Going beyond standard psychology frameworks, we placed extreme behavioral patterns often talked about in Gen Z internet meme culture across 24 cells. You can quickly and playfully check how strictly you adhere to your type's "basic specs" (or if you carry any exceptional bugs).</>
+            ) : (
+              <>CognitiveLensが提供する「偏見だらけの16タイプビンゴ」は、各性格タイプにありがちな「ステレオタイプ（偏見）」や「あるある行動」を可視化するためのエンターテインメント・ツールです。<br/>一般的な心理学の枠組みを超え、Z世代やネット上のミーム文化でよく語られる「各タイプの極端な行動パターン」を24個のセルに配置しました。自分がどれだけそのタイプの「基本スペック」に忠実か（あるいは例外的なバグを抱えているか）を、遊び感覚でサクッとチェックできます。</>
+            )}
           </p>
         </div>
 
         <div className="space-y-4">
           <h3 className="text-lg font-bold text-white flex items-center gap-2">
             <span className="text-cyan-400">#</span>
-            「え、なんでこんなに当たるの…？」の理由
+            {lang === "en" ? "\"Wait, why is this so accurate...?\"" : "「え、なんでこんなに当たるの…？」の理由"}
           </h3>
           <p className="text-sm text-slate-400 leading-relaxed">
-            このビンゴをやってみて「異常に当たる」と感じる理由は、単なるバーナム効果（誰にでも当てはまることを自分にだけ当てはまると錯覚するアレ）だけではありません。<br/>
-            ユングの心理学的類型論に基づく「8つの認知機能」の組み合わせが、日常の無意識の選択やストレス時の反応パターン（劣等機能の暴走）として如実に表れるためです。本ツールでは、そうした心理的メカニズムを「連絡の遅さ」「単独行動の多さ」「無駄なことへの執着」といった具体的な日常行動に翻訳（デコード）して出題しています。
+            {lang === "en" ? (
+              <>The reason it feels "insanely accurate" isn't just the Forer effect. It's because the combination of Jung's 8 cognitive functions clearly manifests in your daily unconscious choices and stress responses (like your inferior function going out of control). This tool decodes those psychological mechanisms into specific daily behaviors like "replying late," "acting alone," or "obsessing over useless things."</>
+            ) : (
+              <>このビンゴをやってみて「異常に当たる」と感じる理由は、単なるバーナム効果（誰にでも当てはまることを自分にだけ当てはまると錯覚するアレ）だけではありません。<br/>ユングの心理学的類型論に基づく「8つの認知機能」の組み合わせが、日常の無意識の選択やストレス時の反応パターン（劣等機能の暴走）として如実に表れるためです。本ツールでは、そうした心理的メカニズムを「連絡の遅さ」「単独行動の多さ」「無駄なことへの執着」といった具体的な日常行動に翻訳（デコード）して出題しています。</>
+            )}
           </p>
         </div>
 
         <div className="space-y-4">
           <h3 className="text-lg font-bold text-white flex items-center gap-2">
             <span className="text-violet-400">#</span>
-            ビンゴ結果の活用法と注意点
+            {lang === "en" ? "How to use the results & Warnings" : "ビンゴ結果の活用法と注意点"}
           </h3>
           <p className="text-sm text-slate-400 leading-relaxed">
-            ビンゴがたくさん揃ったからといって「優れた人間」というわけではありません。むしろビンゴの項目は「あなたの社会生活におけるバグ（弱点やコミュニケーションの癖）」を示していることが多いため、「あ、自分って無意識にこういう印象を与えてるんだな」と客観視する自己分析ツールとして活用してみてください。<br/><br/>
-            ※当サイトで提供する診断・ビンゴ機能は、ユングの認知機能モデルを独自の解釈でエンタメ化したものであり、公式のMBTI®テストとは一切関係ありません。
+            {lang === "en" ? (
+              <>Getting a lot of bingos doesn't mean you're a "superior human." Rather, the bingo items often point out your "social bugs" (weaknesses or communication habits). Use this as a self-analysis tool to objectively realize, "Ah, so this is the unconscious impression I give off."<br/><br/>*The diagnosis/bingo functions provided on this site are entertainment-based reinterpretations of Jung's cognitive function model and are not affiliated with the official MBTI® test.</>
+            ) : (
+              <>ビンゴがたくさん揃ったからといって「優れた人間」というわけではありません。むしろビンゴの項目は「あなたの社会生活におけるバグ（弱点やコミュニケーションの癖）」を示していることが多いため、「あ、自分って無意識にこういう印象を与えてるんだな」と客観視する自己分析ツールとして活用してみてください。<br/><br/>※当サイトで提供する診断・ビンゴ機能は、ユングの認知機能モデルを独自の解釈でエンタメ化したものであり、公式のMBTI®テストとは一切関係ありません。</>
+            )}
           </p>
         </div>
       </article>

@@ -12,6 +12,7 @@ import { SingleSlideImage } from "./SingleSlideImage";
 import { SlideTitleImage } from "./SlideTitleImage";
 import { SlideSummaryImage } from "./SlideSummaryImage";
 import { SlideShowVideo } from "./SlideShowVideo";
+import { ScenarioMontageVideo } from "./ScenarioMontageVideo";
 import React from "react";
 import "../app/globals.css";
 
@@ -342,6 +343,51 @@ export const RemotionRoot: React.FC = () => {
           },
           slideDuration: 150,
           transitionDuration: 20
+        }}
+      />
+      {/* 連続シナリオ動画（YouTube風あるある動画） */}
+      <Composition
+        id="ScenarioMontageVideo"
+        component={ScenarioMontageVideo as React.FC<any>}
+        durationInFrames={1500}
+        fps={30}
+        width={1920}
+        height={1080}
+        calculateMetadata={({ props }) => {
+          const p = props as any;
+          if (!p.scenarios) return { durationInFrames: 150 };
+          const totalFrames = p.scenarios.reduce((acc: number, sc: any) => {
+            const scFrames = sc.subtitles?.reduce((subAcc: number, sub: string) => {
+              return subAcc + Math.round(Math.max(2.5, sub.length / 12) * 30);
+            }, 0) || 0;
+            return acc + scFrames;
+          }, 0);
+          return {
+            durationInFrames: totalFrames > 0 ? totalFrames : 150
+          };
+        }}
+        defaultProps={{
+          themeTitle: "MBTI別 帰宅後あるある",
+          scenarios: [
+            {
+              mbtiType: "INTJ",
+              catchphrase: "即座にシステムを再起動",
+              groupColor: "purple",
+              subtitles: [
+                "帰宅した瞬間から外の世界を遮断し、",
+                "今日1日の非効率だった部分を脳内で分析し始める。"
+              ]
+            },
+            {
+              mbtiType: "ENFP",
+              catchphrase: "玄関開けたら即おしゃべり",
+              groupColor: "green",
+              subtitles: [
+                "「ただいま！」の勢いで今日あった出来事を",
+                "マシンガントークしながら部屋を散らかしていく。"
+              ]
+            }
+          ]
         }}
       />
     </>

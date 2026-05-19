@@ -38,7 +38,7 @@ export default function VideoGeneratorPage() {
   const [zipExportPath, setZipExportPath] = useState<string | null>(null);
   const [errorMSG, setErrorMSG] = useState<string | null>(null);
 
-  const [videoFormat, setVideoFormat] = useState<"ranking" | "pov" | "smartphone" | "reaction" | "piechart" | "combo" | "infographic" | "slideshow">("ranking");
+  const [videoFormat, setVideoFormat] = useState<"ranking" | "pov" | "smartphone" | "reaction" | "piechart" | "combo" | "infographic" | "slideshow" | "scenario">("ranking");
   const [selectedPovType, setSelectedPovType] = useState("INFP");
   const [selectedSmartphoneId, setSelectedSmartphoneId] = useState(smartphonePresets[0].id);
   const [selectedReactionId, setSelectedReactionId] = useState(reactionPresets[0].id);
@@ -265,6 +265,31 @@ export default function VideoGeneratorPage() {
             transitionDuration: 20
           };
           caption = "";
+        } else if (videoFormat === "scenario") {
+          const preset = slidePresets.find(p => p.id === selectedSlideId);
+          if (!preset) throw new Error("プリセットが見つかりません");
+
+          compositionId = "ScenarioMontageVideo";
+          presetId = preset.id;
+          presetTitle = preset.title;
+          const getColorForType = (type: string) => {
+            if (["INTJ", "INTP", "ENTJ", "ENTP"].includes(type)) return "purple";
+            if (["INFJ", "INFP", "ENFJ", "ENFP"].includes(type)) return "green";
+            if (["ISTJ", "ISFJ", "ESTJ", "ESFJ"].includes(type)) return "blue";
+            if (["ISTP", "ISFP", "ESTP", "ESFP"].includes(type)) return "yellow";
+            return preset.groupColor;
+          };
+
+          inputProps = {
+            themeTitle: preset.titleSlide.mainTitle.replace("\\n", " "),
+            scenarios: preset.items.map(item => ({
+              mbtiType: item.mbtiType,
+              catchphrase: item.catchphrase,
+              groupColor: getColorForType(item.mbtiType),
+              subtitles: item.points
+            }))
+          };
+          caption = "";
         }
 
         setGeneratedEntries([{ mbtiType: "ALL", tier: videoFormat, comment: `「${presetTitle}」のプリセットで生成中` } as any]);
@@ -449,6 +474,17 @@ export default function VideoGeneratorPage() {
               >
                 📽️ スライドショー動画
               </button>
+              <button
+                type="button"
+                onClick={() => setVideoFormat("scenario")}
+                className={`relative z-40 shrink-0 whitespace-nowrap px-6 py-3 rounded-xl font-bold transition-all text-sm active:scale-95 ${
+                  videoFormat === "scenario" 
+                    ? "bg-indigo-500 text-white shadow-[0_0_15px_rgba(99,102,241,0.4)]" 
+                    : "bg-white/5 text-neutral-400 hover:bg-white/10"
+                }`}
+              >
+                🎬 連続シナリオ動画
+              </button>
             </div>
 
             {/* スマホ用フォーマット選択ドロップダウン（絶対動くネイティブUI） */}
@@ -470,6 +506,7 @@ export default function VideoGeneratorPage() {
                 <option value="combo">🔥 会話劇コンボ</option>
                 <option value="infographic">🖼️ 1枚絵まとめ (画像生成)</option>
                 <option value="slideshow">📽️ スライドショー動画</option>
+                <option value="scenario">🎬 連続シナリオ動画</option>
               </select>
             </div>
 
@@ -612,6 +649,26 @@ export default function VideoGeneratorPage() {
                   ))}
                 </select>
                 <p className="mt-3 text-xs text-neutral-400">※ 6枚の画像（タイトル＋4キャラ＋まとめ）をスライドショー動画（MP4）に変換します</p>
+              </div>
+            )}
+
+            {videoFormat === "scenario" && (
+              <div className="mb-8">
+                <label className="block text-sm font-bold text-indigo-400 mb-2 uppercase tracking-widest flex items-center gap-2">
+                  <Sparkles className="w-4 h-4" />
+                  シナリオ・テーマ選択
+                </label>
+                <select 
+                  value={selectedSlideId}
+                  onChange={(e) => setSelectedSlideId(e.target.value)}
+                  className="relative z-50 w-full bg-black/50 border border-neutral-700 rounded-xl p-4 text-xl focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400 outline-none transition-all text-white"
+                  disabled={isLoading}
+                >
+                  {slidePresets.map(p => (
+                    <option key={p.id} value={p.id}>{p.title}</option>
+                  ))}
+                </select>
+                <p className="mt-3 text-xs text-neutral-400">※ キャラクターが登場し、字幕とアニメーションでテンポ良く流れるYouTubeショート風の動画を生成します</p>
               </div>
             )}
 
