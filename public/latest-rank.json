@@ -1,8 +1,8 @@
 {
-  "presetId": "demonic_past_life",
-  "title": "Demonic Past Life Ranking",
-  "isTop5": true,
-  "rank1Type": "INFJ",
-  "rank1Reason": "Because they pretend to be your biggest supporter to learn your weaknesses, then execute the most ruthless revenge when betrayed.",
-  "updatedAt": "2026-04-29T14:06:51.018Z"
+  "presetId": "template",
+  "title": "テンプレート",
+  "isTop5": false,
+  "rank1Type": null,
+  "rank1Reason": null,
+  "updatedAt": "2026-05-23T00:32:08.276Z"
 }
