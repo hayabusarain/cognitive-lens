@@ -6,6 +6,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { loadTs } from "./lib/ts-loader.mjs";
 import { LIMITS, length, checkProse, collectStrings } from "./lib/content-rules.mjs";
+import { collectCharset } from "./lib/charset.mjs";
 
 const root = process.cwd();
 const exists = (f) => fs.existsSync(path.join(root, f));
@@ -122,6 +123,13 @@ if (exists("lib/career-jobs.ts")) {
   }
   if (mod.BINGO_TITLES && mod.BINGO_TITLES.length !== 7) fail("lib/bingo-data-ja.ts", "BINGO_TITLES が7件ではない");
 }
+
+// ── 7. 生成画像用フォントのサブセットの収録漏れ ─────────────────────
+if (exists("assets/fonts/charset.txt")) {
+  const included = new Set([...fs.readFileSync(path.join(root, "assets/fonts/charset.txt"), "utf8").replace(/[\r\n]/g, "")]);
+  const missing = [...collectCharset(root)].filter((ch) => !included.has(ch));
+  if (missing.length) fail("assets/fonts", `サブセットにない文字が ${missing.length} 字ある（${missing.slice(0, 20).join("")}…）。node scripts/build-font-subset.mjs を実行してコミットする`);
+} else notes.push("assets/fonts/charset.txt はまだない");
 
 // ── 結果 ────────────────────────────────────────────────────────
 for (const n of notes) console.log(`・${n}`);

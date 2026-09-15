@@ -44,3 +44,9 @@ next-env.d.ts
 /public/outputs/
 /public/tts/
 *.mp4
+
+# 生成画像用の派生ファイル（scripts/build-character-assets.mjs がビルドの直前に作る）
+/assets/characters/trimmed/
+
+# 取得した元フォントの置き場（scripts/build-font-subset.mjs）
+/.cache/

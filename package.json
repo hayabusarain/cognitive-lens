@@ -3,14 +3,16 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "predev": "node scripts/build-character-assets.mjs",
     "dev": "next dev",
-    "prebuild": "node scripts/check-content.mjs && node scripts/check-banned-terms.mjs",
+    "prebuild": "node scripts/build-character-assets.mjs && node scripts/check-content.mjs && node scripts/check-banned-terms.mjs",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
     "check": "tsc --noEmit && node scripts/check-content.mjs && node scripts/check-banned-terms.mjs && npm test",
     "test": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test \"lib/**/*.test.mjs\" \"scripts/**/*.test.mjs\"",
-    "check:redirects": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check-redirects.mjs"
+    "check:redirects": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check-redirects.mjs",
+    "build:font": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/build-font-subset.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.102.1",
@@ -32,6 +34,8 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.2.2",
+    "sharp": "^0.34.5",
+    "subset-font": "^2.7.0",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

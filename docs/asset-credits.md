@@ -61,7 +61,27 @@
 
 外部フォントは使っていない。`next/font` も Google Fonts の読み込みもなく、端末のシステムフォントで表示している（2026-09-15、コード上で確認）。
 
-### 3-2. 生成画像（OG 画像・インスタ用カード）
+### 3-2. 新しい生成画像用（Noto Sans JP のサブセット）
+
+仕様書 4-2〜4-5 の OG 画像・9:16 結果画像・ビンゴカード画像で使う。ステップ 1-6 で用意し、まだどのページでも使っていない。
+
+| 項目 | 内容 |
+|---|---|
+| フォント | Noto Sans JP（Regular・Bold・Black の3ウェイト） |
+| 取得元 | `https://raw.githubusercontent.com/notofonts/noto-cjk/165c01b46ea533872e002e0785ff17e44f6d97d8/Sans/SubsetOTF/JP/NotoSansJP-{ウェイト}.otf`（リポジトリ notofonts/noto-cjk。2021-04-30 のコミットに固定） |
+| 形式 | OTF（CFF）。`ImageResponse` は TTF・OTF・WOFF を読める（`image-response.md` 52行目）。仕様書 4-2 の「TTF」から変えた |
+| ライセンス | SIL Open Font License 1.1（固定したコミットのリポジトリ直下の `LICENSE` で確認。予約フォント名の指定はない） |
+| 元ファイルの SHA-256 | Regular `dff723ba59d57d136764a04b9b2d03205544f7cd785a711442d6d2d085ac5073`、Bold `1b0edfb500b73a4fa8a4fcaae1bbbd403994e08e73e3e0da37e70d3853f42c5f`、Black `3aa30b0956510f4205f759ab3079a5b658310ebcda2577f290466ea51c948819` |
+| リポジトリに置くもの | サブセットだけ（`assets/fonts/NotoSansJP-*.subset.otf`、各約240KB）と収録文字の一覧 `assets/fonts/charset.txt`。元ファイルは `.cache/fonts/`（git の管理外） |
+| サブセット化 | `scripts/build-font-subset.mjs`（`npm run build:font`）。道具は subset-font 2.7.0（BSD-3-Clause）と、その中で使う harfbuzzjs 0.10.3（MIT） |
+| 収録文字 | 2026-09-15 時点で641字。コンテンツの文字が増えたら作り直す。漏れは `scripts/check-content.mjs` がビルド前に検出する |
+| 確認 | 3ウェイトで日本語・英数字・記号を `ImageResponse` で描画できた（2026-09-15） |
+
+### 3-3. キャラクター画像の切り詰め版の生成
+
+`scripts/build-character-assets.mjs` が、sharp 0.34.5（Apache-2.0）で `public/characters/` の透過の余白を切り詰め、`assets/characters/trimmed/` に書き出す。ビルドの直前（`predev`・`prebuild`）に毎回作り直し、git には入れない。元画像と同じ素材なので、出典は 1 章のとおり。
+
+### 3-4. 現行の生成画像（OG 画像・インスタ用カード）
 
 `/api/og` と `/api/story-card` は `next/og` の `ImageResponse` で画像を作り、`fontFamily: "sans-serif"` だけを指定している。
 
