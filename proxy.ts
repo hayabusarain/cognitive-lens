@@ -7,8 +7,10 @@
  * 役割:
  *   1. IPレートリミット（/api/* 宛て: 1分間に10リクエスト上限）
  *   2. Bot User-Agent の遮断（/api/* 宛て）
+ *   画像を返す GET の API（IMAGE_ROUTES）は、どちらの対象からも外す。
+ *   X や Discord などのクローラーが OG 画像を取得できるようにするため。
  *
- * ※ proxy はEdgeランタイムで動作するため Node.js 固有APIは使用不可。
+ * ※ proxy は Node.js ランタイムで動作する（Next.js 16 の既定）。
  *    インメモリ状態はサーバーレスインスタンス間で共有されないが、
  *    単一インスタンスへの集中攻撃には有効。
  */
@@ -90,12 +92,18 @@ function isBot(ua: string | null): boolean {
   return BOT_PATTERNS.some((p) => p.test(ua));
 }
 
+// ── Bot 判定とレートリミットの対象外にする画像 API ──────────────
+const IMAGE_ROUTES = new Set(["/api/og", "/api/story-card", "/api/chat-og"]);
+
 // ── Proxy 本体 ────────────────────────────────────────────────
 export function proxy(request: NextRequest): NextResponse {
   const { pathname } = request.nextUrl;
 
-  // API ルート以外はスルー
+  // API ルート以外と、画像を返す GET の API はスルー
   if (!pathname.startsWith("/api/")) {
+    return NextResponse.next();
+  }
+  if ((request.method === "GET" || request.method === "HEAD") && IMAGE_ROUTES.has(pathname)) {
     return NextResponse.next();
   }
 
