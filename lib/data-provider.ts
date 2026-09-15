@@ -1,7 +1,5 @@
 import { ARTICLE_DATA } from "./article-data";
 import { ARTICLE_DATA_EN } from "./article-data-en";
-import { PRESET_TIER_LISTS } from "./tier-list-data";
-import { PRESET_TIER_LISTS_EN } from "./tier-list-data-en";
 import { TARGET_QUESTIONS } from "./target-questions";
 import { TARGET_QUESTIONS_EN } from "./target-questions-en";
 import { QUESTIONS } from "./questions";
@@ -17,10 +15,6 @@ import { BINGO_DATA_EN } from "./bingo-data-en";
 
 export function getArticleData(lang: string) {
   return lang === "en" ? ARTICLE_DATA_EN : ARTICLE_DATA;
-}
-
-export function getTierListData(lang: string) {
-  return lang === "en" ? PRESET_TIER_LISTS_EN : PRESET_TIER_LISTS;
 }
 
 export function getTargetQuestions(lang: string) {
