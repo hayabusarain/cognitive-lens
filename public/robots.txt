@@ -7,4 +7,4 @@ Disallow: /
 User-agent: ChatGPT-User
 Disallow: /
 
-Sitemap: https://cognitive-lens.com/sitemap.xml
+Sitemap: https://www.cognitive-lens.com/sitemap.xml

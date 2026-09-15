@@ -1,69 +1,88 @@
+import type { Metadata } from "next";
 import { canonical } from "@/lib/site";
-import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { InfoPage, InfoSection, TextLink } from "@/app/[lang]/_components/InfoPage";
 
-export const metadata = {
+/**
+ * 免責事項 /ja/disclaimer（ステップ 3-20）
+ * 「性格タイプは傾向を楽しむためのもので、本人を決めつけるものではない」という前提はここに書く（tone-guide 6章）。
+ * 「MBTI」は公式の検査との関係を説明する1回だけ（tone-guide 5-4）
+ */
+
+const UPDATED_AT = "2026-09-16";
+
+export const metadata: Metadata = {
+  title: "免責事項",
+  description:
+    "CognitiveLens の診断結果、AI が書く文章、キャラクター画像の扱いについての注意です。性格タイプは傾向を楽しむためのもので、本人を決めつけるものではありません。",
+  // openGraph は書かない。書くと [lang]/opengraph-image（トップの OG 画像）を引き継がなくなる（2026-09-16 のビルドで確認）
   alternates: canonical("/ja/disclaimer"),
-  title: "免責事項 | CognitiveLens",
-  description: "CognitiveLensの免責事項について",
 };
 
-export default async function DisclaimerPage({ params }: { params: Promise<{ lang: string }> }) {
-  const { lang } = await params;
+export default function DisclaimerPage() {
   return (
-    <main className="min-h-screen content-layer">
-      <nav className="nav-blur flex items-center gap-4 px-6 py-4 sticky top-0 z-10">
-        <Link href={`/${lang}`} className="flex items-center gap-1.5 text-xs font-medium transition-colors">
-          <ArrowLeft size={14} /> {lang === "en" ? "Back to Home" : "ホームに戻る"}
-        </Link>
-        <span className="text-sm font-bold tracking-[0.1em]" >cognitive<span>lens</span></span>
-      </nav>
+    <InfoPage title="免責事項" path="/ja/disclaimer" updatedAt={UPDATED_AT}>
+      <InfoSection id="disclaimer-result" title="性格タイプの結果について">
+        <p>
+          性格タイプは、ふだんの傾向を楽しむためのものです。あなたの性格や能力を決めつけるものではありません。
+        </p>
+        <p>
+          答えたときの気分や状況で、結果が変わることもあります。当てはまらない説明があっても、おかしなことではありません。
+        </p>
+        <p>
+          診断は、医療や心理の専門家による検査ではありません。進路や仕事、人との付き合い方を、結果だけで決めないでください。
+        </p>
+        <p>気持ちのつらさが続くときは、一人で抱えず、医療機関や公的な相談窓口へ。</p>
+      </InfoSection>
 
-      <div className="max-w-2xl mx-auto px-6 py-12">
-        <h1 className="text-2xl font-bold mb-10 text-slate-800">
-          {lang === "en" ? "Disclaimer" : "免責事項"}
-        </h1>
-        
-        <div className="space-y-8 text-sm leading-relaxed text-slate-700">
-          <section>
-            <h2 className="text-base font-bold mb-3 pb-2 border-b border-slate-100 text-slate-800">
-              {lang === "en" ? "Regarding Diagnostic Results" : "診断結果について"}
-            </h2>
-            <p className="text-sm text-slate-600 leading-relaxed">
-              {lang === "en" 
-                ? "The content provided by 'CognitiveLens', such as the 16-type diagnosis, cognitive function analysis, and interpersonal advice, is based on psychological theories and is intended solely for self-understanding and entertainment purposes. It does not guarantee the accuracy, completeness, or scientific validity of the content, nor should it serve as a substitute for professional medical diagnoses, psychological evaluations, business judgments, or legal advice."
-                : "当サービス「CognitiveLens」が提供する16タイプ診断・認知機能分析・対人関係アドバイス等のコンテンツは、心理学の理論をベースにした自己理解・エンターテインメント目的の参考情報として提供されるものです。コンテンツの正確性・完全性・科学的根拠を保証するものではなく、医療的診断・心理的診断・事業的判断・法的アドバイス等に代わるものではありません。"}
-            </p>
-            <p className="mt-3">
-              {lang === "en" 
-                ? "The operators of this service shall not be held liable for any damages arising from judgments or actions taken based on the information provided herein. For critical psychological, legal, or medical matters, please be sure to consult a qualified professional (e.g., doctor, counselor, lawyer)."
-                : "当サービスが提供する情報に基づいて行われたご自身の判断および行動により生じたいかなる損害についても、当サービスの運営者は一切の責任を負いません。重要な精神的・法的・医療的な問題については、必ず専門家（医師・カウンセラー・弁護士等）の指示を仰いでください。"}
-            </p>
-          </section>
+      <InfoSection id="disclaimer-others" title="相手診断と脈あり度チェックについて">
+        <p>
+          相手診断の結果は、あなたから見た相手の様子をもとにした推測です。相手本人が答えた結果とは違います。
+        </p>
+        <p>
+          脈あり度は、「はい」と答えた行動の割合から出す目安です。相手の気持ちを確かめるものではありません。
+        </p>
+        <p>結果を理由に、相手を責めたり、からかったりしないでください。</p>
+      </InfoSection>
 
-          <section>
-            <h2 className="text-base font-bold mb-3 pb-2 border-b border-slate-100 text-slate-800">
-              {lang === "en" ? "Regarding AI-Generated Content" : "AI生成コンテンツについて"}
-            </h2>
-            <p>
-              {lang === "en"
-                ? "This service utilizes generative AI models in certain features (e.g., profile generation, chat translation). The output results and analysis texts are automatically generated based on machine learning, with no intention of disparaging any specific individual or organization. Due to the nature of AI-generated content, we cannot guarantee the accuracy, validity, or completeness of the information."
-                : "当サービスの一部（プロファイリング生成、チャット翻訳機能等）において、生成AIモデルを使用しております。出力される結果や分析テキストは機械学習に基づき自動生成されており、特定の個人や団体を貶める意図はありません。また、AIが生成するその性質上、情報の正確性・妥当性・完全性を保証するものではありません。"}
-            </p>
-          </section>
+      <InfoSection id="disclaimer-ai" title="AI が書く文章について">
+        <p>
+          脈あり度チェックの結果に添える文章は、OpenAI の AI が自動で書いています。運営者が一つずつ確かめた文章ではありません。
+        </p>
+        <p>
+          答えた内容と合わない文や、事実と違う文が出ることがあります。AI の文は、参考の一つとして扱うのがおすすめです。
+        </p>
+        <p>
+          AI に送る情報は、<TextLink href="/ja/privacy">プライバシーポリシー</TextLink>に書いています。
+        </p>
+      </InfoSection>
 
-          <section>
-            <h2 className="text-base font-bold mb-3 pb-2 border-b border-slate-100 text-slate-800">
-              {lang === "en" ? "Service Interruption and Modification" : "サービスの中断および変更"}
-            </h2>
-            <p>
-              {lang === "en"
-                ? "This service may modify, add, temporarily suspend, or terminate features without prior notice. We shall not be held liable for any disadvantages incurred by users as a result of such actions."
-                : "当サービスは事前通知なく機能の変更、追加、一時停止、または終了する場合があります。これによりユーザーに生じたいかなる不利益についても責任を負いかねます。"}
-            </p>
-          </section>
-        </div>
-      </div>
-    </main>
+      <InfoSection id="disclaimer-characters" title="キャラクター画像について">
+        <p>
+          キャラクターは、運営者が画像生成 AI で作ったオリジナルの画像です。実在の人物とは関係ありません。
+        </p>
+        <p>
+          服装や持ち物は、タイプの雰囲気を表すための絵柄です。そのタイプの人の職業や趣味を示すものではありません。
+        </p>
+        <p>
+          画像を使うときの条件は、<TextLink href="/ja/downloads">キャラクター素材の配布</TextLink>のページにあります。
+        </p>
+      </InfoSection>
+
+      <InfoSection id="disclaimer-official" title="公式の検査との関係">
+        <p>
+          当サイトは、MBTI® の公式の検査や、その提供元とは関係ありません。性格診断サイトの 16Personalities
+          とも関係のない、独立したサイトです。16タイプの呼称、設問、文章は、当サイトで独自に作っています。
+        </p>
+      </InfoSection>
+
+      <InfoSection id="disclaimer-misc" title="そのほか">
+        <p>
+          当サイトの内容は、予告なく変更したり、公開をやめたりすることがあります。リンク先の外部サイトの内容については、責任を負いかねます。
+        </p>
+        <p>
+          当サイトの利用で生じた損害について、運営者は責任を負いません。ただし、運営者に故意または重大な過失がある場合は除きます。
+        </p>
+      </InfoSection>
+    </InfoPage>
   );
 }
