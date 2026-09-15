@@ -1,12 +1,12 @@
 # CognitiveLens リニューアル仕様書
 
-作成日：2026-09-15　更新日：2026-09-15（`docs/decisions.md` と、N1〜N11 の回答を反映）　状態：実装前のレビュー用
+作成日：2026-09-15　更新日：2026-09-15（`docs/decisions.md` と、N1〜N12 の回答を反映）　状態：実装前のレビュー用
 
 ## 0. この文書について
 
 `docs/current-site.md`（現状調査）を土台に、コグニティブレンズを作り直す仕様をまとめた。実装はまだ行わない。
 
-初版の質問（Q1〜Q20）には、運営者が `docs/decisions.md` で回答した。この版はその回答を反映したもので、両者が食い違うときは `decisions.md` を正とする。本文の「Q番号」は初版の質問を指し、回答は `decisions.md` 2章にある。この版で新たに出た確認事項は「→ N番号」と書き、9-3 に集めた。N1〜N11 には運営者がチャットで回答し（2026-09-15）、本文に反映した。N12 は未回答で、依存するステップ 0-7 には回答が出るまで着手しない。
+初版の質問（Q1〜Q20）には、運営者が `docs/decisions.md` で回答した。この版はその回答を反映したもので、両者が食い違うときは `decisions.md` を正とする。本文の「Q番号」は初版の質問を指し、回答は `decisions.md` 2章にある。この版で新たに出た確認事項は「→ N番号」と書き、9-3 に集めた。N1〜N12 にはすべて運営者がチャットで回答し（2026-09-15）、本文に反映した。
 
 ### 0-1. 前提
 
@@ -84,8 +84,8 @@
 | `/ja/video-gen`、`/ja/video-preview`、`/ja/admin/*` | — | 404（2026-09-15 に反映済み） |
 | `/api/og?type=&lang=` | `/ja/result/{TYPE}/opengraph-image` | **301** |
 | `/api/story-card?type=&lang=` | `/ja/result/{TYPE}/share-image` | **301** |
-| `/api/result`、`/api/chat-script`、`/api/chat-og` | — | 削除して 404 |
-| `/api/admin/seed-protocols`、`/api/weakness`、動画系の API 6つ | — | 404（2026-09-15 に削除済み。8章フェーズ0の調査結果） |
+| `/api/admin/seed-protocols`、`/api/weakness`、`/api/chat-script`、`/api/chat-og`、動画系の API 6つ | — | 404（2026-09-15 に削除済み。8章フェーズ0の調査結果） |
+| `/api/result` | — | API は 2026-09-15 に削除済み。今は `[lang]` が `api` を言語として受け付け、INTP の結果ページを 200 で返す。ステップ 1-1 で 404 になる |
 | `/api/romance-ai` | 同じ | 維持 |
 | `https://cognitive-lens.com/*` | `https://www.cognitive-lens.com/*` | **301**（現状は Vercel のドメイン設定による 307） |
 
@@ -382,7 +382,7 @@ X への投稿に入れる URL にはクエリを付けない。カードは型�
 | 言語の区画を `ja` だけにする | `app/[lang]/layout.tsx`（ルートではないレイアウト）を新設し、`generateStaticParams` が `[{ lang: 'ja' }]` を返すようにして `dynamicParams = false` を指定する。`/foo` や `/foo/test` が 404 になる | `dynamicParams.md` 17行目 |
 | 404 ページ | `app/not-found.tsx` を置く。ルートの `not-found` は一致しない URL 全体を扱い、404 には `noindex` が自動で付く | `not-found.md` 131行目、185行目 |
 | 手書きの `<head>` を Metadata API へ | AdSense のアカウント確認は `other`、サイト確認は `verification.google` で出す | `layout.md` 141行目、`generate-metadata.md` 756行目 |
-| Bot 判定とレートリミットの範囲 | `POST /api/romance-ai` だけにする。画像のルートと全ページからは外す。ルート内の `isBotUserAgent` の判定も残す。現状は OG 画像が X などのクローラーに 403 を返しており、ステップ 0-3 で先に直す | `current-site.md` 6-4 |
+| Bot 判定とレートリミットの範囲 | `POST /api/romance-ai` だけにする。画像のルートと全ページからは外す。ルート内の `isBotUserAgent` の判定も残す。OG 画像が X などのクローラーに 403 を返していた件は、ステップ 0-3 で直した。0-8 の削除で、proxy の判定を受ける API は `POST /api/romance-ai` だけになっている | `current-site.md` 6-4 |
 | 型エラーでビルドを止める | `next.config.ts` の `typescript.ignoreBuildErrors: true` を外す。`tsc` で出ている既存の型エラー1件（`app/api/og/route.tsx` 127行目、`catch` の中の `lang`）を先に直す | — |
 
 ### 3-7. 計測（GA4）
@@ -871,7 +871,8 @@ decisions 3章の順で行う。
 | 0-4 | `docs/asset-credits.md` を作り、現行のキャラクター16枚とアイコン（`lucide-react`）を登録する | 文書 | 16枚の行がある。ツール名・時期・プロンプトは記入待ちと明記されている | 宿題 Q2 |
 | 0-5 | `lib/redirects.ts` と単体テスト、`scripts/check-redirects.mjs` を作る。規則はすべて無効のまま | コードのみ | 全規則を有効にした状態のテストで、1-3 の全例が期待どおり | — |
 | 0-6 | 未使用の `/api/weakness` を削除する（N10） | API | **完了**（2026-09-15、コミット `51d0fc3`）。公開サイトで POST が 404 | — |
-| 0-7 | `lib/get-client-ip.ts` が `cf-connecting-ip` を信用しないようにし、`x-real-ip` を最優先にする（下の確認結果） | API | 公開サイトで `cf-connecting-ip` を毎回変えて `/api/chat-script` に12回送り、11回目から 429 | N12 |
+| 0-7 | `lib/get-client-ip.ts` が `cf-connecting-ip` を信用しないようにし、`x-real-ip` を最優先にする（N12。Vercel が上書きするヘッダーだけを信用する） | API | **完了**（2026-09-15、コミット `973cbec`）。公開サイトで `cf-connecting-ip` を毎回変えて `/api/romance-ai` に12回送り、11回目から proxy の 429 | — |
+| 0-8 | 入口のないページ専用の API（`/api/result`、`/api/chat-script`、`/api/chat-og`）を削除する（N12）。ページ本体 `/ja/skip-path`・`/ja/chat-gen` は、R12 を有効にするステップ 1-1 で消す | API | **完了**（2026-09-15）。`/api/chat-script` と `/api/chat-og` が 404。`/api/result` は 200 だが、中身は INTP の結果ページの HTML（`[lang]` が `api` を受け付けるため。1-1 で解消）。3本のファイル削除は、手順の誤りでコミット `973cbec` に入り、`2d75491` は `proxy.ts` の1行だけになった。公開される中身は意図どおりなので、履歴は書き換えていない | — |
 
 0-3 でレートリミットも外すのは、コード上は同じ IP から1分に11回目のアクセスで 429 を返すからだ。クローラーが画像を続けて取得すると、この上限に当たる。
 
@@ -897,12 +898,10 @@ N7 の回答を受けて、公開中だったコミット `47470c9` の全ルー
 
 | API | メソッド | 処理 | 保護 |
 |---|---|---|---|
-| `/api/result` | POST | OpenAI で文章を生成 | Bot 判定（proxy とルート内）、proxy で IP ごと1分10回、ルート内で10分3回、1時間キャッシュ |
-| `/api/romance-ai` | POST | OpenAI で文章を生成 | Bot 判定（両方）、1分10回、ルート内で10分5回 |
-| `/api/chat-script` | POST | OpenAI で文章を生成 | Bot 判定（両方）、1分10回 |
-| `/api/og`、`/api/story-card`、`/api/chat-og` | GET | 画像を返す | なし（0-3 で外した） |
+| `/api/romance-ai` | POST | OpenAI で文章を生成 | Bot 判定（proxy とルート内）、proxy で IP ごと1分10回、ルート内で10分5回 |
+| `/api/og`、`/api/story-card` | GET | 画像を返す | なし（0-3 で外した） |
 
-表には `/api/weakness` もあったが、N10 の回答で削除した（ステップ 0-6）。POST の3つは書き込みをしないが、呼ばれるたびに OpenAI の料金がかかる。
+調べた時点では `/api/weakness`・`/api/result`・`/api/chat-script`・`/api/chat-og` もあったが、N10 と N12 の回答で削除した（ステップ 0-6・0-8）。OpenAI を呼ぶのは `/api/romance-ai` の1本だけになった。
 
 Supabase を使うコードは、どこからも import されていない `utils/supabase/client.ts` だけになった。ビルドした `.next/static` に「supabase」の文字列はなく、ブラウザには接続先も鍵も渡っていない。`protocols` テーブルを読むコードもないので、テーブルが消えていても画面の表示は変わらない。本番のテーブルが実際に消されたことがあるかは未確認。
 
@@ -921,9 +920,29 @@ N10 の回答を受けて、残る3本のリミットを公開サイトで確か
 
 回避できる原因は `lib/get-client-ip.ts` にある。この関数は `cf-connecting-ip` を最優先で信用する。しかしサイトは Cloudflare を通っていないので、利用者が付けた値がそのまま届く。`x-forwarded-for` と `x-real-ip` は、上の結果のとおり Vercel が上書きするので偽装できない。
 
-影響を受けるのは、`getClientIp` を使う proxy のリミットと `/api/result` のリミットだ。`/api/chat-script` にはルート内のリミットがなく、ヘッダーを偽れば回数の制限なく OpenAI を呼べる。`/api/romance-ai` のルート内リミットは `x-forwarded-for` で数えているので効いている。修正はステップ 0-7 とし、出すかは → N12。
+影響を受けるのは、`getClientIp` を使う proxy のリミットと `/api/result` のリミットだ。`/api/chat-script` にはルート内のリミットがなく、ヘッダーを偽れば回数の制限なく OpenAI を呼べる。`/api/romance-ai` のルート内リミットは `x-forwarded-for` で数えているので効いている。
 
-リミットはインスタンスごとのメモリで数えている。今回の連続リクエストではすべて効いたが、複数のインスタンスに分かれたときの動きは未確認。
+N12 の回答を受けて、ステップ 0-7 で `cf-connecting-ip` を読まないように直し、0-8 で `/api/result`・`/api/chat-script`・`/api/chat-og` を削除した。修正後に、`cf-connecting-ip` を毎回変えて `/api/romance-ai` に12回送った結果は次のとおり。
+
+`400 400 400 400 400 429(ルート内) 429(ルート内) 400 400 400 429(proxy) 429(proxy)`
+
+proxy は偽のヘッダーに惑わされず実 IP で数え、11回目から 429 を返した。修正は効いている。
+
+一方で、ルート内リミットは6・7回目で 429 を返した後、8〜10回目を通した。どちらのリミットもインスタンスごとのメモリで数えるので、途中から別のインスタンスに振り分けられたと考えられる。つまり、メモリで数えるリミットは確実な上限にならない。請求額の上限は、OpenAI の管理画面で月の利用上限を設定して別に確保する（9-2 の宿題）。
+
+#### git 履歴の秘密情報チェック（2026-09-15）
+
+リポジトリ `hayabusarain/cognitive-lens` は公開設定なので（GitHub API で `"visibility": "public"` を確認）、ファイルから消したものも過去のコミットから誰でも読める。そこで、全ブランチの104コミットの差分とコミットメッセージを検索した。値は出力せず、種類・先頭4文字・長さ・コミットだけを記録した。
+
+検索した種類は、OpenAI のキー、GitHub のトークン、Supabase のキー（JWT 形式と新形式）、Google の API キー、Basic 認証のパスワード、URL に埋め込んだ認証情報、Bearer トークン、Slack・Vercel・npm のトークン、秘密鍵のブロック、キーやパスワードらしき代入。あわせて、`.env` などの秘密情報を入れがちなファイルが過去にコミットされていないかも見た。
+
+| 見つかったもの | 場所 | 状態 |
+|---|---|---|
+| Basic 認証の ID とパスワード（管理画面用） | `middleware.ts`（コミット `7e41e86`、2026-04-21）と `proxy.ts`（`c17373a`、同日） | `21df36f` で削除済み。守っていた管理画面と API も同じコミットで消えたので、この値で開けるものはサイトに残っていない。ただし過去のコミットからは読める |
+
+OpenAI・GitHub・Supabase・Google のキーやトークンは、どのコミットにも見つからなかった。`.env` などのファイルがコミットされたこともない。
+
+同じパスワードをほかのサービス（Vercel、GitHub、Supabase、OpenAI など）で使い回しているなら、そちらは変更が要る。使い回しの有無は運営者にしか分からない（9-2 の宿題）。
 
 ### フェーズ1：基盤（画面の見た目は変えない）
 
@@ -931,7 +950,7 @@ N10 の回答を受けて、残る3本のリミットを公開サイトで確か
 
 | # | 作業 | 変わるもの | 確認 | 待つもの |
 |---|---|---|---|---|
-| 1-1 | `app/[lang]/layout.tsx` を作って `[lang]` を `ja` だけにし、`app/not-found.tsx` を置く。同じステップで R7 と R11 を有効にする | 未知のパス、英語版と韓国語版の URL | `/foo`、`/foo/test`、`/translate` が 404 で `noindex`。`/en`、`/en/test`、`/ko`、`/test` が1回の 301 で `/ja` の対応ページへ。`/ja` 配下の見た目が変わらない | — |
+| 1-1 | `app/[lang]/layout.tsx` を作って `[lang]` を `ja` だけにし、`app/not-found.tsx` を置く。`/ja/skip-path` と `/ja/chat-gen` のページを削除する（API は 0-8 で削除済み）。同じステップで R7・R11・R12 を有効にする | 未知のパス、英語版と韓国語版の URL、2ページ | `/foo`、`/foo/test`、`/translate`、`/api/result` が 404 で `noindex`。`/en`、`/en/test`、`/ko`、`/test` が1回の 301 で `/ja` の対応ページへ。`/ja/skip-path` と `/en/chat-gen` が1回の 301 で `/ja/test` へ。`/ja` 配下の見た目が変わらない | — |
 | 1-2 | 手書きの `<head>` タグを Metadata API へ移す | head | AdSense のアカウント確認とサイト確認の meta が出ている | — |
 | 1-3 | `metadataBase` を www 付きにし、canonical を出す共通関数を作る | head | 全ページに www 付きの canonical が出る（クロールで確認） | — |
 | 1-4 | R10 を有効にして公開し、その後 Vercel で `cognitive-lens.com` をプロジェクトへ直接割り当てる（順番の理由は 1-4 節） | ドメイン | 公開サイトで `curl -I https://cognitive-lens.com/ja` が 301 で、`Location` が www。`https://cognitive-lens.com/en/test` も1回で `https://www.cognitive-lens.com/ja/test` へ | Vercel の管理画面での操作 |
@@ -947,7 +966,7 @@ N10 の回答を受けて、残る3本のリミットを公開サイトで確か
 | 2-1 | `docs/tone-guide.md` を作る（decisions 2-1 の内容）。流行語と誇張語を `check-banned-terms.mjs` に登録する | 文書・検査 | 運営者のレビューが通る。「3行以上の段落を作らない」が、1段落120字以内かつ3文以内、1文45字以内に置き換わっている（N4） | — |
 | 2-2 | 呼称16件を `lib/type-names.ts` に登録し、6-3 の確認を行う | 文書・コード | `docs/naming-check.md` に禁止語検査・ウェブ調査・J-PlatPat の結果がある | 宿題 Q5（J-PlatPat） |
 | 2-3 | タイプ色16色と暗色の背景色を決める（Q20） | コードのみ | 文字に使う色は背景色とのコントラスト比が 4.5:1 以上。NT・NF・SJ・SP の同じグループの4色が、同じ色相に集まっていない | — |
-| 2-4 | INTJ の `TypeContent` を見本として書く。同じステップで `lib/career-jobs.ts` を現行データから作る | コンテンツ | 運営者のレビューが通る。`npm run check` が通り、職業名が現行と一致する | 職業名の扱いは N9 |
+| 2-4 | INTJ の `TypeContent` を見本として書く。同じステップで `lib/career-jobs.ts` を現行データから作る | コンテンツ | 運営者のレビューが通る。`npm run check` が通り、職業名が 5-2 の書き換え表どおりになっている。書き換え後の職業名は、元の言い回しの毒が抜けすぎて無味になっていないかを見る。全部が「成果主義の強い外資系企業」の調子だと、適職欄が求人票になる（N9） | — |
 | 2-5 | 残り15タイプを書く | コンテンツ | `npm run check` が通る | — |
 | 2-6 | 自己診断の設問24問と決定設問4問を書く | コンテンツ | 各軸で前の文字3問・後の文字3問。45字以内。現行設問との類似度を確認 | — |
 | 2-7 | 相手診断の設問24問と決定設問4問を書く | コンテンツ | 2-6 と同じ | — |
@@ -979,7 +998,7 @@ N10 の回答を受けて、残る3本のリミットを公開サイトで確か
 | 3-19 | GA4 を入れ、`CookieConsentBanner` を外し、プライバシーポリシーに GA4 の利用を書く | 全ページ、`/ja/privacy` | GA4 のリアルタイム表示に3イベントが届く。回答と割合が送られていない。同意バナーが出ない | 宿題：GA4 の測定 ID、N8 |
 | 3-20 | 運営者情報・免責・素材配布を更新する | 3ページ | 最終更新日、連絡先、素材の出典表記が正しい | 宿題 Q17 |
 | 3-21 | sitemap.xml と robots.txt を更新する | 2ファイル | sitemap が59件で、全 URL が 200 | — |
-| 3-22 | `/ja/skip-path` と `/ja/chat-gen` を削除して R12 を有効にする。不要な API（`/api/result`、`/api/chat-script`、`/api/chat-og`）、英語のデータと辞書、`LanguageSwitcher`、置き換え済みの現行データを削除し、Bot 判定の対象を `POST /api/romance-ai` だけにする | ページ・API | `/ja/skip-path` と `/en/chat-gen` が `/ja/test` へ 301。削除した API が 404。`npm run check` とビルドが通る | — |
+| 3-22 | 英語のデータと辞書、`LanguageSwitcher`、置き換え済みの現行データ、使われなくなったライブラリ（`lib/result-cache.ts` など）を削除する | コード | `npm run check` とビルドが通る。削除したファイルを import している箇所がない | — |
 | 3-23 | AdSense の正式な広告枠 ID に差し替える。欧州経済領域と英国向けの同意画面（「プライバシーとメッセージ」）が有効になっているか確かめる | 広告枠 | 仮 ID が残っていない。結果ページのファーストビューに広告がない。日本からのアクセスで同意画面が出ない | 宿題 Q15、宿題：同意画面の有効化 |
 | 3-24 | プレビューで 3-1〜3-23 の確認をまとめてやり直し、ブランチを main にマージして一括公開する | サイト全体 | プレビューで `npm run check`、`check-redirects.mjs`（R10 を除く）、クロール（禁止語、「MBTI」の語、どこからもリンクされないページ）が通る。旧型名と幻獣名が混在していない | — |
 
@@ -1049,6 +1068,8 @@ N10 の回答を受けて、残る3本のリミットを公開サイトで確か
 | Q17：`contact@cognitivelens.com` の受信確認と、新しい連絡先の決定 | 0-2 の連絡先部分、3-20 |
 | 幻獣版キャラクター画像16枚の生成 | G-1 |
 | GA4 のプロパティ作成と測定 ID（この版で追加） | 3-19 |
+| OpenAI の管理画面で、月の利用上限を設定する。レートリミットに穴が開いても請求額の天井になる | なし（すぐ行う） |
+| 公開リポジトリの履歴に残る Basic 認証のパスワードを、ほかのサービスで使い回していないか確かめ、使い回していれば変更する | なし（すぐ行う） |
 
 ### 9-3. この版で新たに出た質問
 
@@ -1067,12 +1088,9 @@ N10 の回答を受けて、残る3本のリミットを公開サイトで確か
 | N9 | 適職の職業名に「起業家」や、くだけた言い回しがあるが、このまま残すか | 職業名は残し、言い回しだけ直す。「起業家」は職業リストに職業名として入っているだけで、16Personalities が独占できる語でもないので問題ない。禁止語検査は `lib/career-jobs.ts` を対象外にし、代わりに「職業名が呼称・タグラインに使われていないこと」を検査する。「ゴリゴリ営業」「下っ端の事務」はトーン違反で職業を見下す表現なので、中立な職業名に書き直す | 5-2、5-3、ステップ 2-4 |
 | N10 | `/api/weakness` をフェーズ0で先に削除するか | すぐ削除する。残る3本の OpenAI API も、ページごと消すまでの間レートリミットが効いているか確認する | ステップ 0-6（完了）、フェーズ0の調査結果 |
 | N11 | meta description は title と本文のどちらの扱いか | title と同じ扱い。検索結果に出る要素（title・description・h1）は「MBTI」を使わず、本文は1回まで。`/ja/romance-checker` の description は書き直す | 3-4、5-3、7-1、ステップ 3-17 |
+| N12 | `cf-connecting-ip` を信用しない修正を今すぐ出すか | 出す。Vercel が上書きするヘッダーだけを信用する。`/api/chat-script` はリミットを足すより消す方が早いので、同じ理由で `/api/chat-og`・`/api/result` も API だけ先に消す。ページ本体は 301 のステップで消す | ステップ 0-7・0-8（完了）、1-1 |
 
-#### 未回答
-
-| # | 質問 | この回答で決まること |
-|---|---|---|
-| N12 | `lib/get-client-ip.ts` から `cf-connecting-ip` の優先を外す修正を、フェーズ0として今すぐ本番に出すか。今は `cf-connecting-ip` を偽るだけで、proxy と `/api/result` のリミットを回避でき、`/api/chat-script` は回数の制限なく OpenAI を呼べる（フェーズ0の確認結果） | ステップ 0-7 |
+この時点で、未回答の N番号はない。
 
 ### 9-4. ビンゴで保持する見出し
 
