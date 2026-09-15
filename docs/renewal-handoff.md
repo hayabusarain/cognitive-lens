@@ -42,7 +42,7 @@
 | 1 | 転送 R1〜R6・R8・R9 を有効にし、`app/api/og`・`app/api/story-card` を削除。proxy の Bot 判定とレートリミットは `/api/romance-ai` だけに | 済み |
 | 2 | sitemap を59件にし、lastmod をコンテンツの更新日から取る | 済み |
 | 3 | 旧データ26件・`utils/supabase`・`types/`・`AnalyzingLoader`・`/styleguide`・未使用の svg 5件と、npm パッケージ5つ（html-to-image、recharts、@types/recharts、framer-motion、@supabase/supabase-js）を削除（3-22）。lucide-react は使っているので残した | 済み |
-| 4 | ビンゴのハブの OG 画像の文字幅、`content_type: romance` の記載 | 未着手 |
+| 4 | ページ用 OG 画像のページ名の最大幅を 380px に（ビンゴのハブと16タイプ一覧の文字がカードに触れていた）。`content_type: romance` を仕様書 3-7 とプライバシーポリシーに記載 | 済み |
 | 5 | `scripts/check-site.mjs`（全ページのクロール） | 未着手 |
 | 6 | `npm run check`・ビルド・転送とクロールの検査・スクリーンショット | 未着手 |
 | 7 | 仕様書 8章の進捗、このメモ、作業ツリーの削除 | 未着手 |
@@ -52,7 +52,7 @@
 
 - `lib/redirects.ts` の R1〜R6・R8・R9 を有効にし、`app/api/og` と `app/api/story-card` を消す。R8 の転送先は `/ja/result/{TYPE}/opengraph-image`（クエリなしでも 200 を確認済み）
 - GA4 を配信する前に、管理画面の拡張計測で「ブラウザの履歴イベントに基づくページの変更」を無効にする（page_view はコードがクエリを外して送る。済み）。配信する日に privacy の `UPDATED_AT_WITH_GA4` を書き換える
-- GA4 の共有イベントに `content_type: romance` が増えた。仕様書 3-7 とプライバシーポリシーの送信内容に足す
+- GA4 の共有イベントに `content_type: romance` が増えた。仕様書 3-7 とプライバシーポリシーの送信内容に足す（済み）
 - `lib/og/page-image.tsx` の文字幅の見積もりが広く、ビンゴのハブの OG 画像で「の」が枠に触れている
 - `app/sitemap.ts` を59件にし、lastmod を `TypeContent.updatedAt` と `ArticleContent.updatedAt` から取る
 - 置き換え済みの旧データ（`lib/type-info.ts`、`lib/static-profiles.ts`、`lib/questions.ts`、`lib/article-data*.ts`、`lib/romance-data*.ts`、英語のデータ、`lib/data-provider.ts`、`lib/result-cache.ts` など）、`app/styleguide/`、使われなくなったパッケージ（`html-to-image` など）を消す

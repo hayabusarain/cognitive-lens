@@ -15,9 +15,9 @@ import {
  * GA4 の節は、GA4 を読み込むビルド（NEXT_PUBLIC_GA_MEASUREMENT_ID がある）でだけ出す。
  * GA4 の配信とポリシーでの公表を同じ公開で始めるため（仕様書 3-7）。値はビルド時に埋め込まれる（environment-variables.md）。
  *
- * GA4 の節に書いた「結果ページの URL に入る割合（?p=）を送る前に取り除く」は、コードではなく GA4 の管理画面で行う。
- * 測定 ID を本番に設定する前に、ウェブのデータストリームの「データの除去」で、クエリパラメータ p を除去の対象に入れること。
- * GA4 の page_view は page_location にクエリを含めて送るため、設定しないと割合が Google に届く。
+ * GA4 の節に書いた「結果ページの URL に入る割合（?p=）を送る前に取り除く」は、app/components/analytics/PageView.tsx が
+ * クエリを外した URL で page_view を送ることで守っている。測定 ID を本番に設定する前に、GA4 の管理画面の拡張計測で
+ * 「ブラウザの履歴イベントに基づくページの変更」を無効にすること（自動の page_view がクエリ付きで送られるのを防ぐ）。
  */
 
 /** GA4 を読み込むか。app/components/analytics/GoogleAnalytics.tsx と同じ条件（G- で始まる測定 ID）にする */
@@ -51,8 +51,8 @@ const GA4_EVENTS = [
   },
   {
     name: "共有",
-    when: "X への投稿ボタンを押したとき",
-    params: "型コード、結果かビンゴか",
+    when: "結果・ビンゴ・脈あり度チェックで、X への投稿ボタンを押したとき",
+    params: "型コード（脈あり度チェックでは選んだ相手のタイプ）、結果・ビンゴ・脈あり度チェックのどれか",
   },
   {
     name: "画像の保存",
@@ -148,7 +148,7 @@ export default function PrivacyPage() {
             ))}
           </ul>
           <p>
-            回答の内容と、4つの軸の割合は送りません。結果ページの URL に入る割合も、Google に送る前に取り除きます。
+            回答の内容、4つの軸の割合、脈あり度の数字は送りません。結果ページの URL に入る割合も、Google に送る前に取り除きます。
           </p>
 
           <Heading level={3} className="mt-2">

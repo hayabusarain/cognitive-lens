@@ -19,6 +19,12 @@ const DEFAULT_TYPES = ["ENFP", "ISFJ", "INTJ", "ISTP"] as const satisfies readon
 
 const PADDING = 60;
 const TEXT_WIDTH = 440;
+/**
+ * ページ名の1行の最大幅。左端のカードは左に傾いていて、枠の左上の角が x≈463 まで来る。
+ * 文字の右端をそこから20px以上離すため、左の余白 60px から 380px までにする
+ * （以前は TEXT_WIDTH の 440px で見積もっていて、ビンゴのハブの「の」と一覧の「覧」が枠に触れていた）
+ */
+const TITLE_MAX_WIDTH = 380;
 
 // カードの寸法（画面の TypeCard に合わせ、タイプ色の枠・型コード・キャラクターの窓・呼称の順。重なって隠れるので番号は出さない）
 const CARD_WIDTH = 200;
@@ -37,10 +43,10 @@ const CARD_POSES = [
   { top: 172, rotate: 9 },
 ] as const;
 
-/** 1行の幅に収まる文字サイズ。和文は1字 1em、英数字は 0.6em と見積もる */
+/** 1行が TITLE_MAX_WIDTH に収まる文字サイズ。和文は1字 1em、英数字は 0.6em と見積もる */
 function titleFontSize(lines: readonly string[]): number {
   const units = Math.max(...lines.map((line) => [...line].reduce((sum, ch) => sum + (ch.charCodeAt(0) < 0x80 ? 0.6 : 1), 0)));
-  return Math.max(52, Math.min(88, Math.floor(TEXT_WIDTH / units)));
+  return Math.max(52, Math.min(88, Math.floor(TITLE_MAX_WIDTH / units)));
 }
 
 function Card({ type, image, index }: { type: TypeCode; image: OgImageSource; index: number }) {
