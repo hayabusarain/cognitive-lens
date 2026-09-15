@@ -9,6 +9,10 @@ export const metadata: Metadata = {
   ),
   title: "CognitiveLens (コグニティブレンズ) | 16タイプ別 恋愛・対人課題解決プラットフォーム",
   description: "CognitiveLens (コグニティブレンズ) は、16の性格タイプや認知機能モデルを用いて、恋愛やコミュニケーションのすれ違いを最適化・解剖する次世代の診断プラットフォームです。",
+  // Search Console のサイト確認（手書きの <head> から Metadata API へ移した。generate-metadata.md の verification）
+  verification: {
+    google: "02VLoI4MqeIcdR9cY5RqXokNW1jGqKaevkoERxU5yXU",
+  },
 };
 
 export default function RootLayout({
@@ -16,9 +20,6 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="ja">
-      <head>
-        <meta name="google-site-verification" content="02VLoI4MqeIcdR9cY5RqXokNW1jGqKaevkoERxU5yXU" />
-      </head>
       <body className="min-h-screen antialiased">
         {children}
         <Footer />
