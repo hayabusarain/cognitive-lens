@@ -71,6 +71,16 @@ for (const code of TYPE_CODES) {
 }
 notes.push(`タイプごとの文章：${writtenTypes.length}/16 件（${writtenTypes.join("・") || "なし"}）`);
 
+// 文章を書いたタイプには、相性の相手の型コード（lib/type-compatibility.ts）が要る
+if (writtenTypes.length) {
+  const { TYPE_COMPATIBILITY } = exists("lib/type-compatibility.ts") ? load("lib/type-compatibility.ts") : {};
+  for (const code of writtenTypes) {
+    const pair = TYPE_COMPATIBILITY?.[code];
+    if (!pair) fail("lib/type-compatibility.ts", `${code} の相性の相手がない`);
+    else if (!TYPE_CODES.includes(pair.easy) || !TYPE_CODES.includes(pair.hard) || pair.easy === code || pair.hard === code || pair.easy === pair.hard) fail("lib/type-compatibility.ts", `${code} の相性の相手が不正（easy ${pair.easy}、hard ${pair.hard}）`);
+  }
+}
+
 // ── 4. 脈あり度の設問 ────────────────────────────────────────────
 if (exists("lib/romance/items.ts")) {
   const { ROMANCE, ROMANCE_STAGES } = load("lib/romance/items.ts");
