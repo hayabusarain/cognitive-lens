@@ -2,6 +2,8 @@
 // 実行：node scripts/check-content.mjs（npm run build の前に prebuild から走る）
 //
 // まだ書かれていないファイルは飛ばす。ステップが進んでファイルができた時点から検査が効く。
+//
+// 1つだけを検査するとき：--only INTJ（そのタイプの文章とコラム）、--only romance、--only bingo
 import fs from "node:fs";
 import path from "node:path";
 import { loadTs } from "./lib/ts-loader.mjs";
@@ -15,9 +17,13 @@ const load = (f) => loadTs(root, f);
 const problems = [];
 const notes = [];
 const fail = (where, message) => problems.push(`${where}: ${message}`);
+const ONLY = process.argv.includes("--only") ? process.argv[process.argv.indexOf("--only") + 1] : null;
+/** --only のときは、指定したものに関係する検査だけを行う */
+const runs = (target) => !ONLY || ONLY === target;
 
 // ── 1. 型コード ──────────────────────────────────────────────
 const { TYPE_CODES } = load("lib/type-codes.ts");
+const TYPE_TARGETS = ONLY && TYPE_CODES.includes(ONLY) ? [ONLY] : ONLY ? [] : TYPE_CODES;
 if (TYPE_CODES.length !== 16 || new Set(TYPE_CODES).size !== 16) fail("lib/type-codes.ts", "16個の重複しない型コードではない");
 const redirectTypes = fs.readFileSync(path.join(root, "lib/redirects.ts"), "utf8").match(/const TYPES = new Set\(\[([\s\S]*?)\]\)/)?.[1].match(/[A-Z]{4}/g) ?? [];
 if ([...redirectTypes].sort().join() !== [...TYPE_CODES].sort().join()) fail("lib/redirects.ts", "TYPES が lib/type-codes.ts と一致しない");
@@ -48,12 +54,14 @@ function checkItems(file, itemsName, tiebreakersName) {
     if (!t?.prompt?.trim() || !t?.first?.trim() || !t?.second?.trim()) fail(file, `${tiebreakersName}.${axis} が空か欠けている`);
   }
 }
-checkItems("lib/diagnosis/items.ts", "ITEMS", "TIEBREAKERS");
-checkItems("lib/target/items.ts", "TARGET_ITEMS", "TARGET_TIEBREAKERS");
+if (runs("items")) {
+  checkItems("lib/diagnosis/items.ts", "ITEMS", "TIEBREAKERS");
+  checkItems("lib/target/items.ts", "TARGET_ITEMS", "TARGET_TIEBREAKERS");
+}
 
 // ── 3. タイプごとの文章 ──────────────────────────────────────────
 const writtenTypes = [];
-for (const code of TYPE_CODES) {
+for (const code of TYPE_TARGETS) {
   const file = `lib/type-content/${code}.ts`;
   if (!exists(file)) continue;
   writtenTypes.push(code);
@@ -123,7 +131,7 @@ if (writtenTypes.length) {
 
 // ── 3-2. 恋愛コラム（仕様書 3-16） ─────────────────────────────────────
 const writtenArticles = [];
-for (const code of TYPE_CODES) {
+for (const code of TYPE_TARGETS) {
   const file = `lib/articles/${code}.ts`;
   if (!exists(file)) continue;
   writtenArticles.push(code);
@@ -144,7 +152,9 @@ for (const code of TYPE_CODES) {
 notes.push(`恋愛コラム：${writtenArticles.length}/16 件`);
 
 // ── 4. 脈あり度の設問 ────────────────────────────────────────────
-if (exists("lib/romance/items.ts")) {
+if (!runs("romance")) {
+  // --only で別のものを検査している
+} else if (exists("lib/romance/items.ts")) {
   const { ROMANCE, ROMANCE_STAGES } = load("lib/romance/items.ts");
   for (const code of TYPE_CODES) {
     const questions = ROMANCE?.[code]?.questions ?? [];
@@ -177,7 +187,9 @@ const CAREER_REWRITES = {
   "スピードと効率重視のブラック企業": "スピードと効率を最優先する職場",
   "データ分析・孤独な作業": "データ分析・ひとりで進める作業",
 };
-if (exists("lib/career-jobs.ts")) {
+if (ONLY && !TYPE_TARGETS.length) {
+  // --only romance・bingo のときは職業名を検査しない
+} else if (exists("lib/career-jobs.ts")) {
   const { CAREER_JOBS } = load("lib/career-jobs.ts");
   if (exists("lib/career-data.ts")) {
     const { CAREER_DATA } = load("lib/career-data.ts");
@@ -198,7 +210,7 @@ if (exists("lib/career-jobs.ts")) {
 } else notes.push("lib/career-jobs.ts はまだない");
 
 // ── 6. ビンゴ ────────────────────────────────────────────────────
-{
+if (runs("bingo")) {
   const mod = load("lib/bingo-data-ja.ts");
   for (const code of TYPE_CODES) {
     const n = mod.BINGO_DATA?.[code]?.length ?? 0;
@@ -208,14 +220,18 @@ if (exists("lib/career-jobs.ts")) {
 }
 
 // ── 7. 生成画像用フォントのサブセットの収録漏れ ─────────────────────
-if (exists("assets/fonts/charset.txt")) {
+if (ONLY) {
+  // フォントの収録漏れは全体の検査でだけ見る
+} else if (exists("assets/fonts/charset.txt")) {
   const included = new Set([...fs.readFileSync(path.join(root, "assets/fonts/charset.txt"), "utf8").replace(/[\r\n]/g, "")]);
   const missing = [...collectCharset(root)].filter((ch) => !included.has(ch));
   if (missing.length) fail("assets/fonts", `サブセットにない文字が ${missing.length} 字ある（${missing.slice(0, 20).join("")}…）。node scripts/build-font-subset.mjs を実行してコミットする`);
 } else notes.push("assets/fonts/charset.txt はまだない");
 
 // ── 8. タイプ色（decisions Q20、仕様書ステップ 2-3） ─────────────────────
-if (exists("lib/type-base.ts") && exists("lib/theme.ts")) {
+if (ONLY) {
+  // タイプ色は全体の検査でだけ見る
+} else if (exists("lib/type-base.ts") && exists("lib/theme.ts")) {
   const { TYPE_BASE } = load("lib/type-base.ts");
   const { THEME } = load("lib/theme.ts");
   for (const code of TYPE_CODES) {
