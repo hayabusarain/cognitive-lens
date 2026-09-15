@@ -1,3 +1,4 @@
+import { canonical } from "@/lib/site";
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import ResultContent from "./ResultContent";
@@ -10,13 +11,17 @@ type Props = {
 
 export async function generateMetadata({ params, searchParams }: Props): Promise<Metadata> {
   const { lang } = await params;
-  const { type = "INTP" } = await searchParams;
+  const { type: rawType } = await searchParams;
+  const type = rawType ?? "INTP";
   const typeKey = type.toUpperCase().slice(0, 4);
   const typeInfoMap = getTypeInfo(lang);
   const info = typeInfoMap[typeKey] ?? typeInfoMap["INTP"] ?? getDefaultType(lang);
   const ogImageUrl = `/api/og?type=${typeKey}&lang=${lang}`;
+  // type が16タイプなら ?type= 付き、省略・不正なら /ja/result を canonical にする（ステップ 3-5 で /ja/result/{TYPE} に移る）
+  const canonicalPath = rawType && typeInfoMap[typeKey] ? `/ja/result?type=${typeKey}` : "/ja/result";
 
   return {
+    alternates: canonical(canonicalPath),
     title: lang === "en" ? `${typeKey} ${info.name} — Deep Psychological Profiling | CognitiveLens` : `${typeKey} ${info.name} — 深層心理プロファイリング | CognitiveLens`,
     description: info.tagline,
     openGraph: {

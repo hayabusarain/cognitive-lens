@@ -1,7 +1,9 @@
+import { canonical } from "@/lib/site";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 
 export const metadata = {
+  alternates: canonical("/ja/about"),
   title: "運営者情報 | CognitiveLens",
   description: "CognitiveLensの運営者について",
 };

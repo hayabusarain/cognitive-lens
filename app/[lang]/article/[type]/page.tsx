@@ -1,3 +1,4 @@
+import { canonical } from "@/lib/site";
 import { getArticleData } from "@/lib/data-provider";
 import { notFound } from "next/navigation";
 import Image from "next/image";
@@ -17,6 +18,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   const article = articleData[type.toUpperCase()];
   if (!article) return {};
   return {
+    alternates: canonical(`/ja/article/${type.toUpperCase()}`),
     title: `${article.title} | CognitiveLens 恋愛心理コラム`,
     description: article.basic.slice(0, 120) + "...",
   };

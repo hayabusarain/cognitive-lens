@@ -1,7 +1,9 @@
+import { canonical } from "@/lib/site";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 
 export const metadata = {
+  alternates: canonical("/ja/privacy"),
   title: "Privacy Policy & Disclaimer | CognitiveLens",
   description: "CognitiveLens Privacy Policy, Cookie Usage, and Disclaimer",
 };

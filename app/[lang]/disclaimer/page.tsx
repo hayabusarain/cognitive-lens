@@ -1,7 +1,9 @@
+import { canonical } from "@/lib/site";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 
 export const metadata = {
+  alternates: canonical("/ja/disclaimer"),
   title: "免責事項 | CognitiveLens",
   description: "CognitiveLensの免責事項について",
 };

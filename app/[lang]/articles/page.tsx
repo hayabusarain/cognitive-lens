@@ -1,3 +1,4 @@
+import { canonical } from "@/lib/site";
 import { getArticleData } from "@/lib/data-provider";
 import Link from "next/link";
 import { BookOpen, Sparkles } from "lucide-react";
@@ -5,6 +6,7 @@ import { BookOpen, Sparkles } from "lucide-react";
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = await params;
   return {
+    alternates: canonical("/ja/articles"),
     title: lang === "en" ? "16 Personality Types Romance & Communication Columns | CognitiveLens" : "16タイプ別 恋愛・コミュニケーションコラム一覧 | CognitiveLens",
     description: lang === "en" ? "Deep dive into the romantic tendencies and communication habits of all 16 MBTI personality types." : "16タイプの恋愛傾向やコミュニケーションのクセを深掘りしたコラム記事一覧です。",
   };

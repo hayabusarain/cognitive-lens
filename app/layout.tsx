@@ -2,11 +2,10 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Footer from "@/app/components/layout/Footer";
 import { Analytics } from "@vercel/analytics/react";
+import { SITE_URL } from "@/lib/site";
 
 export const metadata: Metadata = {
-  metadataBase: new URL(
-    process.env.NEXT_PUBLIC_BASE_URL ?? "https://cognitive-lens.com"
-  ),
+  metadataBase: new URL(SITE_URL),
   title: "CognitiveLens (コグニティブレンズ) | 16タイプ別 恋愛・対人課題解決プラットフォーム",
   description: "CognitiveLens (コグニティブレンズ) は、16の性格タイプや認知機能モデルを用いて、恋愛やコミュニケーションのすれ違いを最適化・解剖する次世代の診断プラットフォームです。",
   // Search Console のサイト確認（手書きの <head> から Metadata API へ移した。generate-metadata.md の verification）

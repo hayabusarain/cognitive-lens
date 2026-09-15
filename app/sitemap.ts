@@ -1,8 +1,9 @@
 import { MetadataRoute } from "next";
 import { TYPE_INFO } from "@/lib/type-info";
+import { SITE_URL } from "@/lib/site";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://cognitive-lens.com";
+  const baseUrl = SITE_URL;
 
   const languages = ["ja"];
   const mbtiTypes = Object.keys(TYPE_INFO);

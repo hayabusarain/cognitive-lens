@@ -1,3 +1,4 @@
+import { canonical } from "@/lib/site";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, Download, AlertTriangle, Copyright } from "lucide-react";
@@ -7,6 +8,7 @@ import { TYPE_INFO } from "@/lib/type-info";
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = await params;
   return {
+    alternates: canonical("/ja/downloads"),
     title: lang === "en" ? "Character Assets Download | CognitiveLens" : "キャラクター素材ダウンロード | CognitiveLens",
     description: lang === "en" ? "Distributing free character assets for all 16 personality types." : "全16タイプのキャラクター画像をフリー素材として配布しています。",
   };

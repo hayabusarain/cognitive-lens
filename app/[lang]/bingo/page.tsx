@@ -1,7 +1,9 @@
+import { canonical } from "@/lib/site";
 import { Metadata } from "next";
 import BingoClient from "./BingoClient";
 
 export const metadata: Metadata = {
+  alternates: canonical("/ja/bingo"),
   title: "偏見だらけのMBTIビンゴ | CognitiveLens",
   description: "あなたのMBTIの「あるある」をビンゴでチェック！SNSにシェアして盛り上がろう。",
 };
