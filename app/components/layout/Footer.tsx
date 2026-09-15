@@ -1,34 +1,46 @@
-"use client";
-
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+
+/**
+ * 全ページ共通のフッター（app/layout.tsx から出す）
+ */
+const LINKS = [
+  { href: "/ja/about", label: "運営者情報" },
+  { href: "/ja/downloads", label: "キャラ素材の配布" },
+  { href: "/ja/disclaimer", label: "免責事項" },
+  { href: "/ja/privacy", label: "プライバシーポリシー" },
+] as const;
+
+const LINK_CLASS = "inline-flex min-h-11 items-center px-2 text-note text-muted underline underline-offset-4 hover:text-fg";
 
 export default function Footer() {
-  const pathname = usePathname();
-  const lang = pathname?.startsWith("/en") ? "en" : "ja";
-
   return (
-    <footer className="w-full px-6 py-8 text-center mt-auto border-t border-black/5 content-layer antialiased">
-      <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-xs mb-4">
-        <Link href={`/${lang}/about`} className="text-slate-500 hover:text-slate-800 transition-colors underline underline-offset-4">
-          {lang === "en" ? "About Us" : "運営者情報"}
-        </Link>
-        <Link href={`/${lang}/downloads`} className="text-slate-500 hover:text-slate-800 transition-colors underline underline-offset-4">
-          {lang === "en" ? "Free Characters" : "キャラ素材無料配布"}
-        </Link>
-        <Link href={`/${lang}/disclaimer`} className="text-slate-500 hover:text-slate-800 transition-colors underline underline-offset-4">
-          {lang === "en" ? "Disclaimer" : "免責事項"}
-        </Link>
-        <Link href={`/${lang}/privacy`} className="text-slate-500 hover:text-slate-800 transition-colors underline underline-offset-4">
-          {lang === "en" ? "Privacy Policy" : "プライバシーポリシー"}
-        </Link>
-        <a href="https://x.com/CognitiveLens_" target="_blank" rel="noopener noreferrer" className="text-slate-500 hover:text-slate-800 transition-colors underline underline-offset-4">
-          {lang === "en" ? "Contact Us" : "お問い合わせ"}
-        </a>
+    <footer className="mt-16 border-t border-line">
+      <div className="mx-auto w-full max-w-page px-4 py-10 md:px-10">
+        <p className="font-display text-lg leading-none tracking-[0.01em]">
+          Cognitive<span className="text-muted">Lens</span>
+        </p>
+        <p className="mt-2 text-note text-muted">16タイプ性格診断</p>
+        <nav aria-label="サイトについて" className="mt-6">
+          <ul className="-mx-2 flex flex-wrap gap-x-2">
+            {LINKS.map((link) => (
+              <li key={link.href}>
+                <Link href={link.href} className={LINK_CLASS}>
+                  {link.label}
+                </Link>
+              </li>
+            ))}
+            <li>
+              <a href="https://x.com/CognitiveLens_" target="_blank" rel="noopener noreferrer" className={LINK_CLASS}>
+                お問い合わせ
+                <span className="sr-only">（X のアカウントを新しいタブで開きます）</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+        <p className="mt-6 text-label text-muted">
+          <small className="text-[length:inherit]">© 2026 CognitiveLens</small>
+        </p>
       </div>
-      <p className="text-[10px] text-slate-400">
-        © 2025 CognitiveLens — Interpersonal Friction Analytics. All rights reserved.
-      </p>
     </footer>
   );
 }

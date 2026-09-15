@@ -13,6 +13,8 @@ export function collectCharset(rootDir) {
   texts.push("、。，．・：；？！「」『』（）【】〜ー…―％＆＋－＝×÷→←↑↓　");
   // サイト名と画像に入る固定文言（仕様書 4-2・4-3）
   texts.push("CognitiveLens www.cognitive-lens.com 外向・内向 感覚・直観 思考・感情 判断・知覚 偏見だらけのビンゴ 僅差 16タイプ");
+  // 共通デザインの OG 画像に入れるページ名（仕様書 4-2。lib/og/page-image.tsx）
+  texts.push("16タイプ性格診断 自己診断 相手診断 16タイプ一覧 偏見だらけのMBTIビンゴ 恋愛コラム一覧 脈あり度チェック");
   const files = [
     ["lib/type-names.ts", "TYPE_NAMES"],
     ["lib/bingo-data-ja.ts", "BINGO_DATA"],
