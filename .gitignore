@@ -50,3 +50,6 @@ next-env.d.ts
 
 # 取得した元フォントの置き場（scripts/build-font-subset.mjs）
 /.cache/
+
+# エディタの一時ファイル
+*.swp
