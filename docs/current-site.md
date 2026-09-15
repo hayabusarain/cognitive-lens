@@ -117,7 +117,7 @@ metadata を持たないページは、`app/layout.tsx` の値がそのまま使
 
 | ページ | 役割 | 入口（内部リンク元） | 出口 |
 |---|---|---|---|
-| `/{lang}` トップ | 5機能への入口と、AdSense 審査向けのサイト説明文 | 全ページのロゴ・戻るリンク | test、romance-checker、bingo、target-diagnosis、articles |
+| `/{lang}` トップ | 5機能への入口と、サイト説明文 | 全ページのロゴ・戻るリンク | test、romance-checker、bingo、target-diagnosis、articles |
 | `/test` | 自分の16タイプを判定する20問の診断 | トップ、skip-path、select、結果ページ | 回答後に自動で `/result?type=&a=` へ |
 | `/result` | タイプ別の結果。静的データの寄せ集め（3-2 参照） | test、target-diagnosis、select、skip-path、記事、相性欄 | 記事16本、相性の相手の結果、X 共有、画像保存 |
 | `/target-diagnosis` | 気になる相手のタイプを推定する20問 | トップ、romance-checker | 回答後に自動で `/result?type=` へ |
@@ -204,15 +204,14 @@ flowchart LR
 2. タイプカード：キャラクター画像、4文字コード、型名、タグライン
 3. X 共有ボタン：本文に相性の最強・最悪の相手を入れて投稿画面を開く
 4. インスタ用カード：`/api/story-card?type=` の画像を表示・保存
-5. 広告枠（AdSense）
-6. 本性プロファイル：`lib/static-profiles.ts` の3節（見出しは全タイプ共通「あなたのデフォ設定（裏アカ仕様）」「恋愛のときの検索アルゴリズム」「ガチでヤバい神機能」）
-7. 行動プロトコル：`lib/protocols-ja.ts` の「短期」「長期」「教育」を各3件、アコーディオンで表示
-8. NG 行動（地雷）：データが空のため**表示されない**
-9. 対人相性：`lib/compatibility.ts` の最強の相手・最悪の相手とその理由
-10. 適職：`lib/career-data.ts`。**日本語のみ**
-11. 恋愛コラムへの16タイプ一覧
+5. 本性プロファイル：`lib/static-profiles.ts` の3節（見出しは全タイプ共通「あなたのデフォ設定（裏アカ仕様）」「恋愛のときの検索アルゴリズム」「ガチでヤバい神機能」）
+6. 行動プロトコル：`lib/protocols-ja.ts` の「短期」「長期」「教育」を各3件、アコーディオンで表示
+7. NG 行動（地雷）：データが空のため**表示されない**
+8. 対人相性：`lib/compatibility.ts` の最強の相手・最悪の相手とその理由
+9. 適職：`lib/career-data.ts`。**日本語のみ**
+10. 恋愛コラムへの16タイプ一覧
 
-英語版では 9 の「最悪の相手」の説明文が空になる。日本語データのキーが `advice`、英語データのキーが `reason` で、画面は `advice` を読むためだ（コード上）。
+英語版では 8 の「最悪の相手」の説明文が空になる。日本語データのキーが `advice`、英語データのキーが `reason` で、画面は `advice` を読むためだ（コード上）。
 
 ### 3-3. 相手診断 `/target-diagnosis`
 
@@ -306,8 +305,7 @@ INTJ◎ENFP×ESFJ、INTP◎ENTJ×ESFJ、ENTJ◎INTP×ISFP、ENTP◎INFJ×ISFJ、
 | `layout/Footer` | 全ページ（`app/layout.tsx`） | 固定リンク5つと「© 2025 CognitiveLens」 |
 | `CookieConsentBanner` | 全ページ | 初回のみ下部に表示。「利用を継続することで同意したものとみなす」方式で、拒否ボタンはない。日本語のみ。同意は localStorage の `cookie_consent_v1` に保存 |
 | `LanguageSwitcher` | トップのみ | 日本語 / 「English (Gen-Z)」の切替。日本語表示中は「For English 👉」が点滅 |
-| `ads/AdSenseUnit` | トップ、記事、結果、脈ありチェッカー、skip-path | `<ins class="adsbygoogle">` を出す。開発環境ではダミー枠 |
-| `AnalyzingLoader` | chat-gen | 最低8秒の進捗演出。中央に 300×250 の「Sponsored」空枠があるが、広告タグは入っていない |
+| `AnalyzingLoader` | chat-gen | 最低8秒の進捗演出 |
 | `result/NextActionCTA` | **なし** | 未使用 |
 
 ### 4-2. ページ内の部品
@@ -351,7 +349,7 @@ INTJ◎ENFP×ESFJ、INTP◎ENTJ×ESFJ、ENTJ◎INTP×ISFP、ENTP◎INFJ×ISFJ、
 | 脈ありチェッカー設問 | 380 | 23 | 2% | 常体82% | 「〜してくれる」系が104件 |
 | ビンゴ | 343 | 9 | 0% | 常体37%、体言止め29% | 「〜ないと死ぬ」「知らんけど」 |
 
-日本語版は一つのサイトの中に3つの声が同居している。画面の説明文は「です・ます」の丁寧な解説調で、AdSense 審査向けに書かれたサイト説明ブロックが特に硬い。型紹介と本性プロファイルは友達が話すような常体で、スマホ・SNS の比喩（裏アカ、通知、アプデ、ブラウザ）が軸になっている。行動プロトコルと適職は命令形の毒舌で、例は「LINEの文面を深読みしすぎるな。（中略）とりあえず寝ろ。」。
+日本語版は一つのサイトの中に3つの声が同居している。画面の説明文は「です・ます」の丁寧な解説調で、サイト説明ブロックが特に硬い。型紹介と本性プロファイルは友達が話すような常体で、スマホ・SNS の比喩（裏アカ、通知、アプデ、ブラウザ）が軸になっている。行動プロトコルと適職は命令形の毒舌で、例は「LINEの文面を深読みしすぎるな。（中略）とりあえず寝ろ。」。
 
 語句の重なりも多い。本性プロファイルの見出し3つは全16タイプで同じ文言だ。脈ありチェッカーの設問は「〜してくれる」が全380文の27%を占める。二人称は「あなた」に統一する置換コミット（`0594005`）があったが、「お前」が恋愛コラムと相性データに1件ずつ残っている。
 
@@ -401,7 +399,6 @@ OG 画像とインスタ用カード（`next/og`）は `fontFamily: "sans-serif"
 
 | 種別 | 相手先 | 用途 |
 |---|---|---|
-| 広告 | Google AdSense（`ca-pub-7201202773518258`） | 広告配信 |
 | 解析 | Vercel Web Analytics（`@vercel/analytics`） | アクセス解析 |
 | 生成 AI | OpenAI API（gpt-4o-mini） | 3-6 の AI 機能 |
 | データベース | Supabase | 認証なしの投入 API からのみ使用。画面からは読んでいない |
@@ -415,29 +412,15 @@ OG 画像とインスタ用カード（`next/og`）は `fontFamily: "sans-serif"
 
 ## 6. 計測タグ、sitemap、robots、OGP の現状
 
-### 6-1. 計測・広告タグ
+### 6-1. 計測タグ
 
 | タグ | 設置場所 | 状況 |
 |---|---|---|
-| AdSense スクリプト | `app/layout.tsx`（`beforeInteractive` で全ページ） | 設置済み |
-| AdSense アカウント確認 meta | `app/layout.tsx` | `google-adsense-account` を設置 |
-| AdSense 広告枠 | 下表 | **枠 ID がすべて仮の連番** |
 | Google サイト確認 meta | `app/layout.tsx` | `google-site-verification` を設置。Search Console の登録状況は未確認 |
 | Vercel Analytics | `app/layout.tsx` の `<Analytics />` | 設置済み。Vercel 側で有効かは未確認 |
 | Google Analytics / GTM | — | なし |
 | イベント計測 | — | なし。診断完了、共有、画像保存は計測していない |
 
-| 広告枠 ID | ページと位置 |
-|---|---|
-| `1111111111` | トップ、機能リストの途中 |
-| `2222222222` | トップ、下部 |
-| `3333333333` | 記事、下部 |
-| `6666666666` | 結果、共有ボタンの下 |
-| `7777777777` | skip-path、AI 出力の節の間 |
-| `8888888888` | 記事の中段と、脈ありチェッカーの選択画面（同じ ID を2箇所で使用） |
-| `9999999999` | 脈ありチェッカーの判定画面 |
-
-`AdSenseUnit` のコメントに「審査後または申請時に書き換える」とあり、正式な枠 ID に置き換えていない。公開サイトで広告が実際に表示されているかは未確認。
 
 ### 6-2. sitemap（`app/sitemap.ts`）
 
@@ -453,11 +436,9 @@ OG 画像とインスタ用カード（`next/og`）は `fontFamily: "sans-serif"
 
 `app/layout.tsx` の `metadataBase` は `NEXT_PUBLIC_BASE_URL` を読み、sitemap は `NEXT_PUBLIC_SITE_URL` を読む。同じ用途に別の環境変数名が使われている。
 
-### 6-3. robots.txt と ads.txt
+### 6-3. robots.txt
 
-`public/robots.txt` の静的ファイル。全クローラーに全体を許可し、`GPTBot` と `ChatGPT-User` だけを禁止している。Sitemap 行は www なしのドメインを指す。
-
-`public/ads.txt` は `google.com, pub-7201202773518258, DIRECT, f08c47fec0942fa0` の1行。どちらも公開サイトで 200 を返す（確認済み）。
+`public/robots.txt` の静的ファイル。全クローラーに全体を許可し、`GPTBot` と `ChatGPT-User` だけを禁止している。Sitemap 行は www なしのドメインを指す。公開サイトで 200 を返す（確認済み）。
 
 ### 6-4. OGP・canonical・言語指定
 
@@ -487,7 +468,7 @@ OG 画像そのものが SNS から取得できない。`proxy.ts` の Bot 判�
 
 ### 6-5. Cookie 同意
 
-バナーは「利用を継続すると同意とみなす」方式で、拒否や設定の選択肢はない。広告と解析のタグは同意の有無にかかわらず最初から読み込まれる（コード上）。バナーの文面は日本語のみで、英語ページにも日本語で出る。
+バナーは「利用を継続すると同意とみなす」方式で、拒否や設定の選択肢はない。解析のタグは同意の有無にかかわらず最初から読み込まれる（コード上）。バナーの文面は日本語のみで、英語ページにも日本語で出る。
 
 ---
 
@@ -508,15 +489,14 @@ OG 画像そのものが SNS から取得できない。`proxy.ts` の Bot 判�
 | 9 | 自己診断で選択肢ごとに対応する文字（E / I など）が見える | `test/page.tsx` | 結果を狙って選べる | コード上 |
 | 10 | `/test` の進捗バーとトップ・相手診断のアニメーションが動かない | CSS クラス未定義 | 進捗が見えない | コード上 |
 | 11 | sitemap に 404 の `/translate` が載り、ドメインが www なし | `app/sitemap.ts` | クロールの無駄 | 確認済み |
-| 12 | 広告枠 ID が仮の連番のまま | 6-1 の各所 | 広告収益が計上されないおそれ | コード上（表示実態は未確認） |
-| 13 | 英語の脈ありチェッカーは10問なのに「20 questions」と表示 | `romance-data-en.ts` | 説明と実際が食い違う | コード上 |
-| 14 | 日本語記事の見出しは「脈ありサイン・ガチ5選」だが4件しかない | `article-data.ts` | 見出しと中身が食い違う | コード上 |
-| 15 | インスタ用カードが英語版でも日本語で生成される | `ResultContent.tsx`（`lang` を渡していない） | 英語ユーザーに日本語画像 | コード上 |
-| 16 | skip-path の英語版で、型名と入力例が日本語のまま | `skip-path/page.tsx` | 英語画面に日本語が混在 | コード上 |
-| 17 | 英語の型名と日本語記事の呼称が 16Personalities と一致し、出典表記がない | `type-info-en.ts`、`article-data.ts` | 権利面の確認が必要 | 名称一致は確認済み、権利判断は未確認 |
-| 18 | キャラクター画像の作者・生成手段の記録がない | `public/characters/` | 配布規約の前提が裏付けられない | 確認済み |
-| 19 | プライバシーポリシーの最終更新日が 2025-01-01（リポジトリ作成は 2026-04-08）。存在しない「フィードバック機能」「テーマ設定」「チャット翻訳機能」に言及。フッターは © 2025、配布ページは © 2026 | `privacy`、`disclaimer`、`about`、`Footer` | 規約の信頼性 | コード上 |
-| 20 | NG 行動の欄が常に非表示（データが空） | `ResultContent.tsx` | 見出しだけ設計されて中身がない | コード上 |
-| 21 | `/select`・`/skip-path`・`/chat-gen` にどこからもリンクがない | — | 使われていないページ | 確認済み |
-| 22 | 使われていないコード：`/api/weakness`、`getRelationshipTimeline`、`NextActionCTA`、`utils/supabase/client.ts`、韓国語辞書と未使用の辞書キー、`badge-neon`、`recharts` | 各所 | 保守の負担 | コード上 |
-| 23 | `/api/og` のエラー処理が未定義の変数 `lang` を参照している（型エラー1件） | `app/api/og/route.tsx` 127行目 | 例外時に 500 を返す点は同じで、表示への影響はない | 確認済み（`tsc`） |
+| 12 | 英語の脈ありチェッカーは10問なのに「20 questions」と表示 | `romance-data-en.ts` | 説明と実際が食い違う | コード上 |
+| 13 | 日本語記事の見出しは「脈ありサイン・ガチ5選」だが4件しかない | `article-data.ts` | 見出しと中身が食い違う | コード上 |
+| 14 | インスタ用カードが英語版でも日本語で生成される | `ResultContent.tsx`（`lang` を渡していない） | 英語ユーザーに日本語画像 | コード上 |
+| 15 | skip-path の英語版で、型名と入力例が日本語のまま | `skip-path/page.tsx` | 英語画面に日本語が混在 | コード上 |
+| 16 | 英語の型名と日本語記事の呼称が 16Personalities と一致し、出典表記がない | `type-info-en.ts`、`article-data.ts` | 権利面の確認が必要 | 名称一致は確認済み、権利判断は未確認 |
+| 17 | キャラクター画像の作者・生成手段の記録がない | `public/characters/` | 配布規約の前提が裏付けられない | 確認済み |
+| 18 | プライバシーポリシーの最終更新日が 2025-01-01（リポジトリ作成は 2026-04-08）。存在しない「フィードバック機能」「テーマ設定」「チャット翻訳機能」に言及。フッターは © 2025、配布ページは © 2026 | `privacy`、`disclaimer`、`about`、`Footer` | 規約の信頼性 | コード上 |
+| 19 | NG 行動の欄が常に非表示（データが空） | `ResultContent.tsx` | 見出しだけ設計されて中身がない | コード上 |
+| 20 | `/select`・`/skip-path`・`/chat-gen` にどこからもリンクがない | — | 使われていないページ | 確認済み |
+| 21 | 使われていないコード：`/api/weakness`、`getRelationshipTimeline`、`NextActionCTA`、`utils/supabase/client.ts`、韓国語辞書と未使用の辞書キー、`badge-neon`、`recharts` | 各所 | 保守の負担 | コード上 |
+| 22 | `/api/og` のエラー処理が未定義の変数 `lang` を参照している（型エラー1件） | `app/api/og/route.tsx` 127行目 | 例外時に 500 を返す点は同じで、表示への影響はない | 確認済み（`tsc`） |
