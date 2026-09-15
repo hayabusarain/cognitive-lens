@@ -20,7 +20,7 @@
 | 作業ツリー | ブランチ | 中身 | 状態（2026-09-16） |
 |---|---|---|---|
 | `D:/mbti_wt/result` | `renewal-result` | 結果ページ一式 | 取り込み済み |
-| `D:/mbti_wt/diagnosis` | `renewal-diagnosis` | `/ja/test`、`/ja/target-diagnosis` | 作業中 |
+| `D:/mbti_wt/diagnosis` | `renewal-diagnosis` | `/ja/test`、`/ja/target-diagnosis` | 取り込み済み |
 | `D:/mbti_wt/bingo` | `renewal-bingo` | `/ja/bingo`、`/ja/bingo/{TYPE}`、カード画像 | 取り込み済み |
 | `D:/mbti_wt/static` | `renewal-static` | トップ、運営者情報、免責事項、プライバシーポリシー、素材配布、robots.txt | 取り込み済み |
 | `D:/mbti_wt/article` | `renewal-article` | `/ja/articles`、`/ja/article/{TYPE}`、`/ja/romance-checker` | 取り込み済み |
