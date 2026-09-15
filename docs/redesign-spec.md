@@ -114,7 +114,7 @@
 
 複数の規則が重なる例を挙げる。`https://cognitive-lens.com/en/result?type=entp` は R10・R11・R1 が順に当たり、`https://www.cognitive-lens.com/ja/result/ENTP` へ1回で転送される。
 
-R8 の転送先は、Next.js が生成画像の URL に付けるキャッシュ用クエリを含まない。実装後に実際の URL を確かめて、この表を更新する（ステップ 3-4）。
+R8 の転送先は、Next.js が生成画像の URL に付けるキャッシュ用クエリを含まない。クエリなしの `/ja/result/{TYPE}/opengraph-image` と `/ja/opengraph-image` が 200 を返すことを、ローカルの本番ビルドで確かめた（2026-09-16）。
 
 ### 1-4. 転送の実装方式
 
@@ -134,7 +134,7 @@ R10 を働かせるには、Vercel で `cognitive-lens.com` を「www への転�
 | 収録 | 59 URL。トップ、test、result 一覧、result/{TYPE}×16、target-diagnosis、romance-checker、bingo、bingo/{TYPE}×16、articles、article/{TYPE}×16、about、disclaimer、privacy、downloads |
 | 載せない | 画像 URL、転送元の URL、API |
 | hreflang | 付けない（日本語のみ） |
-| lastmod | ビルド時刻ではなく、コンテンツファイルに持たせた更新日 |
+| lastmod | ビルド時刻ではなく、コンテンツファイルに持たせた更新日。結果ページは `TypeContent.updatedAt`、コラムは `ArticleContent.updatedAt`。ほかのページと、タイプごとの更新日を持たないタイプ別ビンゴは、`app/sitemap.ts` に書いた固定の日付 |
 | robots.txt | `GPTBot` と `ChatGPT-User` の拒否は現行どおり。`Sitemap:` 行を www 付きに直す |
 
 ---
@@ -382,7 +382,7 @@ X への投稿に入れる URL にはクエリを付けない。カードは型�
 | 言語の区画を `ja` だけにする | `app/[lang]/layout.tsx`（ルートではないレイアウト）を新設し、`generateStaticParams` が `[{ lang: 'ja' }]` を返すようにして `dynamicParams = false` を指定する。`/foo` や `/foo/test` が 404 になる。実行時に描画するページ（`/[lang]/result`）には `dynamicParams` が効かなかったので、レイアウトでも `lang` が `ja` 以外なら `notFound()` を呼ぶ（2026-09-15 確認） | `dynamicParams.md` 17行目 |
 | 404 ページ | `app/not-found.tsx` を置く。ルートの `not-found` は一致しない URL 全体を扱い、404 には `noindex` が自動で付く | `not-found.md` 131行目、185行目 |
 | 手書きの `<head>` を Metadata API へ | サイト確認の meta を `verification.google` で出す | `layout.md` 141行目、`generate-metadata.md` 756行目 |
-| Bot 判定とレートリミットの範囲 | `POST /api/romance-ai` だけにする。画像のルートと全ページからは外す。ルート内の `isBotUserAgent` の判定も残す。OG 画像が X などのクローラーに 403 を返していた件は、ステップ 0-3 で直した。0-8 の削除で、proxy の判定を受ける API は `POST /api/romance-ai` だけになっている | `current-site.md` 6-4 |
+| Bot 判定とレートリミットの範囲 | `POST /api/romance-ai` だけにする。画像のルートと全ページからは外す。ルート内の `isBotUserAgent` の判定も残す。OG 画像が X などのクローラーに 403 を返していた件は、ステップ 0-3 で直した。0-8 の削除で、proxy の判定を受ける API は `POST /api/romance-ai` だけになっている。実装（2026-09-16）では、proxy はパスが `/api/romance-ai` のときだけ判定し、メソッドは問わない（GET はルートが 405 を返す） | `current-site.md` 6-4 |
 | 型エラーでビルドを止める | `next.config.ts` の `typescript.ignoreBuildErrors: true` を外す。`tsc` で出ている既存の型エラー1件（`app/api/og/route.tsx` 127行目、`catch` の中の `lang`）を先に直す | — |
 
 ### 3-7. 計測（GA4）
@@ -471,7 +471,7 @@ sharp は `package.json` に書かれていないが、`node_modules` に 0.34.5
 
 #### 方式
 
-Next.js のファイル規約 `opengraph-image.tsx` を使う。`app/[lang]/result/[type]/opengraph-image.tsx` を置くと、親の `generateStaticParams` に従ってビルド時に16枚が生成される（`opengraph-image.md` 91行目、221行目）。Node.js ランタイムでフォントと画像をファイルから読む（同 417行目）。
+Next.js のファイル規約 `opengraph-image.tsx` を使う。`app/[lang]/result/[type]/opengraph-image.tsx` を置き、ビルド時に16枚を生成する（`opengraph-image.md` 91行目、221行目）。当初は親の `generateStaticParams` に従うと考えていたが、画像のルートは親を引き継がず、ファイルの中で `generateStaticParams` を書かないと実行時の生成になった（2026-09-16 のビルドで確認）。そのため画像のルートごとに `generateStaticParams` を書いている。Node.js ランタイムでフォントと画像をファイルから読む（同 417行目）。
 
 `/api/` の下に置かないので、Bot 判定を受けない。3-6 の変更で Bot 判定は `POST /api/romance-ai` だけになり、二重に守られる。
 
@@ -582,7 +582,7 @@ Instagram ストーリーズでは、画面の上下に操作用の表示が重�
 
 `/ja/bingo/{TYPE}/card/{mask}` で 1080×1350 の PNG を返す。X と Instagram のフィード投稿で切れにくい縦横比 4:5 にする。
 
-生成方式は 4-3 と同じ（初回生成してキャッシュ）で、保存の流れも `ShareImageButton` を共用する。現状はブラウザ上で DOM を画像にしている（`html-to-image`）。サーバー生成に変えるのは、端末やブラウザによってフォントや画像が抜ける差をなくすためだ。
+生成方式は 4-3 と同じ（初回生成してキャッシュ）で、保存の流れも `ShareImageButton` を共用する。リニューアル前はブラウザ上で DOM を画像にしていた（`html-to-image`。ステップ 3-22 で削除）。サーバー生成に変えたのは、端末やブラウザによってフォントや画像が抜ける差をなくすためだ。`{mask}` は24マスの押した状態を表す6桁の16進数（小文字）で、形が違えば 404 を返す（`lib/bingo/board.ts`）。
 
 ---
 
@@ -594,7 +594,7 @@ Instagram ストーリーズでは、画面の上下に操作用の表示が重�
 
 ### 5-1. 置き場所
 
-実装で作ったファイルに合わせて更新した（2026-09-15）。
+実装で作ったファイルに合わせて更新した（2026-09-16、統合の後）。
 
 ```
 lib/
@@ -602,35 +602,47 @@ lib/
   type-codes.ts          16の型コード（アルファベット順）と TypeCode 型
   type-names.ts          呼称16件（6-2）
   type-base.ts           画像パスとタイプ色
-  type-compatibility.ts  相性の相手の型コード（文章を書いたタイプから順に足す）
+  type-display.ts        タイプ色の CSS 変数と通し番号（画面の部品が使う）
+  type-compatibility.ts  相性の相手の型コード
   theme.ts               背景・面・文字の色
-  career-jobs.ts         適職の職業名（現行の lib/career-data.ts に 5-2 の書き換え表を当てたもの）
+  career-jobs.ts         適職の職業名（旧 lib/career-data.ts に 5-2 の書き換え表を当てたもの）
   site.ts                サイトの URL 定数と canonical()
   redirects.ts           1-3 の転送の判定
+  analytics.ts           GA4 の3イベント（3-7）
+  bot-guard.ts・get-client-ip.ts  /api/romance-ai の Bot 判定と IP の取得
   type-content/
-    schema.ts            TypeContent 型
+    schema.ts・index.ts  TypeContent 型と16件をまとめた TYPE_CONTENT
     ENFJ.ts … ISTP.ts    タイプごとの文章（16ファイル）
+  articles/
+    schema.ts・index.ts  ArticleContent 型と16件をまとめた ARTICLES
+    ENFJ.ts … ISTP.ts    タイプ別の恋愛コラム（16ファイル）
   diagnosis/
     types.ts             軸・文字・設問・決定設問の型と尺度
     items.ts             自己診断の設問・決定設問
     score.ts             2-1〜2-3 の計算（純粋な関数）
+    flow.ts              診断の進行（reducer）と途中経過の保存形式
   target/
     items.ts             相手診断の設問・決定設問
   romance/
     items.ts             タイプ別の設問（12問以内）と段階別の説明文
-  bingo-data-ja.ts       タイプ別の24項目（現行ファイルに型を付けて部分改訂）
+    ai-text.ts           AI 文の応答の読み替えと共有文
+  bingo/
+    board.ts             盤面の判定と mask の形式（4-5）
+  bingo-data-ja.ts       タイプ別の24項目と称号（現行ファイルに型を付けて部分改訂）
+  og/                    生成画像の素材読み込み・色・ページ用の共通デザイン
 scripts/
   check-content.mjs          件数・文字数・段落・相性・職業名・フォントの収録・色を検査
-  check-banned-terms.mjs     6-1 の名称とトーンガイドの流行語を検査
+  check-banned-terms.mjs     6-1 の名称とトーンガイドの流行語を検査（語の一覧は lib/banned-terms.mjs）
   check-redirects.mjs        実際のサーバーの 301 を検査
-  check-question-similarity.mjs  新旧の設問の類似度
+  check-site.mjs             sitemap の全ページの head・本文・リンクと 404 を検査（5-3）
+  check-question-similarity.mjs  新旧の設問の類似度（旧設問を 3-22 で消したので、今は比べる相手がなく何もしない）
   build-character-assets.mjs キャラクターの切り詰め版（predev・prebuild で毎回）
   build-font-subset.mjs      生成画像用フォントのサブセット（npm run build:font）
 ```
 
 Node.js の型除去（`node --test`）で読むファイル（`redirects.ts`・`diagnosis/score.ts`）は、値の import をしない。Next.js は拡張子なしの import を、Node.js は拡張子付きを求めて両立しないためだ。
 
-タイプごとにファイルを分けるのは、1タイプずつ書いてレビューする（ステップ 2-4、2-5）ためだ。置き換えが済んだ現行ファイル（`lib/type-info.ts`、`lib/static-profiles.ts`、`lib/questions.ts` など）は、ステップ 3-22 でまとめて削除する。
+タイプごとにファイルを分けるのは、1タイプずつ書いてレビューする（ステップ 2-4、2-5）ためだ。置き換えが済んだ現行ファイル（`lib/type-info.ts`、`lib/static-profiles.ts`、`lib/questions.ts` など）は、ステップ 3-22 でまとめて削除した（2026-09-16）。現行サイトの型名とタグラインは、禁止語の検査のため `scripts/lib/legacy-type-names.json` に写してある。
 
 ### 5-2. 型の定義
 
@@ -747,13 +759,13 @@ export const BINGO_DATA = { /* 16件 */ } satisfies Record<TypeCode, Tuple<strin
 | 文字数 | 設問45字以内、`tagline` と `og.catch` は24字以内 | 同上 |
 | 脈あり度の設問数 | 各タイプ1〜12問 | 同上 |
 | 置換変数 | `share.text` に `{name}` と `{url}` がある | 同上 |
-| 適職の職業名 | `CAREER_JOBS` の値が、現行 `lib/career-data.ts` の `hellJob`・`survivalRoute` に 5-2 の書き換え表を当てたものと一致する（現行ファイルを消すステップ 3-22 まで） | 同上 |
+| 適職の職業名 | `CAREER_JOBS` の値が、現行 `lib/career-data.ts` の `hellJob`・`survivalRoute` に 5-2 の書き換え表を当てたものと一致する（現行ファイルを消すステップ 3-22 まで）。3-22 で照合を外し、今は空の値がないことだけを見る。外す直前（2026-09-16）の照合は通っていた | 同上 |
 | 職業名の転用 | `CAREER_JOBS` の職業名（「・」で区切った各語）が、呼称と `tagline` に含まれていない（N9） | 同上 |
 | 段落と文の長さ | 1段落120字以内かつ3文以内、1文45字以内（N4）。段落は改行で、文は「。」「！」「？」で区切って数える | 同上 |
 | 禁止語 | 6-1 の名称と、トーンガイドに載せる流行語・誇張語。`lib/career-jobs.ts` は対象外（N9） | `scripts/check-banned-terms.mjs` |
-| 「MBTI」の語 | ビルドした HTML を取得し、`/ja/bingo` 以外の title・meta description・h1・`og:site_name` に「MBTI」がない。本文での出現が1ページ1回まで（N3・N11） | ステップごとの確認時のクロール |
+| 「MBTI」の語 | ビルドした HTML を取得し、`/ja/bingo` 以外の title・meta description・h1・`og:site_name` に「MBTI」がない。本文での出現が1ページ1回まで（N3・N11） | `scripts/check-site.mjs`（`npm run check:site -- <URL>`）。同じスクリプトで、canonical、title の重なり、og:image、16Personalities・Keirsey・現行サイトの型名とグループ名、どこからもリンクされないページ、404 も見る |
 
-`npm run check` でこの3つ（`tsc`、`check-content`、`check-banned-terms`）を実行する。`next build` の前に走らせ、失敗したらビルドを止める。3-6 のとおり `ignoreBuildErrors` も外す。
+`npm run check` でこの3つ（`tsc`、`check-content`、`check-banned-terms`）と単体テスト（`npm test`）を実行する。`next build` の前に走らせ、失敗したらビルドを止める。3-6 のとおり `ignoreBuildErrors` も外す。
 
 ---
 
@@ -768,7 +780,7 @@ export const BINGO_DATA = { /* 16件 */ } satisfies Record<TypeCode, Tuple<strin
 | 16Personalities の型名（英語） | Architect、Logician、Commander、Debater、Advocate、Mediator、Protagonist、Campaigner、Logistician、Defender、Executive、Consul、Virtuoso、Adventurer、Entrepreneur、Entertainer |
 | 16Personalities の型名（日本語） | 建築家、論理学者、指揮官、討論者、提唱者、仲介者、主人公、広報運動家、管理者、擁護者、幹部、領事、巨匠、冒険家、起業家、エンターテイナー |
 | 16Personalities のグループ名・軸名 | Analysts、Diplomats、Sentinels、Explorers、分析家、外交官、番人、探検家、Mind、Energy、Nature、Tactics、Identity、`-A`・`-T` の表記 |
-| 現行サイトの型名 | 「通知全オフのガチ勢スマホ」など `lib/type-info.ts` の16件と、各タグライン |
+| 現行サイトの型名 | 「通知全オフのガチ勢スマホ」など `lib/type-info.ts` の16件と、各タグライン（ファイルは 3-22 で削除し、`scripts/lib/legacy-type-names.json` に写した） |
 | 現行サイトのグループ名 | 分析系、理想主義系、管理系、探索系、Idealists |
 | Keirsey の型名・気質名 | Mastermind、Inventor、Fieldmarshal、Healer、Counselor、Champion、Teacher、Inspector、Protector、Supervisor、Provider、Crafter、Composer、Promoter、Performer、Rational、Idealist、Guardian、Artisan |
 | 職業名・役職名全般 | 絵柄の持ち物と結びつき、16Personalities の型名に近づくため（4-1） |
@@ -873,9 +885,9 @@ decisions 3章の順で行う。
 
 フェーズ2〜3のブランチは、フェーズ1がすべて本番に出てから main で作る。作業中に main へ修正が入ったら（0-2 の連絡先の差し替えなど）、ブランチに main を取り込む。プレビューでの確認では、`check-redirects.mjs` とクロールをプレビューの URL に向けて実行する。R10 はホスト名が違うので対象から外す。プレビューに Vercel の保護がかかっていれば、自動化用のバイパス（Protection Bypass for Automation）を使う。
 
-### 進捗（2026-09-15 時点）
+### 進捗（2026-09-16 時点）
 
-フェーズ0・1 は `main` から本番に出した。フェーズ2〜3 は作業用ブランチ `renewal` で進めていて、Vercel のプレビューのビルドは成功している（コミット `aa48d8b`）。
+フェーズ0・1 は `main` から本番に出した。フェーズ2〜3 は作業用ブランチ `renewal` で進め、3-22 までを統合した。Vercel のプレビューのビルドは成功している（コミット `152b583`。GitHub の commit status で確認）。残りは 3-23（プレビューでの確認と一括公開）で、`main` へのマージは運営者の確認を取ってから行う。
 
 | ステップ | 状態 | コミット | 確認したこと |
 |---|---|---|---|
@@ -899,6 +911,27 @@ decisions 3章の順で行う。
 | 2-8 | 完了 | `renewal`：`4c5c44a` | 16タイプ×12問。旧設問との類似度は最大 0.40。AI 文を3タイプで生成し、禁止語・「MBTI」・「彼」は出なかった。「〜ようです」「かもしれません」のぼかしは残る（gpt-4o-mini の限界） |
 | 2-9 | 完了 | `renewal`：`071127f` | 項目26件と称号4つを差し替え。一覧は `docs/bingo-revisions.md` |
 | 3-1 | 完了 | `renewal`：`481db77` | T1〜T10 と相手診断のテストが合格 |
+| 3-2・3-3 | 完了。行動プロトコルは載せていない（**Q9 は運営者の確認待ち**） | `renewal`：`6838532` | ビルド出力で `/ja/result/{TYPE}` の16件が SSG。INTJ のページに h1「INTJ」と副題「スフィンクス」、本文、canonical がある。`/ja/result/XXXX` が 404。旧 `lib/protocols-*.ts` は 3-22 で削除した（載せると決めたら git の履歴から戻す） |
+| 3-4 | 完了。X への実投稿は運営者の確認待ち | `renewal`：`6838532` | OG 画像16枚が SSG。4-2 の6種の User-Agent で 200・`image/png`・1200×630。`og:image` が www 付きの絶対 URL |
+| 3-5 | 完了 | `renewal`：`32acf61` | `check-redirects` で R1・R4・R8 の例が1回の 301 になり、転送先は 200。R8 の転送先はクエリなし |
+| 3-6 | 完了 | `renewal`：`6838532` | `/ja/result/{TYPE}/share-image` が SSG で 1080×1920 の PNG。INTP の画像で「リヴァイアサン」が1行に収まり、上端 250px と下端 340px に文字がないことを目で確かめた |
+| 3-7 | コードは完了。**4-3 の端末表（実機）が残る** | `renewal`：`6838532`・`32acf61` | スコアあり画像はビルド時に作らず初回生成。型と矛盾するスコア（`INTJ/share-image/61-33-78-50`）は 404。R9 が1回の 301 |
+| 3-8 | コードは完了 | `renewal`：`ba31b97` | `lib/diagnosis/flow.test.mjs`（T1 で決定設問が4問出る、戻る T7、途中経過の直列化と復元）が合格。画面での手操作と、再読み込みからの再開は、統合では確かめ直していない |
+| 3-9 | 完了 | `renewal`：`6838532` | `p` と `from` を Suspense の内側で読む。T8〜T10 の表示はクライアント側の描画で、統合では確かめ直していない |
+| 3-10 | 完了 | `renewal`：`6838532`・`32acf61` | HTML に16枚がアルファベット順。`/ja/select` と `/ja/result?type=XXXX` が1回の 301。絞り込み9通りの枚数は、統合では確かめ直していない |
+| 3-11 | コードは完了 | `renewal`：`ba31b97` | `flow.test.mjs` で判定不能 0・1・2・3以上の分岐が合格 |
+| 3-12 | 完了 | `renewal`：`bf1e9ab` | title・h1・解説の見出し3つが 9-4 の文言と一致（ローカルの本番ビルドの HTML で比較） |
+| 3-13・3-14 | 完了 | `renewal`：`bf1e9ab`・`32acf61` | 16件が SSG で 200。R6 が1回の 301。`lib/bingo/board.test.mjs` が合格。X の共有文に「MBTI」がない |
+| 3-15 | コードは完了。**実機での保存確認が残る** | `renewal`：`bf1e9ab` | `card/ffffff` が 1080×1350 の PNG。`card/1000000` と `card/zzzzzz` が 404 |
+| 3-16 | 完了 | `renewal`：`29b2ea3`・`ab4f229`・`f4ca343`・`32acf61` | 16件が SSG。title・h1 に禁止語と「MBTI」がない（`check-site`）。R5 が1回の 301 |
+| 3-17 | 完了 | `renewal`：`f4ca343` | 段階の境界（24/25、49/50、74/75）と、AI 文の取得に失敗したときの単体テストが合格。description に「MBTI」がない |
+| 3-18 | 完了 | `renewal`：`2978430` | どのページからもリンクされない sitemap の URL が0（`check-site`） |
+| 3-19 | コードは完了。**測定 ID の設定と GA4 の管理画面の操作が残る** | `renewal`：`35f8e77`・`da69be2`・`33ef732`・`e155c2c` | 測定 ID があるビルドだけで GA4 とポリシーの GA4 の節を出す。page_view はクエリを外して送る。共有の `content_type` に `romance` を足した（3-7）。リアルタイム表示での確認は、測定 ID を設定してから |
+| 3-20 | 完了 | `renewal`：`2978430` | 最終更新日は 2026-09-16。連絡先は X のアカウントにした |
+| 3-21 | 完了 | `renewal`：`db214cf`・`2978430` | sitemap が59件で、全 URL が 200（`check-site`）。robots.txt の `Sitemap:` 行が www 付き |
+| 3-22 | 完了 | `renewal`：`be7b618` | ページ・ルート・proxy・scripts・テストから import をたどり、届かないファイルが0。`npm run check` とビルドが通る。npm パッケージ5つを外した（`lucide-react` は使っているので残した） |
+
+3-22 までの統合（2026-09-16）では、ほかに次のことを行った。ページ用 OG 画像のページ名が傾いたカードの枠に触れていたので、1行の最大幅を 380px にした（`e155c2c`）。全ページの検査を `scripts/check-site.mjs` にまとめた（`152b583`）。ローカルの本番ビルドに向けた結果は、`check-redirects` が37件すべて OK、`check-site` が NG なし（警告は ENTJ の適職「起業家」の1件で、N9 で残すと決めた職業名）。トップ・結果（INTJ）・自己診断・ビンゴ（INTJ）を幅390と1280で撮り、崩れはなかった。
 
 AdSense をやめたので、関係する記述と広告枠を 2026-09-15 に削除した（`d1d565f`・`bcd8428`）。旧ステップ 3-23 はなくなり、一括公開は 3-23 に繰り上がった。
 
@@ -1042,7 +1075,7 @@ OpenAI・GitHub・Supabase・Google のキーやトークンは、どのコミ�
 | 3-20 | 運営者情報・免責・素材配布を更新する | 3ページ | 最終更新日、連絡先、素材の出典表記が正しい | 宿題 Q17 |
 | 3-21 | sitemap.xml と robots.txt を更新する | 2ファイル | sitemap が59件で、全 URL が 200 | — |
 | 3-22 | 英語のデータと辞書、`LanguageSwitcher`、置き換え済みの現行データ、使われなくなったライブラリ（`lib/result-cache.ts` など）を削除する | コード | `npm run check` とビルドが通る。削除したファイルを import している箇所がない | — |
-| 3-23 | プレビューで 3-1〜3-22 の確認をまとめてやり直し、ブランチを main にマージして一括公開する | サイト全体 | プレビューで `npm run check`、`check-redirects.mjs`（R10 を除く）、クロール（禁止語、「MBTI」の語、どこからもリンクされないページ）が通る。旧型名と幻獣名が混在していない | — |
+| 3-23 | プレビューで 3-1〜3-22 の確認をまとめてやり直し、ブランチを main にマージして一括公開する | サイト全体 | プレビューで `npm run check`、`check-redirects.mjs`（R10 を除く）、クロール（`check-site.mjs`。禁止語、「MBTI」の語、どこからもリンクされないページ）が通る。旧型名と幻獣名が混在していない | — |
 
 ### 画像の差し替え（幻獣版が完成したとき）
 
