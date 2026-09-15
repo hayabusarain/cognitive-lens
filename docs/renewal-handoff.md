@@ -41,7 +41,7 @@
 |---|---|---|
 | 1 | 転送 R1〜R6・R8・R9 を有効にし、`app/api/og`・`app/api/story-card` を削除。proxy の Bot 判定とレートリミットは `/api/romance-ai` だけに | 済み |
 | 2 | sitemap を59件にし、lastmod をコンテンツの更新日から取る | 済み |
-| 3 | 旧データと使われないパッケージの削除（3-22） | 未着手 |
+| 3 | 旧データ26件・`utils/supabase`・`types/`・`AnalyzingLoader`・`/styleguide`・未使用の svg 5件と、npm パッケージ5つ（html-to-image、recharts、@types/recharts、framer-motion、@supabase/supabase-js）を削除（3-22）。lucide-react は使っているので残した | 済み |
 | 4 | ビンゴのハブの OG 画像の文字幅、`content_type: romance` の記載 | 未着手 |
 | 5 | `scripts/check-site.mjs`（全ページのクロール） | 未着手 |
 | 6 | `npm run check`・ビルド・転送とクロールの検査・スクリーンショット | 未着手 |

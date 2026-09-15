@@ -174,31 +174,13 @@ if (!runs("romance")) {
 } else notes.push("lib/romance/items.ts はまだない");
 
 // ── 5. 適職の職業名（decisions N1・N9） ────────────────────────────
-// 仕様書 5-2 の書き換え表。見下す言い回しだけを中立な職業名に直し、ほかは現行の値のまま
-const CAREER_REWRITES = {
-  "ルーチンワーク・下っ端の事務": "定型業務が中心の事務職",
-  "お堅い公務員・銀行員": "公務員・銀行員",
-  "ノルマ第一のゴリゴリ営業": "ノルマの厳しい営業職",
-  "クレーム処理・体育会系の職場": "クレーム対応・上下関係の厳しい職場",
-  "一日中PCと向き合う孤独な作業": "一日中ひとりで進めるPC作業",
-  "成果主義で蹴落とし合う外資系": "成果主義の強い外資系企業",
-  "ルールがないフリーランス": "決まった手順のないフリーランス",
-  "完全リモート・誰とも話さない仕事": "フルリモートで人と話す機会が少ない仕事",
-  "スピードと効率重視のブラック企業": "スピードと効率を最優先する職場",
-  "データ分析・孤独な作業": "データ分析・ひとりで進める作業",
-};
+// 旧 lib/career-data.ts との照合（仕様書 5-3）は、旧ファイルを消したステップ 3-22 で外した。消す直前（2026-09-16）の照合は通っていた
 if (ONLY && !TYPE_TARGETS.length) {
   // --only romance・bingo のときは職業名を検査しない
 } else if (exists("lib/career-jobs.ts")) {
   const { CAREER_JOBS } = load("lib/career-jobs.ts");
-  if (exists("lib/career-data.ts")) {
-    const { CAREER_DATA } = load("lib/career-data.ts");
-    for (const code of TYPE_CODES) {
-      const expected = { avoid: CAREER_REWRITES[CAREER_DATA[code].hellJob] ?? CAREER_DATA[code].hellJob, fit: CAREER_REWRITES[CAREER_DATA[code].survivalRoute] ?? CAREER_DATA[code].survivalRoute };
-      for (const key of ["avoid", "fit"]) {
-        if (CAREER_JOBS?.[code]?.[key] !== expected[key]) fail("lib/career-jobs.ts", `${code}.${key} が「${expected[key]}」ではない（現行データと書き換え表から計算）`);
-      }
-    }
+  for (const code of TYPE_CODES) {
+    for (const key of ["avoid", "fit"]) if (!CAREER_JOBS?.[code]?.[key]?.trim()) fail("lib/career-jobs.ts", `${code}.${key} が空`);
   }
   // 職業名が呼称とタグラインに使われていないこと
   const names = exists("lib/type-names.ts") ? Object.values(load("lib/type-names.ts").TYPE_NAMES ?? {}) : [];

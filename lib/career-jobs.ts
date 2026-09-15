@@ -3,7 +3,7 @@ import type { TypeCode } from "@/lib/type-codes";
 /**
  * 適職の職業名（decisions N1・N9）
  *
- * どのタイプにどの職業を挙げるかは、現行の lib/career-data.ts（hellJob・survivalRoute）のまま。
+ * どのタイプにどの職業を挙げるかは、リニューアル前の lib/career-data.ts（hellJob・survivalRoute。ステップ 3-22 で削除）のまま。
  * 職業を見下す言い回しだけを、仕様書 5-2 の書き換え表で中立な職業名に直した。
  * 説明文は lib/type-content/{TYPE}.ts の career に書く。禁止語の検査の対象外（職業名のため）。
  */
