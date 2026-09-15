@@ -8,8 +8,8 @@ import type { TypeCode } from "@/lib/type-codes";
  * 回答内容と各軸の割合は送らない。引数の型で、送れる値を型コードと決まった文字列だけに絞っている。
  */
 
-/** 共有・保存の対象（content_type） */
-export type ShareContentType = "result" | "bingo";
+/** 共有・保存の対象（content_type）。romance は脈あり度チェックの共有で、item_id は相手のタイプ（脈あり度の数字は送らない） */
+export type ShareContentType = "result" | "bingo" | "romance";
 
 /** 画像保存の経路（ShareImageButton の分岐） */
 export type SaveImageMethod = "share_sheet" | "download" | "long_press";
