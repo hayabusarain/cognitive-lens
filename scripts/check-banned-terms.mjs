@@ -23,8 +23,8 @@ export const BANNED = {
   "現行サイトのグループ名": ["分析系", "理想主義系", "管理系", "探索系", "Idealists"],
   "Keirsey の型名・気質名": ["Mastermind", "Inventor", "Fieldmarshal", "Healer", "Counselor", "Champion", "Teacher", "Inspector", "Protector", "Supervisor", "Provider", "Crafter", "Composer", "Promoter", "Performer", "Rational", "Idealist", "Guardian", "Artisan"],
   "誇張語": ["最強", "天才", "神", "完璧"],
-  // トーンガイド（docs/tone-guide.md）で決めた流行語は、ステップ 2-1 でここに足す
-  "流行語": [],
+  // トーンガイド（docs/tone-guide.md 5-1）の流行語・若者言葉
+  "流行語": ["ヤバい", "ヤバ", "ガチ", "ガチ勢", "マジ", "エモい", "エモ", "沼る", "沼", "蛙化", "ぴえん", "それな", "草", "陰キャ", "陽キャ", "メンヘラ", "無理ゲー", "詰んだ", "秒で", "爆速", "エグい", "ワンチャン", "知らんけど", "神対応", "神機能", "チート", "デフォ", "アプデ", "裏アカ", "量産型", "限界突破"],
 };
 const ALL_TERMS = Object.values(BANNED).flat();
 const categoryOf = (term) => Object.entries(BANNED).find(([, list]) => list.includes(term))?.[0] ?? "表記";

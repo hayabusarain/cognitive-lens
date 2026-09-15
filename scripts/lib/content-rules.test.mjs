@@ -24,6 +24,7 @@ test("禁止語：英字は単語単位、1字の漢字は熟語を除き、ほ�
   assert.deepEqual(findBannedTerms("精神的に強い", ["神"]), []);
   assert.deepEqual(findBannedTerms("建築家タイプ", ["建築家"]), ["建築家"]);
   assert.deepEqual(findBannedTerms("INTJ-A の人", []), ["-A・-T の表記"]);
+  assert.deepEqual(findBannedTerms("「エモい」が好き", ["エモい", "エモ"]), ["エモい"]);
 });
 
 test("文字列を場所つきで取り出す", () => {

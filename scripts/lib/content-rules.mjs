@@ -72,5 +72,6 @@ export function findBannedTerms(text, terms) {
   }
   // 16Personalities の「INTJ-A」「INTJ-T」の表記
   if (/\b[EI][SN][TF][JP]-[AT]\b/.test(text)) hits.push("-A・-T の表記");
-  return hits;
+  // 「エモい」と「エモ」のように、長い語に含まれる短い語の当たりは省く
+  return hits.filter((term) => !hits.some((other) => other !== term && other.includes(term)));
 }
