@@ -40,7 +40,7 @@
 | # | 作業 | 状態 |
 |---|---|---|
 | 1 | 転送 R1〜R6・R8・R9 を有効にし、`app/api/og`・`app/api/story-card` を削除。proxy の Bot 判定とレートリミットは `/api/romance-ai` だけに | 済み |
-| 2 | sitemap を59件にする | 未着手 |
+| 2 | sitemap を59件にし、lastmod をコンテンツの更新日から取る | 済み |
 | 3 | 旧データと使われないパッケージの削除（3-22） | 未着手 |
 | 4 | ビンゴのハブの OG 画像の文字幅、`content_type: romance` の記載 | 未着手 |
 | 5 | `scripts/check-site.mjs`（全ページのクロール） | 未着手 |
