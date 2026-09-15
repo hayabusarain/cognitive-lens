@@ -7,6 +7,7 @@ import path from "node:path";
 import { loadTs } from "./lib/ts-loader.mjs";
 import { LIMITS, length, checkProse, collectStrings } from "./lib/content-rules.mjs";
 import { collectCharset } from "./lib/charset.mjs";
+import { contrastRatio, hue, hueArc, hueDistance } from "./lib/color.mjs";
 
 const root = process.cwd();
 const exists = (f) => fs.existsSync(path.join(root, f));
@@ -130,6 +131,32 @@ if (exists("assets/fonts/charset.txt")) {
   const missing = [...collectCharset(root)].filter((ch) => !included.has(ch));
   if (missing.length) fail("assets/fonts", `サブセットにない文字が ${missing.length} 字ある（${missing.slice(0, 20).join("")}…）。node scripts/build-font-subset.mjs を実行してコミットする`);
 } else notes.push("assets/fonts/charset.txt はまだない");
+
+// ── 8. タイプ色（decisions Q20、仕様書ステップ 2-3） ─────────────────────
+if (exists("lib/type-base.ts") && exists("lib/theme.ts")) {
+  const { TYPE_BASE } = load("lib/type-base.ts");
+  const { THEME } = load("lib/theme.ts");
+  for (const code of TYPE_CODES) {
+    const color = TYPE_BASE[code]?.color;
+    if (!/^#[0-9A-Fa-f]{6}$/.test(color ?? "")) { fail("lib/type-base.ts", `${code} の色が #RRGGBB ではない`); continue; }
+    for (const [name, bg] of [["background", THEME.background], ["surface", THEME.surface]]) {
+      const ratio = contrastRatio(color, bg);
+      if (ratio < 4.5) fail("lib/type-base.ts", `${code} の色 ${color} と ${name} のコントラスト比が ${ratio.toFixed(2)}（4.5 以上）`);
+    }
+  }
+  // 16Personalities の4グループ配色を再現しないよう、同じグループの4色を色相環の90°以内に固めない
+  const groupOf = (code) => (code[1] === "N" ? "N" + code[2] : "S" + code[3]);
+  for (const group of ["NT", "NF", "SJ", "SP"]) {
+    const members = TYPE_CODES.filter((code) => groupOf(code) === group);
+    const arc = hueArc(members.map((code) => hue(TYPE_BASE[code].color)));
+    if (arc <= 90) fail("lib/type-base.ts", `${group} の4色が色相環の ${arc.toFixed(0)}° に固まっている（90° を超えて散らす）`);
+  }
+  const hues = TYPE_CODES.map((code) => [code, hue(TYPE_BASE[code].color)]);
+  for (let i = 0; i < hues.length; i++) for (let j = i + 1; j < hues.length; j++) {
+    if (TYPE_BASE[hues[i][0]].color.toLowerCase() === TYPE_BASE[hues[j][0]].color.toLowerCase()) fail("lib/type-base.ts", `${hues[i][0]} と ${hues[j][0]} が同じ色`);
+    else if (hueDistance(hues[i][1], hues[j][1]) < 10) notes.push(`タイプ色：${hues[i][0]} と ${hues[j][0]} の色相差が ${hueDistance(hues[i][1], hues[j][1]).toFixed(0)}°（見分けにくい）`);
+  }
+} else notes.push("lib/type-base.ts はまだない");
 
 // ── 結果 ────────────────────────────────────────────────────────
 for (const n of notes) console.log(`・${n}`);
