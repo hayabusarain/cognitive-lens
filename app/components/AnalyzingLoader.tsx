@@ -120,18 +120,6 @@ export default function AnalyzingLoader({
         </div>
       </div>
 
-      {/* Ad placeholder — center of screen, highest visual attention zone */}
-      <div
-        style={{ width: 300, height: 250 }}
-        className="relative border border-black/10 rounded flex items-center justify-center flex-shrink-0"
-      >
-        <span className="absolute top-2 right-2.5 text-[9px] font-medium text-slate-300 tracking-widest uppercase">
-          Sponsored
-        </span>
-        {/* AdSense injection point */}
-        <div id="adsense-loader-slot" className="w-full h-full" />
-      </div>
-
       {/* Completed steps checklist */}
       <div className="w-full max-w-sm space-y-2">
         {COMPLETED_STEPS.map((step, i) => {

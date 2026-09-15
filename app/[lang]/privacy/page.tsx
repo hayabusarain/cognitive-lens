@@ -6,7 +6,7 @@ export const metadata = {
   description: "CognitiveLens Privacy Policy, Cookie Usage, and Disclaimer",
 };
 
-const LAST_UPDATED = "2025-01-01";
+const LAST_UPDATED = "2026-09-15";
 
 export default async function PrivacyPage({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = await params;
@@ -74,8 +74,8 @@ export default async function PrivacyPage({ params }: { params: Promise<{ lang: 
               <li>
                 <strong>{lang === "en" ? "Cookies & Local Storage: " : "Cookie・ローカルストレージ："}</strong>
                 {lang === "en"
-                  ? "Records of cookie consent and user settings (such as theme preferences)."
-                  : "Cookie同意の記録、テーマ設定等のユーザー設定の保存。"}
+                  ? "User settings (such as theme preferences)."
+                  : "テーマ設定等のユーザー設定の保存。"}
               </li>
             </ul>
           </section>
@@ -91,9 +91,8 @@ export default async function PrivacyPage({ params }: { params: Promise<{ lang: 
                 : "当サービスは、以下の目的でCookieおよびこれに類する技術を使用します。"}
             </p>
             <ul className="mt-3 space-y-2 list-disc list-inside">
-              <li><strong>{lang === "en" ? "Essential Cookies: " : "必須Cookie："}</strong>{lang === "en" ? "Required for core service functions (e.g., saving cookie consent states)." : "サービスの基本機能（Cookie同意状態の保存等）に必要"}</li>
+              <li><strong>{lang === "en" ? "Essential Cookies: " : "必須Cookie："}</strong>{lang === "en" ? "Required for core service functions (e.g., saving user settings)." : "サービスの基本機能（ユーザー設定の保存等）に必要"}</li>
               <li><strong>{lang === "en" ? "Analytics Cookies: " : "分析Cookie："}</strong>{lang === "en" ? "Used for access analysis to improve service quality." : "サービス品質の向上のためのアクセス解析"}</li>
-              <li><strong>{lang === "en" ? "Advertising Cookies: " : "広告Cookie："}</strong>{lang === "en" ? "Used by Google AdSense to serve personalized ads." : "Google AdSenseによるパーソナライズ広告の配信"}</li>
             </ul>
             <p className="mt-3">
               {lang === "en"
@@ -105,40 +104,7 @@ export default async function PrivacyPage({ params }: { params: Promise<{ lang: 
           {/* 4 */}
           <section>
             <h2 className="text-base font-bold mb-3 pb-2 border-b" style={{ color: "#1e293b", borderColor: "rgba(0,0,0,0.06)" }}>
-              {lang === "en" ? "4. About Google AdSense" : "4. Google AdSenseについて"}
-            </h2>
-            <p>
-              {lang === "en"
-                ? "This service uses Google AdSense, an advertising service provided by Google LLC. Google AdSense uses cookies to display personalized ads based on users' interests."
-                : "当サービスは、Google LLC が提供する広告配信サービス「Google AdSense」を使用しています。Google AdSense は、ユーザーの興味・関心に基づいたパーソナライズ広告を表示するためにCookieを使用します。"}
-            </p>
-            <p className="mt-3">
-              {lang === "en" ? "For more details on how Google uses data, please refer to " : "Google によるデータの使用方法については、"}
-              <a
-                href="https://policies.google.com/technologies/ads"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-teal-500 hover:text-teal-600 underline underline-offset-2"
-              >
-                {lang === "en" ? "Google's Policies and Terms" : "Google のポリシーと規約"}
-              </a>
-              {lang === "en" ? ". To opt out of personalized advertising, you can visit the " : "をご確認ください。パーソナライズ広告の無効化については、"}
-              <a
-                href="https://www.google.com/settings/ads"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-teal-500 hover:text-teal-600 underline underline-offset-2"
-              >
-                {lang === "en" ? "Ad Settings" : "広告設定"}
-              </a>
-              {lang === "en" ? " page." : "から行うことができます。"}
-            </p>
-          </section>
-
-          {/* 5 */}
-          <section>
-            <h2 className="text-base font-bold mb-3 pb-2 border-b" style={{ color: "#1e293b", borderColor: "rgba(0,0,0,0.06)" }}>
-              {lang === "en" ? "5. AI-Generated Content" : "5. AIによるコンテンツ生成"}
+              {lang === "en" ? "4. AI-Generated Content" : "4. AIによるコンテンツ生成"}
             </h2>
             <p>
               {lang === "en"
@@ -161,10 +127,10 @@ export default async function PrivacyPage({ params }: { params: Promise<{ lang: 
             </p>
           </section>
 
-          {/* 6 */}
+          {/* 5 */}
           <section>
             <h2 className="text-base font-bold mb-3 pb-2 border-b" style={{ color: "#1e293b", borderColor: "rgba(0,0,0,0.06)" }}>
-              {lang === "en" ? "6. Third-Party Information Sharing" : "6. 情報の第三者提供"}
+              {lang === "en" ? "5. Third-Party Information Sharing" : "5. 情報の第三者提供"}
             </h2>
             <p>
               {lang === "en"
@@ -178,10 +144,10 @@ export default async function PrivacyPage({ params }: { params: Promise<{ lang: 
             </ul>
           </section>
 
-          {/* 7 */}
+          {/* 6 */}
           <section>
             <h2 className="text-base font-bold mb-3 pb-2 border-b" style={{ color: "#1e293b", borderColor: "rgba(0,0,0,0.06)" }}>
-              {lang === "en" ? "7. Use by Minors" : "7. 未成年者の利用"}
+              {lang === "en" ? "6. Use by Minors" : "6. 未成年者の利用"}
             </h2>
             <p>
               {lang === "en"
@@ -190,10 +156,10 @@ export default async function PrivacyPage({ params }: { params: Promise<{ lang: 
             </p>
           </section>
 
-          {/* 8 */}
+          {/* 7 */}
           <section>
             <h2 className="text-base font-bold mb-3 pb-2 border-b" style={{ color: "#1e293b", borderColor: "rgba(0,0,0,0.06)" }}>
-              {lang === "en" ? "8. Changes to the Privacy Policy" : "8. プライバシーポリシーの変更"}
+              {lang === "en" ? "7. Changes to the Privacy Policy" : "7. プライバシーポリシーの変更"}
             </h2>
             <p>
               {lang === "en"
@@ -202,10 +168,10 @@ export default async function PrivacyPage({ params }: { params: Promise<{ lang: 
             </p>
           </section>
 
-          {/* 9 */}
+          {/* 8 */}
           <section>
             <h2 className="text-base font-bold mb-3 pb-2 border-b" style={{ color: "#1e293b", borderColor: "rgba(0,0,0,0.06)" }}>
-              {lang === "en" ? "9. Contact Us" : "9. お問い合わせ"}
+              {lang === "en" ? "8. Contact Us" : "8. お問い合わせ"}
             </h2>
             <p>
               {lang === "en"

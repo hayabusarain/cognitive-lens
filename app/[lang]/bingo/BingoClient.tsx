@@ -125,7 +125,7 @@ export default function BingoClient({ lang }: { lang: string }) {
           ))}
         </div>
 
-        {/* SEO & Context Article Block (for Google AdSense / Crawlers) */}
+        {/* SEO & Context Article Block (for Crawlers) */}
         <article className="mt-16 max-w-2xl text-left space-y-8 bg-slate-900/50 p-8 rounded-3xl border border-slate-800">
           <div className="space-y-4">
             <h3 className="text-lg font-extrabold text-white flex items-center gap-2">
@@ -323,7 +323,7 @@ export default function BingoClient({ lang }: { lang: string }) {
         </p>
       </div>
 
-      {/* SEO & Context Article Block (for Google AdSense / Crawlers) */}
+      {/* SEO & Context Article Block (for Crawlers) */}
       <article className="mt-24 max-w-2xl text-left space-y-8 bg-slate-900/50 p-8 rounded-3xl border border-slate-800">
         <div className="space-y-4">
           <h3 className="text-lg font-extrabold text-white flex items-center gap-2">

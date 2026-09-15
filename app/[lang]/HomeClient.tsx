@@ -3,7 +3,6 @@
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, Sparkles, Languages, FlaskConical, Zap, Shield, BarChart2, Video, Heart, BookOpen } from "lucide-react";
-import AdSenseUnit from "@/app/components/ads/AdSenseUnit";
 import { useEffect, useState } from "react";
 import LanguageSwitcher from "@/app/components/LanguageSwitcher";
 
@@ -149,11 +148,6 @@ export default function HomeClient({ dict, lang }: { dict: any, lang: string }) 
                 </div>
               </Link>
 
-              {/* AdSense Space (Mid List) */}
-              <div className="w-full flex items-center justify-center overflow-hidden">
-                <AdSenseUnit id="adsense-home-mid" slotId="1111111111" />
-              </div>
-
 
               {/* 4. ターゲット攻略判定 */}
               <Link
@@ -200,12 +194,7 @@ export default function HomeClient({ dict, lang }: { dict: any, lang: string }) 
 
 
 
-            {/* AdSense: Bottom */}
-            <div className="mt-6">
-              <AdSenseUnit id="adsense-bottom" slotId="2222222222" />
-            </div>
-
-            {/* SEO & Context Article Block (for Google AdSense / Crawlers) */}
+            {/* SEO & Context Article Block (for Crawlers) */}
             <article className="mt-16 text-left space-y-8 bg-white/60 backdrop-blur-md p-8 rounded-3xl border border-slate-200/60 shadow-sm">
               <div className="space-y-4">
                 <h2 className="text-xl font-extrabold text-slate-800 tracking-tight flex items-center gap-2">

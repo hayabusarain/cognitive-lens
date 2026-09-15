@@ -3,7 +3,6 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, Heart, Zap, ShieldAlert, BookOpen } from "lucide-react";
-import AdSenseUnit from "@/app/components/ads/AdSenseUnit";
 
 // 1. SSGのためのパラメータ生成
 export async function generateStaticParams() {
@@ -78,11 +77,6 @@ export default async function ArticlePage({ params }: { params: Promise<{ lang: 
               </div>
               <p className="text-[15px]">{article.basic}</p>
             </section>
-
-            {/* AdSense In-Article */}
-            <div className="my-8 w-full flex flex-col items-center justify-center overflow-hidden">
-              <AdSenseUnit id="adsense-article-mid" slotId="8888888888" />
-            </div>
 
             <section>
               <div className="flex items-center gap-3 mb-4">
@@ -195,11 +189,6 @@ export default async function ArticlePage({ params }: { params: Promise<{ lang: 
             {/* ──────────────────────────────────────────────── */}
           </div>
         </article>
-
-        {/* AdSense Space (Bottom) */}
-        <div className="mt-8 w-full flex flex-col items-center justify-center overflow-hidden">
-          <AdSenseUnit id="adsense-article-bottom" slotId="3333333333" />
-        </div>
 
         <div className="mt-12 text-center">
           <Link href={`/${lang}/result?type=${typeKey}`} className="inline-block px-8 py-4 bg-slate-800 text-white font-bold rounded-full hover:bg-slate-700 transition-transform hover:scale-105 shadow-xl">

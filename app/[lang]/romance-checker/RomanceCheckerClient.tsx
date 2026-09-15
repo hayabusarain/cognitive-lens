@@ -5,7 +5,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, Heart, Sparkles, BrainCircuit, X, Check } from "lucide-react";
 import Link from "next/link";
 import { getRomanceData, MBTIType } from "@/lib/romance-data";
-import AdSenseUnit from "@/app/components/ads/AdSenseUnit";
 
 const ALL_TYPES: MBTIType[] = [
   "INTJ", "INTP", "ENTJ", "ENTP",
@@ -233,11 +232,6 @@ export default function RomanceCheckerClient({ lang }: { lang: string }) {
             </div>
           </div>
 
-          {/* AdSense Space */}
-          <div className="mb-8 w-full flex items-center justify-center overflow-hidden">
-            <AdSenseUnit id="adsense-romance-result" slotId="9999999999" />
-          </div>
-
           <div className="mt-8 text-center">
             <Link 
               href={`/${lang}/article/${targetMBTI}`}
@@ -377,12 +371,7 @@ export default function RomanceCheckerClient({ lang }: { lang: string }) {
           </Link>
         </div>
 
-        {/* AdSense Space */}
-        <div className="mb-8 w-full flex items-center justify-center overflow-hidden">
-          <AdSenseUnit id="adsense-romance-select" slotId="8888888888" />
-        </div>
-
-        {/* SEO & Context Article Block (for Google AdSense / Crawlers) */}
+        {/* SEO & Context Article Block (for Crawlers) */}
         <article className="mt-12 text-left space-y-8 bg-white/50 p-6 sm:p-8 rounded-3xl border border-slate-200">
           <div className="space-y-3">
             <h2 className="text-lg font-extrabold text-slate-800 flex items-center gap-2">

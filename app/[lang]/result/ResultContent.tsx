@@ -23,7 +23,6 @@ import { PROTOCOLS_EN } from "@/lib/protocols-en";
 import { getDefaultType } from "@/lib/data-provider";
 import { getTypeInfo, getCompatibility } from "@/lib/data-provider";
 import { STATIC_PROFILES_JA, STATIC_PROFILES_EN } from "@/lib/static-profiles";
-import AdSenseUnit from "@/app/components/ads/AdSenseUnit";
 
 // ── Chart colors (modern fixed) ───────────────────────────────
 const CC = {
@@ -682,9 +681,6 @@ export default function ResultContent({ lang = "ja" }: { lang?: string }) {
 
         {/* Story Share */}
         <StoryShareCard typeKey={typeKey} lang={lang} />
-
-        {/* 広告枠1 */}
-        <AdSenseUnit id="adsense-slot-1" slotId="6666666666" />
 
         {/* AI Profiling */}
         <AiProfileSection typeKey={typeKey} lang={lang} />

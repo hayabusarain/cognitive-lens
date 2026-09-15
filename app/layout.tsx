@@ -1,10 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import CookieConsentBanner from "@/app/components/CookieConsentBanner";
 import Footer from "@/app/components/layout/Footer";
 import { Analytics } from "@vercel/analytics/react";
-
-import Script from "next/script";
 
 export const metadata: Metadata = {
   metadataBase: new URL(
@@ -20,18 +17,10 @@ export default function RootLayout({
   return (
     <html lang="ja">
       <head>
-        <meta name="google-adsense-account" content="ca-pub-7201202773518258" />
         <meta name="google-site-verification" content="02VLoI4MqeIcdR9cY5RqXokNW1jGqKaevkoERxU5yXU" />
       </head>
       <body className="min-h-screen antialiased">
-        {/* AdSense審査用スクリプト: beforeInteractiveでDOM構築前に最速ロード */}
-        <Script
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7201202773518258"
-          crossOrigin="anonymous"
-          strategy="beforeInteractive"
-        />
         {children}
-        <CookieConsentBanner />
         <Footer />
         <Analytics />
       </body>
