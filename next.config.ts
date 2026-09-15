@@ -12,14 +12,6 @@ const nextConfig: NextConfig = {
   // Turbopack を明示的に有効化（Next.js 16 デフォルト）
   turbopack: {},
 
-  // Vercelでのビルドブロックを防ぐためにLintとTSのエラーを無視
-  // @ts-ignore
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-  typescript: {
-    ignoreBuildErrors: true,
-  },
 };
 
 export default nextConfig;

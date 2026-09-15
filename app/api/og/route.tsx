@@ -5,10 +5,11 @@ import { getTypeInfo, getDefaultType } from "@/lib/data-provider";
 export const runtime = "edge";
 
 export async function GET(request: NextRequest) {
+  // catch の中のエラー文でも使うので、try の外で読む
+  const { searchParams } = new URL(request.url);
+  const lang = searchParams.get("lang") ?? "ja";
   try {
-    const { searchParams } = new URL(request.url);
     const typeParam = searchParams.get("type") ?? "INTP";
-    const lang = searchParams.get("lang") ?? "ja";
     const TYPE_INFO_MAP = getTypeInfo(lang);
     const typeKey = typeParam.toUpperCase().slice(0, 4);
     const info = TYPE_INFO_MAP[typeKey] ?? getDefaultType(lang);
