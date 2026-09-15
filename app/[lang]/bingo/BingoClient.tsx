@@ -291,7 +291,7 @@ export default function BingoClient({ lang }: { lang: string }) {
             lang === "en"
               ? `I got ${bingoCount} BINGO on the [Biased ${selectedMBTI} Bingo] and earned the title '${currentTitle}'! 🎯\n\nCheck out your own stereotypes on CognitiveLens, the Gen-Z MBTI analytics platform!\n\n#CognitiveLens #MBTIBingo #${selectedMBTI}\n`
               : `私は【偏見だらけの${selectedMBTI}ビンゴ】で ${bingoCount} BINGO 達成し、称号『${currentTitle}』を獲得しました！🎯\n\nZ世代向けの辛口MBTI診断サイト『CognitiveLens』で、あなたも自分の「あるある」をチェックしてみよう！\n\n#CognitiveLens #MBTI #MBTIビンゴ #${selectedMBTI}\n`
-          )}&url=${encodeURIComponent(`https://cognitivelens.com/${lang}/bingo`)}`}
+          )}&url=${encodeURIComponent(`https://www.cognitive-lens.com/${lang}/bingo`)}`}
           target="_blank"
           rel="noopener noreferrer"
           className="w-full py-4 bg-black border border-slate-700 rounded-xl font-bold text-sm shadow-lg flex items-center justify-center gap-2 active:scale-[0.98] transition-transform hover:bg-slate-900"
