@@ -4,7 +4,7 @@ import { TYPE_INFO } from "@/lib/type-info";
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://cognitive-lens.com";
 
-  const languages = ["ja", "en"];
+  const languages = ["ja"];
   const mbtiTypes = Object.keys(TYPE_INFO);
 
   const sitemapEntries: MetadataRoute.Sitemap = [];
@@ -17,7 +17,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/disclaimer",
     "/downloads",
     "/test",
-    "/translate",
     "/target-diagnosis",
     "/articles",
     "/romance-checker",

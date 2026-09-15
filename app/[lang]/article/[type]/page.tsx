@@ -4,19 +4,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, Heart, Zap, ShieldAlert, BookOpen } from "lucide-react";
 
-// 1. SSGのためのパラメータ生成
+// 1. SSGのためのパラメータ生成（lang は親の app/[lang]/layout.tsx が ja だけを返す）
 export async function generateStaticParams() {
   const { ARTICLE_DATA } = await import("@/lib/article-data");
-  const types = Object.keys(ARTICLE_DATA);
-  const params: { lang: string; type: string }[] = [];
-  
-  for (const lang of ["ja", "en"]) {
-    for (const type of types) {
-      params.push({ lang, type });
-    }
-  }
-  
-  return params;
+  return Object.keys(ARTICLE_DATA).map((type) => ({ type }));
 }
 
 // 2. SEOメタデータの生成

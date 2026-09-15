@@ -5,6 +5,7 @@
  * エクスポート関数名も `middleware` → `proxy` に変更。
  *
  * 役割:
+ *   0. 旧 URL の 301 転送（全ページ宛て。判定は lib/redirects.ts）
  *   1. IPレートリミット（/api/* 宛て: 1分間に10リクエスト上限）
  *   2. Bot User-Agent の遮断（/api/* 宛て）
  *   画像を返す GET の API（IMAGE_ROUTES）は、どちらの対象からも外す。
@@ -18,6 +19,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getClientIp } from "@/lib/get-client-ip";
+import { resolveRedirect } from "@/lib/redirects";
 
 // ── レートリミット設定 ──────────────────────────────────────────
 const WINDOW_MS = 60 * 1000; // 1分
@@ -99,6 +101,12 @@ const IMAGE_ROUTES = new Set(["/api/og", "/api/story-card"]);
 export function proxy(request: NextRequest): NextResponse {
   const { pathname } = request.nextUrl;
 
+  // ⓪ 旧 URL の 301 転送（仕様書 docs/redesign-spec.md 1-3）
+  const redirectTo = resolveRedirect(new URL(request.nextUrl.href));
+  if (redirectTo) {
+    return NextResponse.redirect(redirectTo, 301);
+  }
+
   // API ルート以外と、画像を返す GET の API はスルー
   if (!pathname.startsWith("/api/")) {
     return NextResponse.next();
@@ -123,7 +131,7 @@ export function proxy(request: NextRequest): NextResponse {
     );
   }
 
-  // ② IPレートリミット（偽造対策: cf-connecting-ip → x-real-ip → xff末尾 の優先順位）
+  // ② IPレートリミット（IP は Vercel が上書きする x-real-ip → xff 末尾の順で取る）
   const ip = getClientIp(request.headers);
 
   const { allowed, retryAfter } = checkRateLimit(ip);
@@ -155,6 +163,7 @@ export function proxy(request: NextRequest): NextResponse {
 }
 
 // Proxy を適用するパスのマッチャー
+// 転送の判定のため全ページに適用し、Next.js の静的ファイルと拡張子付きのファイルは除く
 export const config = {
-  matcher: ["/api/:path*"],
+  matcher: ["/((?!_next/static|_next/image|.*\\..*).*)"],
 };

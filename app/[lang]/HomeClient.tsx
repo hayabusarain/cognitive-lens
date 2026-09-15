@@ -4,7 +4,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, Sparkles, Languages, FlaskConical, Zap, Shield, BarChart2, Video, Heart, BookOpen } from "lucide-react";
 import { useEffect, useState } from "react";
-import LanguageSwitcher from "@/app/components/LanguageSwitcher";
 
 export default function HomeClient({ dict, lang }: { dict: any, lang: string }) {
   return (
@@ -21,9 +20,6 @@ export default function HomeClient({ dict, lang }: { dict: any, lang: string }) 
             cognitive
             <span style={{ color: "#00e5ff", textShadow: "0 0 12px rgba(0,229,255,0.3)" }}>lens</span>
           </span>
-          <div className="flex items-center gap-3">
-            <LanguageSwitcher />
-          </div>
         </nav>
 
         {/* Hero */}

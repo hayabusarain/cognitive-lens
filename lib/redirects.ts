@@ -17,12 +17,12 @@ export const ENABLED_RULES: Readonly<Record<RuleId, boolean>> = {
   R4: false, // /ja/result/{type} の大文字化（ステップ 3-5）
   R5: false, // /ja/article/{type} の大文字化（ステップ 3-16）
   R6: false, // /ja/bingo/{type} の大文字化（ステップ 3-13）
-  R7: false, // 言語なしの既知パス → /ja/…（ステップ 1-1）
+  R7: true, // 言語なしの既知パス → /ja/…（ステップ 1-1）
   R8: false, // /api/og → OG 画像（ステップ 3-5）
   R9: false, // /api/story-card → 9:16 画像（ステップ 3-7）
   R10: false, // www なし → www（ステップ 1-4）
-  R11: false, // /en・/ko → /ja（ステップ 1-1）
-  R12: false, // /ja/skip-path・/ja/chat-gen → /ja/test（ステップ 1-1）
+  R11: true, // /en・/ko → /ja（ステップ 1-1）
+  R12: true, // /ja/skip-path・/ja/chat-gen → /ja/test（ステップ 1-1）
 };
 
 export const CANONICAL_HOST = "www.cognitive-lens.com";
