@@ -19,7 +19,7 @@ const PATHS = [
   "/ja", "/ja/test", "/ja/result", "/ja/result?type=intj&a=EIIE", "/ja/result?type=XXXX", "/ja/select",
   "/ja/result/intj", "/ja/article/Enfp", "/ja/article/INTJ", "/ja/bingo/istp",
   "/test", "/select", "/result?type=ENTP", "/privacy", "/article/intj",
-  "/api/og?type=intj&lang=en", "/api/story-card?type=INTJ",
+  "/api/og?type=intj&lang=en", "/api/og?type=zzz", "/api/story-card?type=INTJ", "/api/story-card", "/ja/result/intj/share-image",
   "/en", "/en/test", "/en/result?type=entp", "/en/select", "/en/chat-gen", "/en/article/intj", "/ko", "/ko/test",
   "/ja/skip-path", "/ja/chat-gen", "/skip-path",
   "/foo", "/translate", "/en/foo", "/api/romance-ai",

@@ -11,15 +11,15 @@ export type RuleId = "R1" | "R2" | "R3" | "R4" | "R5" | "R6" | "R7" | "R8" | "R9
 
 /** 規則ごとの有効・無効。仕様書 8章のステップで順に true にする */
 export const ENABLED_RULES: Readonly<Record<RuleId, boolean>> = {
-  R1: false, // /ja/result?type=有効 → /ja/result/{TYPE}（ステップ 3-5）
-  R2: false, // /ja/result?type=無効 → /ja/result（ステップ 3-10）
-  R3: false, // /ja/select → /ja/result（ステップ 3-10）
-  R4: false, // /ja/result/{type} の大文字化（ステップ 3-5）
-  R5: false, // /ja/article/{type} の大文字化（ステップ 3-16）
-  R6: false, // /ja/bingo/{type} の大文字化（ステップ 3-13）
+  R1: true, // /ja/result?type=有効 → /ja/result/{TYPE}（ステップ 3-5）
+  R2: true, // /ja/result?type=無効 → /ja/result（ステップ 3-10）
+  R3: true, // /ja/select → /ja/result（ステップ 3-10）
+  R4: true, // /ja/result/{type} の大文字化（ステップ 3-5）
+  R5: true, // /ja/article/{type} の大文字化（ステップ 3-16）
+  R6: true, // /ja/bingo/{type} の大文字化（ステップ 3-13）
   R7: true, // 言語なしの既知パス → /ja/…（ステップ 1-1）
-  R8: false, // /api/og → OG 画像（ステップ 3-5）
-  R9: false, // /api/story-card → 9:16 画像（ステップ 3-7）
+  R8: true, // /api/og → OG 画像（ステップ 3-5）
+  R9: true, // /api/story-card → 9:16 画像（ステップ 3-7）
   R10: true, // www なし → www（ステップ 1-4）
   R11: true, // /en・/ko → /ja（ステップ 1-1）
   R12: true, // /ja/skip-path・/ja/chat-gen → /ja/test（ステップ 1-1）
