@@ -403,7 +403,7 @@ OG 画像とインスタ用カード（`next/og`）は `fontFamily: "sans-serif"
 | 生成 AI | OpenAI API（gpt-4o-mini） | 3-6 の AI 機能 |
 | データベース | Supabase | 認証なしの投入 API からのみ使用。画面からは読んでいない |
 | SNS | X（`twitter.com/intent/tweet`） | 結果とビンゴの共有 |
-| リンク | `x.com/CognitiveLens_`、`policies.google.com`、`google.com/settings/ads`、`openai.com/policies/privacy-policy` | 運営者情報、規約 |
+| リンク | `x.com/CognitiveLens_`、`openai.com/policies/privacy-policy` | 運営者情報、規約 |
 | 連絡先 | `contact@cognitivelens.com` | 運営者情報のメール |
 
 連絡先メールのドメインはサイトと違い、ハイフンがない `cognitivelens.com` になっている。このドメインは Vercel ではない別のサーバーを指し、アクセスすると `/lander` へ転送されるだけのページが出る。メールは Microsoft 365 に配送される設定だった（確認済み）。持ち主が運営者本人かどうかは未確認。
