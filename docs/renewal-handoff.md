@@ -44,7 +44,7 @@
 | 3 | 旧データ26件・`utils/supabase`・`types/`・`AnalyzingLoader`・`/styleguide`・未使用の svg 5件と、npm パッケージ5つ（html-to-image、recharts、@types/recharts、framer-motion、@supabase/supabase-js）を削除（3-22）。lucide-react は使っているので残した | 済み |
 | 4 | ページ用 OG 画像のページ名の最大幅を 380px に（ビンゴのハブと16タイプ一覧の文字がカードに触れていた）。`content_type: romance` を仕様書 3-7 とプライバシーポリシーに記載 | 済み |
 | 5 | `scripts/check-site.mjs` と `npm run check:site -- <URL>` を追加。禁止語の一覧は `scripts/lib/banned-terms.mjs` に切り出して共有 | 済み |
-| 6 | `npm run check`・ビルド・転送とクロールの検査・スクリーンショット | 未着手 |
+| 6 | `npm run check`（61テスト合格）、`npm run build`（結果・ビンゴ・コラム各16ページと OG 画像が SSG）、ローカルの本番ビルドに `check:redirects`（37件 OK）と `check:site`（NG なし）、トップ・結果・自己診断・ビンゴを幅390と1280で撮影して崩れなし | 済み（直すものはなかった） |
 | 7 | 仕様書 8章の進捗、このメモ、作業ツリーの削除 | 未着手 |
 | 8 | Vercel のプレビューの確認 | 未着手 |
 
