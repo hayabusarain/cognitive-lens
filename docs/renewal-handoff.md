@@ -21,7 +21,9 @@
 
 ## プレビュー
 
-Vercel のプレビューには Vercel Authentication（ログインの保護）がかかっていて、ログインしていない自動の検査からは見られない。`check:site` をプレビューに向けるには、Vercel の管理画面で「Protection Bypass for Automation」の値を発行し、次のように実行する。
+統合を終えたコミット `b46e6d0` のプレビューは、ビルドが成功している（GitHub の commit status が success、2026-09-16）。URL は https://cognitive-lens-pwabhur9n-hayabusarains-projects.vercel.app で、この後のコミットでは URL が変わる。
+
+プレビューには Vercel Authentication（ログインの保護）がかかっていて、ログインしていない自動の検査からは見られない。統合の作業で `check:site` を向けたところ、`/sitemap.xml` が Vercel のログイン画面への 302 になり、検査できなかった。`check:site` をプレビューに向けるには、Vercel の管理画面で「Protection Bypass for Automation」の値を発行し、次のように実行する。
 
 ```
 VERCEL_AUTOMATION_BYPASS_SECRET=（発行した値） npm run check:site -- https://（プレビューの URL）
