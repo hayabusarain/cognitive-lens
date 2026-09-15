@@ -6,9 +6,8 @@ import type { TypeCode } from "@/lib/type-codes";
  *
  * 項目は現行を残し、トーンガイドから外れるものだけを差し替えた（decisions Q7）。差し替えの一覧は docs/bingo-revisions.md。
  * 件数は scripts/check-content.mjs、禁止語は scripts/check-banned-terms.mjs が検査する。
- * MBTIType は現行のビンゴのページが使っている。ページを作り直すステップ 3-13 で消す。
+ * 項目の並びは盤面の左上から行ごと（中央の FREE を飛ばす）。判定は lib/bingo/board.ts
  */
-export type MBTIType = "INTJ" | "INTP" | "ENTJ" | "ENTP" | "INFJ" | "INFP" | "ENFJ" | "ENFP" | "ISTJ" | "ISFJ" | "ESTJ" | "ESFJ" | "ISTP" | "ISFP" | "ESTP" | "ESFP";
 
 export const BINGO_DATA = {
   "INTJ": [
@@ -127,7 +126,7 @@ export const BINGO_DATA = {
 
 /**
  * 揃ったライン数ごとの称号。{type} を型コードに置き換えて使う。
- * 並びは 0本、1本、2〜3本、4〜5本、6〜8本、9〜11本、12本（現行 app/[lang]/bingo/BingoClient.tsx の getBingoTitle のしきい値）
+ * 並びは 0本、1本、2〜3本、4〜5本、6〜8本、9〜11本、12本（仕様書 2-5。段階の判定は lib/bingo/board.ts の titleLevel）
  */
 export const BINGO_TITLES: Tuple<string, 7> = [
   "【自称疑惑】エセ{type}",
