@@ -20,7 +20,7 @@ export const ENABLED_RULES: Readonly<Record<RuleId, boolean>> = {
   R7: true, // 言語なしの既知パス → /ja/…（ステップ 1-1）
   R8: false, // /api/og → OG 画像（ステップ 3-5）
   R9: false, // /api/story-card → 9:16 画像（ステップ 3-7）
-  R10: false, // www なし → www（ステップ 1-4）
+  R10: true, // www なし → www（ステップ 1-4）
   R11: true, // /en・/ko → /ja（ステップ 1-1）
   R12: true, // /ja/skip-path・/ja/chat-gen → /ja/test（ステップ 1-1）
 };

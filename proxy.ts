@@ -102,7 +102,17 @@ export function proxy(request: NextRequest): NextResponse {
   const { pathname } = request.nextUrl;
 
   // ⓪ 旧 URL の 301 転送（仕様書 docs/redesign-spec.md 1-3）
-  const redirectTo = resolveRedirect(new URL(request.nextUrl.href));
+  // www なしの判定（R10）のため、ホスト名は要求の Host ヘッダーから取る。
+  // request.nextUrl はローカルの next start で Host ヘッダーを反映しなかった（2026-09-15 確認）
+  const current = new URL(request.nextUrl.href);
+  const host = request.headers.get("host");
+  if (host) {
+    // host に値だけを入れると元のポートが残るので、ホスト名とポートを別々に設定する
+    const parsed = new URL(`http://${host}`);
+    current.hostname = parsed.hostname;
+    current.port = parsed.port;
+  }
+  const redirectTo = resolveRedirect(current);
   if (redirectTo) {
     return NextResponse.redirect(redirectTo, 301);
   }
