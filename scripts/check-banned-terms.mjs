@@ -57,6 +57,16 @@ for (const code of load("lib/type-codes.ts").TYPE_CODES) {
   }
 }
 
+// 恋愛コラム。title と節の見出しは厳しく、ほかは警告
+const ARTICLE_STRICT_PATHS = [/^title$/, /^sections\[\d\]\.heading$/];
+for (const code of load("lib/type-codes.ts").TYPE_CODES) {
+  const file = `lib/articles/${code}.ts`;
+  if (!exists(file)) continue;
+  for (const { path: p, value } of collectStrings(load(file).article ?? {})) {
+    scan(`${file} ${p}`, value, ARTICLE_STRICT_PATHS.some((re) => re.test(p)));
+  }
+}
+
 // 設問・脈あり度（本文扱い）
 for (const [file, names] of [["lib/diagnosis/items.ts", ["ITEMS", "TIEBREAKERS"]], ["lib/target/items.ts", ["TARGET_ITEMS", "TARGET_TIEBREAKERS"]], ["lib/romance/items.ts", ["ROMANCE", "ROMANCE_STAGES"]]]) {
   if (!exists(file)) continue;

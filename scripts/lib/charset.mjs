@@ -28,5 +28,12 @@ export function collectCharset(rootDir) {
       texts.push(...collectStrings(loadTs(rootDir, `lib/type-content/${f}`).content ?? {}).map((s) => s.value));
     }
   }
+  // コラムの OG 画像に title を入れる（仕様書 4-2）
+  const articleDir = path.join(rootDir, "lib/articles");
+  if (fs.existsSync(articleDir)) {
+    for (const f of fs.readdirSync(articleDir).filter((f) => /^[EI][SN][TF][JP]\.ts$/.test(f))) {
+      texts.push(loadTs(rootDir, `lib/articles/${f}`).article?.title ?? "");
+    }
+  }
   return [...new Set([...texts.join("")])].filter((ch) => ch !== "\n" && ch !== "\r").sort().join("");
 }

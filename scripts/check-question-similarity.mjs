@@ -1,4 +1,4 @@
-// 新しい設問が、現行サイトの設問に似ていないかを確かめる（仕様書 2-6、ステップ 2-6・2-7）
+// 新しい設問が、現行サイトの設問に似ていないかを確かめる（仕様書 2-6、ステップ 2-6・2-7・2-8）
 // 実行：node scripts/check-question-similarity.mjs
 //
 // 文字の2字組（バイグラム）の Dice 係数で比べ、新しい設問ごとに一番近い現行の文を出す。
@@ -31,7 +31,7 @@ export function dice(a, b) {
 }
 
 const old = [];
-for (const [file, name] of [["lib/questions.ts", "QUESTIONS"], ["lib/target-questions.ts", "TARGET_QUESTIONS"]]) {
+for (const [file, name] of [["lib/questions.ts", "QUESTIONS"], ["lib/target-questions.ts", "TARGET_QUESTIONS"], ["lib/romance-data-ja.ts", "ROMANCE_DATA_JA"]]) {
   if (!exists(file)) continue;
   for (const { path: p, value } of collectStrings(loadTs(root, file)[name] ?? [])) {
     if (/[぀-ヿ一-鿿]/.test(value) && value.length >= 6) old.push({ where: `${file} ${p}`, text: value });
@@ -43,7 +43,7 @@ if (!old.length) {
 }
 
 const fresh = [];
-for (const [file, names] of [["lib/diagnosis/items.ts", ["ITEMS", "TIEBREAKERS"]], ["lib/target/items.ts", ["TARGET_ITEMS", "TARGET_TIEBREAKERS"]]]) {
+for (const [file, names] of [["lib/diagnosis/items.ts", ["ITEMS", "TIEBREAKERS"]], ["lib/target/items.ts", ["TARGET_ITEMS", "TARGET_TIEBREAKERS"]], ["lib/romance/items.ts", ["ROMANCE"]]]) {
   if (!exists(file)) continue;
   const mod = loadTs(root, file);
   for (const name of names) {

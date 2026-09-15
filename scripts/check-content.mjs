@@ -71,24 +71,96 @@ for (const code of TYPE_CODES) {
 }
 notes.push(`タイプごとの文章：${writtenTypes.length}/16 件（${writtenTypes.join("・") || "なし"}）`);
 
-// 文章を書いたタイプには、相性の相手の型コード（lib/type-compatibility.ts）が要る
+// 検索結果に出る要素（title・description）に「MBTI」を使わず、本文でも1ページ1回まで（decisions N3・N11）。
+// 本文の1回は、ページの部品側の固定文（「MBTIでいう{TYPE}」）で使う。コンテンツのファイルには書かない
+const TYPE_NAMES = exists("lib/type-names.ts") ? load("lib/type-names.ts").TYPE_NAMES : {};
+const countMbti = (texts) => texts.join("\n").match(/MBTI/gi)?.length ?? 0;
+const DATE = /^\d{4}-\d{2}-\d{2}$/;
+function checkSearchSnippet(file, { title, description, updatedAt }, all) {
+  for (const [key, value] of [["title", title], ["description", description]]) {
+    if (/MBTI/i.test(value ?? "")) fail(file, `${key} に「MBTI」がある（検索結果に出る要素には使わない）`);
+  }
+  if (length(description ?? "") > LIMITS.description) fail(file, `description が${length(description)}字（上限${LIMITS.description}）`);
+  const mbti = countMbti(all);
+  if (mbti > 0) fail(file, `「MBTI」が${mbti}回ある（1ページ1回の枠はページの部品側で使うので、コンテンツには書かない）`);
+  if (!DATE.test(updatedAt ?? "")) fail(file, `updatedAt が YYYY-MM-DD ではない（${updatedAt}）`);
+}
+
+for (const code of writtenTypes) {
+  const file = `lib/type-content/${code}.ts`;
+  const content = load(file).content;
+  if (!content) continue;
+  const prefix = `${code}（${TYPE_NAMES[code]}）`;
+  const title = content.seo?.title ?? "";
+  if (!title.startsWith(prefix)) fail(file, `seo.title が「${prefix}」で始まっていない`);
+  if (!title.endsWith(" | CognitiveLens")) fail(file, "seo.title が「 | CognitiveLens」で終わっていない");
+  // 「{TYPE} 恋愛」はコラムのキーワード（仕様書 7-3）。結果ページの title では取り合わない
+  if (title.includes("恋愛")) fail(file, "seo.title に「恋愛」がある（コラム /ja/article/{TYPE} のキーワード）");
+  checkSearchSnippet(file, { ...content.seo, updatedAt: content.updatedAt }, collectStrings(content).map((s) => s.value));
+}
+
+// 文章を書いたタイプには、相性の相手の型コード（lib/type-compatibility.ts）が要る。理由の文には相手の呼称を入れる
 if (writtenTypes.length) {
   const { TYPE_COMPATIBILITY } = exists("lib/type-compatibility.ts") ? load("lib/type-compatibility.ts") : {};
   for (const code of writtenTypes) {
     const pair = TYPE_COMPATIBILITY?.[code];
     if (!pair) fail("lib/type-compatibility.ts", `${code} の相性の相手がない`);
     else if (!TYPE_CODES.includes(pair.easy) || !TYPE_CODES.includes(pair.hard) || pair.easy === code || pair.hard === code || pair.easy === pair.hard) fail("lib/type-compatibility.ts", `${code} の相性の相手が不正（easy ${pair.easy}、hard ${pair.hard}）`);
+    else {
+      const reasons = load(`lib/type-content/${code}.ts`).content?.compatibility ?? {};
+      if (!reasons.easyReason?.includes(TYPE_NAMES[pair.easy])) fail(`lib/type-content/${code}.ts`, `compatibility.easyReason に相手の呼称「${TYPE_NAMES[pair.easy]}」（${pair.easy}）がない`);
+      if (!reasons.hardReason?.includes(TYPE_NAMES[pair.hard])) fail(`lib/type-content/${code}.ts`, `compatibility.hardReason に相手の呼称「${TYPE_NAMES[pair.hard]}」（${pair.hard}）がない`);
+    }
+  }
+  if (TYPE_COMPATIBILITY) {
+    for (const [code, pair] of Object.entries(TYPE_COMPATIBILITY)) {
+      for (const key of ["easy", "hard"]) {
+        if (TYPE_COMPATIBILITY[pair[key]]?.[key] !== code) fail("lib/type-compatibility.ts", `${code} の ${key} が ${pair[key]} なのに、${pair[key]} の ${key} が ${code} ではない（対称にする）`);
+      }
+    }
   }
 }
+
+// ── 3-2. 恋愛コラム（仕様書 3-16） ─────────────────────────────────────
+const writtenArticles = [];
+for (const code of TYPE_CODES) {
+  const file = `lib/articles/${code}.ts`;
+  if (!exists(file)) continue;
+  writtenArticles.push(code);
+  const article = load(file).article;
+  if (!article) { fail(file, "article をエクスポートしていない"); continue; }
+  for (const { path: where, value } of collectStrings(article)) {
+    if (!value.trim()) fail(file, `${where} が空`);
+    if (where === "updatedAt") continue;
+    for (const p of checkProse(value)) fail(file, `${where}：${p}`);
+  }
+  const prefix = `${code}（${TYPE_NAMES[code]}）の恋愛`;
+  if (!article.title?.startsWith(prefix)) fail(file, `title が「${prefix}」で始まっていない`);
+  if (length(article.title ?? "") > LIMITS.articleTitle) fail(file, `title が${length(article.title)}字（上限${LIMITS.articleTitle}）`);
+  if (article.sections?.length !== 4) fail(file, "sections が4件ではない");
+  if (article.signs?.length !== 5) fail(file, "signs が5件ではない");
+  checkSearchSnippet(file, article, collectStrings(article).map((s) => s.value));
+}
+notes.push(`恋愛コラム：${writtenArticles.length}/16 件`);
 
 // ── 4. 脈あり度の設問 ────────────────────────────────────────────
 if (exists("lib/romance/items.ts")) {
   const { ROMANCE, ROMANCE_STAGES } = load("lib/romance/items.ts");
   for (const code of TYPE_CODES) {
-    const n = ROMANCE?.[code]?.questions?.length ?? 0;
+    const questions = ROMANCE?.[code]?.questions ?? [];
+    const n = questions.length;
     if (n < 1 || n > LIMITS.romanceQuestionsMax) fail("lib/romance/items.ts", `${code} の設問が${n}問（1〜${LIMITS.romanceQuestionsMax}問）`);
+    if (new Set(questions).size !== n) fail("lib/romance/items.ts", `${code} に同じ設問がある`);
+    questions.forEach((q, i) => {
+      if (!q?.trim()) fail("lib/romance/items.ts", `${code} の設問${i + 1}が空`);
+      else if (length(q) > LIMITS.question) fail("lib/romance/items.ts", `${code} の設問${i + 1}が${length(q)}字（上限${LIMITS.question}）`);
+    });
   }
   if (!Array.isArray(ROMANCE_STAGES) || ROMANCE_STAGES.length !== 4) fail("lib/romance/items.ts", "ROMANCE_STAGES が4件ではない");
+  else ROMANCE_STAGES.forEach((stage, i) => {
+    if (!stage?.title?.trim() || !stage?.body?.trim()) fail("lib/romance/items.ts", `ROMANCE_STAGES[${i}] の title か body が空`);
+    for (const p of checkProse(stage?.body ?? "")) fail("lib/romance/items.ts", `ROMANCE_STAGES[${i}].body：${p}`);
+  });
 } else notes.push("lib/romance/items.ts はまだない");
 
 // ── 5. 適職の職業名（decisions N1・N9） ────────────────────────────

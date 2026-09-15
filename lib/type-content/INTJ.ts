@@ -59,8 +59,9 @@ export const content: TypeContent = {
   og: { catch: "沈黙は、計算中のしるし" },
   share: { text: "わたしのタイプは{name}でした。あなたは？ {url}" },
   seo: {
-    title: "INTJ（スフィンクス）の性格と特徴・恋愛・相性 | CognitiveLens",
+    title: "INTJ（スフィンクス）の性格と特徴・相性・適職 | CognitiveLens",
     description:
-      "INTJ（スフィンクス）は、話す前に三手先まで決めているタイプ。特徴、恋愛や仕事での傾向、相性の良い相手をまとめました。",
+      "INTJ（スフィンクス）は、話す前に三手先まで決めているタイプ。特徴、人間関係や仕事での傾向、相性の良い相手と適職をまとめました。",
   },
+  updatedAt: "2026-09-15",
 };

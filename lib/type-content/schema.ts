@@ -30,4 +30,6 @@ export interface TypeContent {
   /** {name} と {url} を含む */
   share: { text: string };
   seo: { title: string; description: string };
+  /** 更新日（YYYY-MM-DD）。sitemap の lastmod に使う */
+  updatedAt: string;
 }

@@ -8,6 +8,8 @@ export const LIMITS = {
   ogCatch: 24,
   question: 45,
   romanceQuestionsMax: 12,
+  description: 120, // meta description
+  articleTitle: 40, // コラムの title（サイト名を除く）
 };
 
 /** 文字数（サロゲートペアを1字として数える） */
