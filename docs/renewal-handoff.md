@@ -22,7 +22,7 @@
 | `D:/mbti_wt/result` | `renewal-result` | 結果ページ一式 | 取り込み済み |
 | `D:/mbti_wt/diagnosis` | `renewal-diagnosis` | `/ja/test`、`/ja/target-diagnosis` | 作業中 |
 | `D:/mbti_wt/bingo` | `renewal-bingo` | `/ja/bingo`、`/ja/bingo/{TYPE}`、カード画像 | 作業中 |
-| `D:/mbti_wt/static` | `renewal-static` | トップ、運営者情報、免責事項、プライバシーポリシー、素材配布、robots.txt | 作業中 |
+| `D:/mbti_wt/static` | `renewal-static` | トップ、運営者情報、免責事項、プライバシーポリシー、素材配布、robots.txt | 取り込み済み |
 | `D:/mbti_wt/article` | `renewal-article` | `/ja/articles`、`/ja/article/{TYPE}`、`/ja/romance-checker` | 取り込み済み |
 | `D:/mbti_wt/foundation` | `renewal-foundation` | デザインの土台 | 取り込み済み。消してよい |
 
@@ -36,6 +36,7 @@
 ## 統合でやること（仕様書 3-5、3-10、3-13、3-16、3-21〜3-23）
 
 - `lib/redirects.ts` の R1〜R6・R8・R9 を有効にし、`app/api/og` と `app/api/story-card` を消す。R8 の転送先は `/ja/result/{TYPE}/opengraph-image`（クエリなしでも 200 を確認済み）
+- GA4 の page_view に結果ページの `?p=`（割合）が載らないよう、送る URL からクエリを外す。GA4 を配信する日に privacy の `UPDATED_AT_WITH_GA4` を書き換える
 - GA4 の共有イベントに `content_type: romance` が増えた。仕様書 3-7 とプライバシーポリシーの送信内容に足す
 - `next.config.ts` の `outputFileTracingIncludes` を、結果ページとビンゴの両方のルートで合わせる
 - `app/sitemap.ts` を59件にし、lastmod を `TypeContent.updatedAt` と `ArticleContent.updatedAt` から取る
