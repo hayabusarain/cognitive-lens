@@ -1,193 +1,188 @@
-import { canonical } from "@/lib/site";
-import { getArticleData } from "@/lib/data-provider";
-import { notFound } from "next/navigation";
-import Image from "next/image";
+import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowLeft, Heart, Zap, ShieldAlert, BookOpen } from "lucide-react";
+import { notFound } from "next/navigation";
+import { ChevronRight } from "lucide-react";
+import { TYPE_CODES, isTypeCode, type TypeCode } from "@/lib/type-codes";
+import { TYPE_NAMES } from "@/lib/type-names";
+import { ARTICLES, splitArticleTitle } from "@/lib/articles";
+import { ROMANCE } from "@/lib/romance/items";
+import { BASE_OPEN_GRAPH, canonical } from "@/lib/site";
+import { typeColorStyle } from "@/lib/type-display";
+import { ButtonLink } from "@/app/components/ui/Button";
+import { Heading, Latin } from "@/app/components/ui/Heading";
+import { Breadcrumbs } from "@/app/components/ui/Breadcrumbs";
+import { TypeFrame } from "@/app/components/type/TypeFrame";
+import { CharacterFigure } from "@/app/components/type/CharacterFigure";
 
-// 1. SSGのためのパラメータ生成（lang は親の app/[lang]/layout.tsx が ja だけを返す）
-export async function generateStaticParams() {
-  const { ARTICLE_DATA } = await import("@/lib/article-data");
-  return Object.keys(ARTICLE_DATA).map((type) => ({ type }));
+/**
+ * タイプ別の恋愛コラム /ja/article/{TYPE}（仕様書 3-16、7-2・7-3）
+ * 本文は lib/articles/{TYPE}.ts。相性・適職・特徴全般は詳しく書かず、結果ページの該当の節へリンクする。
+ * 型コードは大文字だけを生成する。小文字の URL は lib/redirects.ts の R5 が大文字へ 301 で転送する
+ */
+
+export const dynamicParams = false;
+
+export function generateStaticParams() {
+  return TYPE_CODES.map((type) => ({ type }));
 }
 
-// 2. SEOメタデータの生成
-export async function generateMetadata({ params }: { params: Promise<{ lang: string; type: string }> }) {
-  const { lang, type } = await params;
-  const articleData = getArticleData(lang);
-  const article = articleData[type.toUpperCase()];
-  if (!article) return {};
+type Props = { params: Promise<{ lang: string; type: string }> };
+
+/** 4節の役割（lib/articles/schema.ts の sections の順）。節の見出しの上に小さく出す */
+const SECTION_LABELS = ["好きになるまで", "好きな人への態度", "すれ違いやすいところ", "距離を縮めるには"] as const;
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { type } = await params;
+  if (!isTypeCode(type)) return {};
+  const article = ARTICLES[type];
+  const path = `/ja/article/${type}`;
   return {
-    alternates: canonical(`/ja/article/${type.toUpperCase()}`),
-    title: `${article.title} | CognitiveLens 恋愛心理コラム`,
-    description: article.basic.slice(0, 120) + "...",
+    // title は「| CognitiveLens」を含まないので、レイアウトの template で「{title} | CognitiveLens」になる
+    title: article.title,
+    description: article.description,
+    alternates: canonical(path),
+    openGraph: {
+      ...BASE_OPEN_GRAPH,
+      type: "article",
+      title: article.title,
+      description: article.description,
+      url: path,
+      modifiedTime: article.updatedAt,
+    },
   };
 }
 
-export default async function ArticlePage({ params }: { params: Promise<{ lang: string; type: string }> }) {
-  const { lang, type } = await params;
-  const typeKey = type.toUpperCase();
-  const articleData = getArticleData(lang);
-  const article = articleData[typeKey];
+/** 2026-09-15 → 2026年9月15日 */
+function formatDate(date: string): string {
+  const [y, m, d] = date.split("-").map(Number);
+  return `${y}年${m}月${d}日`;
+}
 
-  if (!article) {
-    notFound();
-  }
+function RelatedLinks({ type }: { type: TypeCode }) {
+  // アンカーテキストは、リンク先のページが狙うキーワードに揃える（仕様書 7-3）。
+  // 相性と適職の節の id（compatibility・career）は、結果ページ側で同じ値を付ける
+  const links = [
+    { href: `/ja/result/${type}`, label: `${type}の特徴`, note: "恋愛以外の性格と、友人・仕事での傾向" },
+    { href: `/ja/result/${type}#compatibility`, label: `${type}の相性`, note: "付き合いやすい相手と、すれ違いやすい相手" },
+    { href: `/ja/result/${type}#career`, label: `${type}の適職`, note: "向く仕事と向かない仕事" },
+    { href: `/ja/bingo/${type}`, label: `偏見だらけの${type}ビンゴ`, note: "あるある24マスで、何ライン揃うか試す" },
+    { href: "/ja/romance-checker", label: "脈あり度チェック", note: "相手のタイプを選んで、はい・いいえで答える" },
+  ];
+  return (
+    <ul className="mt-3 divide-y divide-line border-y border-line">
+      {links.map((link) => (
+        <li key={link.href}>
+          <Link href={link.href} className="group flex min-h-14 items-center justify-between gap-3 py-3 no-underline">
+            <span className="min-w-0">
+              <span className="block font-bold underline decoration-line decoration-2 underline-offset-4 group-hover:decoration-type">
+                {link.label}
+              </span>
+              <span className="text-phrase block text-note text-muted">{link.note}</span>
+            </span>
+            <ChevronRight aria-hidden="true" className="size-5 shrink-0 text-muted group-hover:text-fg" />
+          </Link>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+export default async function ArticlePage({ params }: Props) {
+  const { type } = await params;
+  if (!isTypeCode(type)) notFound();
+  const article = ARTICLES[type];
+  const name = TYPE_NAMES[type];
+  const { prefix, subtitle } = splitArticleTitle(type);
 
   return (
-    <main className="min-h-screen bg-slate-50 relative pb-24 md:pb-0 overflow-hidden font-sans">
-      {/* Background Aurora */}
-      <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-rose-400/20 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-violet-400/20 rounded-full blur-[120px] pointer-events-none" />
+    <main className="mx-auto w-full max-w-page px-4 pb-16 pt-4 md:px-10" style={typeColorStyle(type)}>
+      <Breadcrumbs
+        items={[
+          { name: "トップ", href: "/ja" },
+          { name: "恋愛コラム一覧", href: "/ja/articles" },
+          { name: prefix || `${type}の恋愛`, href: `/ja/article/${type}` },
+        ]}
+      />
 
-      <div className="max-w-2xl mx-auto px-4 py-8 relative z-10">
-        <Link href={`/${lang}`} className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-800 transition-colors mb-8">
-          <ArrowLeft size={16} />
-          {lang === "en" ? "Back to Home" : "トップへ戻る"}
-        </Link>
-        
-        <article className="glass-card rounded-3xl p-6 sm:p-10 border border-white/50 shadow-sm relative overflow-hidden bg-white/60 backdrop-blur-xl">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-rose-400/10 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
-          
-          <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 mb-8">
-            <div className="flex-1 w-full text-center sm:text-left">
-              <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-800 leading-relaxed tracking-tight">
-                {article.title}
-              </h1>
-            </div>
-            {article && (
-              <div className="w-32 h-32 sm:w-40 sm:h-40 relative flex-shrink-0 drop-shadow-lg">
-                <Image src={`/characters/${typeKey}.png`} alt={typeKey} fill className="object-contain" sizes="(max-width: 640px) 128px, 160px" priority />
-              </div>
-            )}
-          </div>
+      {/* スマートフォンは「タイプ → 本文 → 関連ページ」の1列。パソコンは本文を左、タイプと関連ページを右に置く */}
+      <div className="mt-2 lg:grid lg:grid-cols-[minmax(0,42rem)_17.5rem] lg:grid-rows-[auto_1fr] lg:justify-between lg:gap-x-12">
+        <div className="flex items-center gap-4 lg:col-start-2 lg:row-start-1 lg:mt-2 lg:flex-col lg:items-stretch lg:gap-3">
+          <TypeFrame size="sm" className="w-20 shrink-0 lg:w-full lg:[--frame-radius:18px] lg:[--frame:6px]">
+            <CharacterFigure type={type} sizes="(min-width: 1024px) 270px, 72px" loading="eager" />
+          </TypeFrame>
+          <p className="grid gap-1.5">
+            <span className="font-display text-h2 leading-none tracking-[0.02em] lg:text-h1">{type}</span>
+            <span className="font-display text-lead leading-tight text-type">{name}</span>
+          </p>
+        </div>
 
-          <div className="space-y-10 text-slate-700 leading-8">
-            <section>
-              <div className="flex items-center gap-3 mb-4">
-                <div className="p-2 rounded-xl bg-rose-50 text-rose-500"><Heart size={20} /></div>
-                <h2 className="text-xl font-bold text-slate-800">{lang === "en" ? "Basic Romance Psychology" : "基本の恋愛心理"}</h2>
-              </div>
-              <p className="text-[15px]">{article.basic}</p>
-            </section>
+        <article className="min-w-0 lg:col-start-1 lg:row-span-2 lg:row-start-1">
+          <header className="mt-6 lg:mt-2">
+            <h1 className="palt text-phrase font-black">
+              {prefix && (
+                <span className="block text-lead leading-snug text-type">
+                  {prefix}
+                  <span className="sr-only">：</span>
+                </span>
+              )}
+              <span className="mt-1 block text-h1">{subtitle}</span>
+            </h1>
+            <p className="mt-5 text-lead">{article.lead}</p>
+            <p className="mt-3 text-note text-muted">
+              <time dateTime={article.updatedAt}>{formatDate(article.updatedAt)}</time>更新
+            </p>
+          </header>
 
-            <section>
-              <div className="flex items-center gap-3 mb-4">
-                <div className="p-2 rounded-xl bg-amber-50 text-amber-500"><Zap size={20} /></div>
-                <h2 className="text-xl font-bold text-slate-800">{lang === "en" ? "Who You're Attracted To & Compatibility" : "惹かれる相手と相性"}</h2>
-              </div>
-              <p className="text-[15px]">{article.attraction}</p>
-            </section>
-
-            <section>
-              <div className="flex items-center gap-3 mb-4">
-                <div className="p-2 rounded-xl bg-violet-50 text-violet-500"><ShieldAlert size={20} /></div>
-                <h2 className="text-xl font-bold text-slate-800">{lang === "en" ? "Fatal Weaknesses & Relationship Breakers" : "致命的弱点と関係崩壊の引き金"}</h2>
-              </div>
-              <p className="text-[15px]">{article.weakness}</p>
-            </section>
-
-            <section className="bg-slate-50/80 rounded-2xl p-6 border border-slate-100">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="p-2 rounded-xl bg-blue-50 text-blue-500"><BookOpen size={20} /></div>
-                <h2 className="text-lg font-bold text-slate-800">{lang === "en" ? "Manual for Building the Ideal Relationship" : "理想の関係を築くためのトリセツ"}</h2>
-              </div>
-              <div className="text-[15px] space-y-3">
-                {article.manual.split('\n').map((line, i) => (
-                  <p key={i}>{line}</p>
+          {article.sections.map((section, i) => (
+            <section key={section.heading} aria-labelledby={`section-${i + 1}`} className="mt-12">
+              <p className="mb-2 flex items-center gap-2 text-label font-bold text-muted">
+                <span className="font-display text-note font-normal text-type">{String(i + 1).padStart(2, "0")}</span>
+                {SECTION_LABELS[i]}
+              </p>
+              <Heading level={2} id={`section-${i + 1}`} className="mb-4">
+                {section.heading}
+              </Heading>
+              <div className="grid gap-4">
+                {section.body.split("\n").map((paragraph) => (
+                  <p key={paragraph}>{paragraph}</p>
                 ))}
               </div>
             </section>
+          ))}
 
-            {article.pulseSigns && article.pulseSigns.length > 0 && (
-              <section className="mt-8 bg-fuchsia-50/50 rounded-2xl p-6 border border-fuchsia-100 relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-24 h-24 bg-fuchsia-200/30 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
-                <div className="flex items-center gap-3 mb-5 relative z-10">
-                  <div className="p-2 rounded-xl bg-fuchsia-100 text-fuchsia-500"><Heart size={20} className="fill-fuchsia-500" /></div>
-                  <h2 className="text-lg font-bold text-fuchsia-900 tracking-tight">{lang === "en" ? "【Special】5 Genuine Signs They Like You" : "【特別公開】このタイプの脈ありサイン・ガチ5選"}</h2>
-                </div>
-                <ul className="space-y-3 relative z-10">
-                  {article.pulseSigns.map((sign, i) => (
-                    <li key={i} className="flex items-start gap-3">
-                      <span className="flex-shrink-0 flex items-center justify-center w-5 h-5 rounded-full bg-fuchsia-200 text-fuchsia-600 text-xs font-bold mt-0.5">{i + 1}</span>
-                      <span className="text-[14px] text-slate-700 leading-snug">{sign}</span>
-                    </li>
-                  ))}
-                </ul>
-              </section>
-            )}
-
-            {/* ── マッチングアプリアフィリエイト誘導用コンポーネント（一時非表示） ── */}
-            {/*
-            <div className="mt-12 overflow-hidden relative rounded-3xl bg-gradient-to-br from-pink-500 to-rose-400 p-[2px] shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
-              <div className="bg-white/95 backdrop-blur-sm rounded-[22px] p-6 sm:p-8 relative overflow-hidden">
-                <Heart className="absolute -right-8 -bottom-8 w-40 h-40 text-pink-50 -rotate-12 pointer-events-none" />
-                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-pink-400 via-rose-400 to-pink-400" />
-                
-                <div className="relative z-10 flex flex-col items-center text-center">
-                  <div className="inline-flex items-center justify-center bg-pink-50 text-pink-600 border border-pink-200 px-3 py-1 rounded-full text-[10px] font-bold mb-4 tracking-widest uppercase">
-                    Sponsored
-                  </div>
-                  
-                  <h3 className="text-xl sm:text-2xl font-extrabold text-slate-800 mb-4 leading-tight tracking-tight">
-                    {lang === "en" ? (
-                      <>
-                        How to meet the perfect match for a <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-rose-500">{typeKey}</span>?
-                      </>
-                    ) : (
-                      <>
-                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-rose-500">
-                          {typeKey}の人
-                        </span>
-                        と運命の出会いを果たすには？
-                      </>
-                    )}
-                  </h3>
-                  
-                  <p className="text-[13px] sm:text-[15px] text-slate-600 mb-6 leading-relaxed max-w-md mx-auto">
-                    {lang === "en" ? (
-                      <>
-                        The more you understand your own personality,<br className="hidden sm:block"/>the clearer it becomes who you're compatible with.
-                        <br />
-                        Why not take the next step on Japan's largest app where you can <span className="font-bold text-slate-800 bg-pink-100/50 px-1 rounded">find matches by values and compatibility</span>?
-                      </>
-                    ) : (
-                      <>
-                        自分の性格をもっと深く知るほど、<br className="hidden sm:block"/>自分に合った人が見えてきます。
-                        <br />
-                        <span className="font-bold text-slate-800 bg-pink-100/50 px-1 rounded">価値観や相性で相手を探せる</span>国内最大級のアプリで、
-                        次の一歩を踏み出してみませんか？
-                      </>
-                    )}
-                  </p>
-                  
-                  <a 
-                    href="#" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="group relative inline-flex items-center justify-center w-full sm:w-auto px-8 py-4 font-bold text-white transition-all duration-200 bg-gradient-to-r from-pink-500 to-rose-500 rounded-full shadow-[0_8px_30px_rgb(244,63,94,0.3)] hover:shadow-[0_8px_40px_rgb(244,63,94,0.5)] overflow-hidden"
-                  >
-                    <span className="absolute w-0 h-0 transition-all duration-500 ease-out bg-white rounded-full group-hover:w-64 group-hover:h-64 opacity-20"></span>
-                    <Heart className="w-4 h-4 mr-2 animate-bounce fill-white/90" />
-                    {lang === "en" ? "Find Your Perfect Match (Free)" : "相性ピッタリの相手を探す（登録無料）"}
-                  </a>
-                  
-                  <p className="text-[10px] sm:text-xs text-slate-400 mt-4 max-w-xs mx-auto">
-                    {lang === "en" ? "* Free registration. Completely free for women, men can use for free until matching!" : "※登録無料。女性は完全無料・男性もマッチングまで無料で使えます！"}
-                  </p>
-                </div>
-              </div>
-            </div>
-            */}
-            {/* ──────────────────────────────────────────────── */}
-          </div>
+          <section aria-labelledby="signs" className="mt-12">
+            <Heading level={2} id="signs" className="mb-4">
+              <Latin>{type}</Latin>の脈ありサイン
+            </Heading>
+            <ol className="grid gap-3">
+              {article.signs.map((sign, i) => (
+                <li key={sign} className="flex items-baseline gap-3 rounded-panel bg-surface px-4 py-3">
+                  <span aria-hidden="true" className="w-5 shrink-0 font-display text-lead leading-none text-type">
+                    {i + 1}
+                  </span>
+                  <span>{sign}</span>
+                </li>
+              ))}
+            </ol>
+            <p className="mt-6">
+              相手が{name}なら、そのタイプらしい行動{ROMANCE[type].questions.length}問に答えて、脈あり度を確かめられます。
+            </p>
+            <ButtonLink
+              href="/ja/romance-checker"
+              meta={`${ROMANCE[type].questions.length}問`}
+              className="mt-3 w-full md:w-auto md:min-w-80"
+            >
+              脈あり度をチェックする
+            </ButtonLink>
+          </section>
         </article>
 
-        <div className="mt-12 text-center">
-          <Link href={`/${lang}/result?type=${typeKey}`} className="inline-block px-8 py-4 bg-slate-800 text-white font-bold rounded-full hover:bg-slate-700 transition-transform hover:scale-105 shadow-xl">
-            {lang === "en" ? `Proceed to ${typeKey} AI Profiling` : `${typeKey}のAIプロファイリング診断へ進む`}
-          </Link>
-        </div>
+        <aside aria-labelledby="related" className="mt-12 lg:col-start-2 lg:row-start-2 lg:mt-8">
+          <Heading level={2} id="related">
+            関連ページ
+          </Heading>
+          <RelatedLinks type={type} />
+        </aside>
       </div>
     </main>
   );
