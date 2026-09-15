@@ -14,6 +14,7 @@ export default function PageView() {
     const w = window as typeof window & { dataLayer?: unknown[] };
     w.dataLayer = w.dataLayer || [];
     // gtag() と同じ形（arguments オブジェクト）で積む
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const gtag = function (..._args: unknown[]) {
       // eslint-disable-next-line prefer-rest-params
       w.dataLayer!.push(arguments);
