@@ -12,6 +12,7 @@
     "check": "tsc --noEmit && node scripts/check-content.mjs && node scripts/check-banned-terms.mjs && npm test",
     "test": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test \"lib/**/*.test.mjs\" \"scripts/**/*.test.mjs\"",
     "check:redirects": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check-redirects.mjs",
+    "check:site": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check-site.mjs",
     "build:font": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/build-font-subset.mjs"
   },
   "dependencies": {

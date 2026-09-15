@@ -9,26 +9,15 @@ import fs from "node:fs";
 import path from "node:path";
 import { loadTs } from "./lib/ts-loader.mjs";
 import { findBannedTerms, collectStrings } from "./lib/content-rules.mjs";
+import { BANNED, categoryOf } from "./lib/banned-terms.mjs";
+
+// 語の一覧は scripts/lib/banned-terms.mjs（scripts/check-site.mjs と共有）
+export { BANNED };
 
 const root = process.cwd();
 const exists = (f) => fs.existsSync(path.join(root, f));
 const load = (f) => loadTs(root, f);
-const legacy = JSON.parse(fs.readFileSync(path.join(root, "scripts/lib/legacy-type-names.json"), "utf8"));
-
-export const BANNED = {
-  "16Personalities の型名（英語）": ["Architect", "Logician", "Commander", "Debater", "Advocate", "Mediator", "Protagonist", "Campaigner", "Logistician", "Defender", "Executive", "Consul", "Virtuoso", "Adventurer", "Entrepreneur", "Entertainer"],
-  "16Personalities の型名（日本語）": ["建築家", "論理学者", "指揮官", "討論者", "提唱者", "仲介者", "主人公", "広報運動家", "管理者", "擁護者", "幹部", "領事", "巨匠", "冒険家", "起業家", "エンターテイナー"],
-  "16Personalities のグループ名・軸名": ["Analysts", "Diplomats", "Sentinels", "Explorers", "分析家", "外交官", "番人", "探検家", "Mind", "Energy", "Nature", "Tactics", "Identity"],
-  "現行サイトの型名": legacy.names,
-  "現行サイトのタグライン": legacy.taglines,
-  "現行サイトのグループ名": ["分析系", "理想主義系", "管理系", "探索系", "Idealists"],
-  "Keirsey の型名・気質名": ["Mastermind", "Inventor", "Fieldmarshal", "Healer", "Counselor", "Champion", "Teacher", "Inspector", "Protector", "Supervisor", "Provider", "Crafter", "Composer", "Promoter", "Performer", "Rational", "Idealist", "Guardian", "Artisan"],
-  "誇張語": ["最強", "天才", "神", "完璧"],
-  // トーンガイド（docs/tone-guide.md 5-1）の流行語・若者言葉
-  "流行語": ["ヤバい", "ヤバ", "ガチ", "ガチ勢", "マジ", "エモい", "エモ", "沼る", "沼", "蛙化", "ぴえん", "それな", "草", "陰キャ", "陽キャ", "メンヘラ", "無理ゲー", "詰んだ", "秒で", "爆速", "エグい", "ワンチャン", "知らんけど", "神対応", "神機能", "チート", "デフォ", "アプデ", "裏アカ", "量産型", "限界突破"],
-};
 const ALL_TERMS = Object.values(BANNED).flat();
-const categoryOf = (term) => Object.entries(BANNED).find(([, list]) => list.includes(term))?.[0] ?? "表記";
 
 const ONLY = process.argv.includes("--only") ? process.argv[process.argv.indexOf("--only") + 1] : null;
 const runs = (target) => !ONLY || ONLY === target;
