@@ -8,7 +8,7 @@
 // 期待が「転送なし」の URL では、301 が返らないことだけを確かめる。
 import http from "node:http";
 import https from "node:https";
-import { resolveRedirect, CANONICAL_HOST } from "../lib/redirects.ts";
+import { resolveRedirect, CANONICAL_HOST, ENABLED_RULES } from "../lib/redirects.ts";
 
 const base = new URL(process.argv[2] ?? "http://localhost:3000");
 const isLocal = ["localhost", "127.0.0.1"].includes(base.hostname);
@@ -72,7 +72,9 @@ async function check(path, host) {
 }
 
 for (const p of PATHS) await check(p, isLocal ? CANONICAL_HOST : base.host);
-for (const p of APEX_PATHS) await check(p, APEX);
+// R10 が無効のあいだは、Vercel のドメイン設定が apex を先に 307 で転送し proxy に届かないので確かめない
+if (ENABLED_RULES.R10) for (const p of APEX_PATHS) await check(p, APEX);
+else console.log("（R10 が無効のため、www なしのドメインは確かめていない）");
 
 for (const r of results) console.log(`${r.ok ? "OK" : "NG"}  ${r.host}${r.path}  →  ${r.expected}  （${r.note}）`);
 const ng = results.filter((r) => !r.ok).length;
