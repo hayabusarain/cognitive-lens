@@ -1,64 +1,57 @@
 # リニューアル作業の引き継ぎメモ
 
-想定読者：中断したリニューアル作業を再開する人（運営者と、このリポジトリで作業する AI）
+想定読者：リニューアルの本番公開を判断する運営者と、このリポジトリで作業を続ける AI
 更新日：2026-09-16
 
-作業が途中で止まったら、このメモの「再開の手順」から始める。仕様は `docs/redesign-spec.md`、進捗の詳細は同じ文書の 8章にある。
+## 今の状態：統合済み。プレビューの確認と本番公開の判断待ち
 
-## 今の状態
+ページごとの作り直しをすべて `renewal` ブランチに取り込み、統合の作業（仕様書 3-5、3-10、3-13、3-16、3-21、3-22）も終えた。GitHub に push 済みで、Vercel のプレビューのビルドも成功している。`main` にはまだ何も入れていない。
 
-`renewal` ブランチ（GitHub にも push 済み）に、次のものが入っている。
+ステップごとの状態とコミット、確かめたことは、`docs/redesign-spec.md` 8章の「進捗」にある。統合でのローカルの本番ビルドに対する確認結果は次のとおり。
 
-| 済んだもの | 中身 |
+| 確認 | 結果 |
 |---|---|
-| フェーズ2の文章 | 16タイプの文章、自己診断・相手診断の設問、脈あり度の設問と AI 文の API、ビンゴの改訂、恋愛コラム16本 |
-| デザインの土台 | 暗色の「コレクションカード」案。`docs/design-system.md`、`app/components/`、`lib/og/`、見本ページ `/styleguide` |
-| 結果ページ | `/ja/result/{TYPE}`、16タイプ一覧、OG 画像、9:16 結果画像（ブランチ `renewal-result` を取り込み済み） |
+| `npm run check` | tsc、内容検査、禁止語検査、単体テスト61件がすべて合格 |
+| `npm run build` | 結果・ビンゴ・コラムの各16ページと、それぞれの OG 画像が静的生成（SSG） |
+| `npm run check:redirects -- http://localhost:3200` | 37件すべて OK（www なしの R10 を含む） |
+| `npm run check:site -- http://localhost:3200` | NG なし。警告は ENTJ の適職「起業家」の1件（decisions N9 で職業名として残すと決めた語） |
+| スクリーンショット | トップ・結果（INTJ）・自己診断・ビンゴ（INTJ）を幅390と1280で撮り、崩れなし |
 
-ページの作り直しは、ページごとに別の git 作業ツリーで進めている。終わったものから `renewal` に取り込む。
+作業用の git 作業ツリー（`D:/mbti_wt/` の6つ）とブランチ `renewal-*` は、すべて `renewal` に取り込まれていることを確かめてから削除した。
 
-| 作業ツリー | ブランチ | 中身 | 状態（2026-09-16） |
-|---|---|---|---|
-| `D:/mbti_wt/result` | `renewal-result` | 結果ページ一式 | 取り込み済み |
-| `D:/mbti_wt/diagnosis` | `renewal-diagnosis` | `/ja/test`、`/ja/target-diagnosis` | 取り込み済み |
-| `D:/mbti_wt/bingo` | `renewal-bingo` | `/ja/bingo`、`/ja/bingo/{TYPE}`、カード画像 | 取り込み済み |
-| `D:/mbti_wt/static` | `renewal-static` | トップ、運営者情報、免責事項、プライバシーポリシー、素材配布、robots.txt | 取り込み済み |
-| `D:/mbti_wt/article` | `renewal-article` | `/ja/articles`、`/ja/article/{TYPE}`、`/ja/romance-checker` | 取り込み済み |
-| `D:/mbti_wt/foundation` | `renewal-foundation` | デザインの土台 | 取り込み済み。消してよい |
+## プレビュー
 
-## 再開の手順
+Vercel のプレビューには Vercel Authentication（ログインの保護）がかかっていて、ログインしていない自動の検査からは見られない。`check:site` をプレビューに向けるには、Vercel の管理画面で「Protection Bypass for Automation」の値を発行し、次のように実行する。
 
-1. 各作業ツリーで `git status` と `git log --oneline -3` を見る。コミットがあれば、そのブランチは作業を終えている。未コミットの変更だけなら途中で止まっているので、続きを作るか、変更を確かめてコミットする
-2. 終わったブランチを `renewal` に取り込む：`git merge --no-edit renewal-XXX`。`assets/fonts/` が衝突したら、どちらかを選んだあと `npm run build:font` で作り直してコミットする（入力が同じなら結果も同じ）
-3. すべて取り込んだら、下の「統合でやること」を行う
-4. `.next/types` が古いと `tsc` が消したページの型で失敗する。`.next/types` を消してから `npx tsc --noEmit` を実行する
+```
+VERCEL_AUTOMATION_BYPASS_SECRET=（発行した値） npm run check:site -- https://（プレビューの URL）
+```
 
-## 統合の進み具合（2026-09-16 着手）
+プレビューの URL は、GitHub のコミットの Vercel の表示か、`https://api.github.com/repos/hayabusarain/cognitive-lens/deployments?sha=（コミット）` の statuses にある `environment_url` で分かる。
 
-作業ツリーのブランチはすべて取り込み済み。統合は下の順で進め、1つ終わるごとにコミットと push をしている。
+## 本番公開の前に運営者が確かめること
 
-| # | 作業 | 状態 |
-|---|---|---|
-| 1 | 転送 R1〜R6・R8・R9 を有効にし、`app/api/og`・`app/api/story-card` を削除。proxy の Bot 判定とレートリミットは `/api/romance-ai` だけに | 済み |
-| 2 | sitemap を59件にし、lastmod をコンテンツの更新日から取る | 済み |
-| 3 | 旧データ26件・`utils/supabase`・`types/`・`AnalyzingLoader`・`/styleguide`・未使用の svg 5件と、npm パッケージ5つ（html-to-image、recharts、@types/recharts、framer-motion、@supabase/supabase-js）を削除（3-22）。lucide-react は使っているので残した | 済み |
-| 4 | ページ用 OG 画像のページ名の最大幅を 380px に（ビンゴのハブと16タイプ一覧の文字がカードに触れていた）。`content_type: romance` を仕様書 3-7 とプライバシーポリシーに記載 | 済み |
-| 5 | `scripts/check-site.mjs` と `npm run check:site -- <URL>` を追加。禁止語の一覧は `scripts/lib/banned-terms.mjs` に切り出して共有 | 済み |
-| 6 | `npm run check`（61テスト合格）、`npm run build`（結果・ビンゴ・コラム各16ページと OG 画像が SSG）、ローカルの本番ビルドに `check:redirects`（37件 OK）と `check:site`（NG なし）、トップ・結果・自己診断・ビンゴを幅390と1280で撮影して崩れなし | 済み（直すものはなかった） |
-| 7 | 仕様書 8章の進捗、このメモ、作業ツリーの削除 | 未着手 |
-| 8 | Vercel のプレビューの確認 | 未着手 |
+コードの検査では確かめられないものを残している。上から順に見るとよい。
 
-## 統合でやること（仕様書 3-5、3-10、3-13、3-16、3-21〜3-23）
+1. **プレビューを実際に触る**。自己診断を最後まで答えて結果ページに移る、相手診断で「わからない」を選ぶ、脈あり度チェックで AI 文が出る、ビンゴでマスを押す
+2. **画像の保存を実機で試す**（仕様書 4-3 の端末表）。iPhone の Safari、Android の Chrome、X と LINE のアプリ内ブラウザで、結果画像とビンゴのカード画像を保存する
+3. **行動プロトコルを結果ページに載せないことでよいか**（Q9）。今は載せていない。旧データ `lib/protocols-*.ts` は削除したが、git の履歴から戻せる
+4. **GA4 を公開と同時に始めるか**。始めるなら、Vercel の本番の環境変数に `NEXT_PUBLIC_GA_MEASUREMENT_ID` を入れる前に、GA4 の管理画面の拡張計測で「ブラウザの履歴イベントに基づくページの変更」を無効にする。`app/[lang]/privacy/page.tsx` の `UPDATED_AT_WITH_GA4` を公開の日付に書き換える
+5. **リポジトリに `..env.local.swp` が入っている**（2026-04-15 のコミット `74af475`、1KB）。`.env.local` を vim で開いたときの一時ファイルで、公開リポジトリから誰でも読める。中身は統合の作業では開いていない（秘密情報を表示しないため）。キーが含まれていれば、そのキーを作り直してからファイルを消す
 
-- `lib/redirects.ts` の R1〜R6・R8・R9 を有効にし、`app/api/og` と `app/api/story-card` を消す。R8 の転送先は `/ja/result/{TYPE}/opengraph-image`（クエリなしでも 200 を確認済み）
-- GA4 を配信する前に、管理画面の拡張計測で「ブラウザの履歴イベントに基づくページの変更」を無効にする（page_view はコードがクエリを外して送る。済み）。配信する日に privacy の `UPDATED_AT_WITH_GA4` を書き換える
-- GA4 の共有イベントに `content_type: romance` が増えた。仕様書 3-7 とプライバシーポリシーの送信内容に足す（済み）
-- `lib/og/page-image.tsx` の文字幅の見積もりが広く、ビンゴのハブの OG 画像で「の」が枠に触れている
-- `app/sitemap.ts` を59件にし、lastmod を `TypeContent.updatedAt` と `ArticleContent.updatedAt` から取る
-- 置き換え済みの旧データ（`lib/type-info.ts`、`lib/static-profiles.ts`、`lib/questions.ts`、`lib/article-data*.ts`、`lib/romance-data*.ts`、英語のデータ、`lib/data-provider.ts`、`lib/result-cache.ts` など）、`app/styleguide/`、使われなくなったパッケージ（`html-to-image` など）を消す
-- `npm run check`、`npm run build`、`scripts/check-redirects.mjs`（ローカルの本番ビルドに向けて）、全ページのクロール（禁止語、「MBTI」の語、どこからもリンクされないページ、canonical）
-- `renewal` を push し、Vercel のプレビューで同じ確認をする
-- **`main` へのマージ（本番公開）は運営者の確認を取ってから行う**
+## 本番公開の手順（運営者の確認が取れてから）
+
+1. `main` に `renewal` をマージして push する（`git checkout main`、`git merge --no-ff renewal`、`git push origin main`）
+2. Vercel の本番のビルドが成功したら、公開サイトに `npm run check:redirects -- https://www.cognitive-lens.com` と `npm run check:site -- https://www.cognitive-lens.com` を実行する（仕様書 4-1）
+3. X に結果ページの URL を投稿し、カードに OG 画像が出るか見る（3-4）
+4. Vercel で `cognitive-lens.com` を「www への転送」からプロジェクトへの直接の割り当てに切り替え、`curl -I https://cognitive-lens.com/ja` が 301 になるか見る（ステップ 1-4 の残り）
+5. Search Console でサイトマップを送信する（4-2）
+
+## 作業を再開するとき
+
+1. `git status` と `git log --oneline -5` で、`renewal` に未コミットの変更がないか見る
+2. `.next/types` が古いと `tsc` が消したページの型で失敗する。`.next/types` を消してから `npx tsc --noEmit` を実行する
+3. ローカルで確かめるときは `npm run build` の後に `npx next start -p 3200` を起動し、`check:redirects` と `check:site` を向ける。`next dev` に `check:site` を向けると、同時に多くのページをコンパイルして開発サーバーが 500 を返すことがあった（2026-09-16）ので、本番ビルドで確かめる
 
 ## 決めたこと
 
