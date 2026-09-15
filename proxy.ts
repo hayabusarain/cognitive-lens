@@ -93,7 +93,7 @@ function isBot(ua: string | null): boolean {
 }
 
 // ── Bot 判定とレートリミットの対象外にする画像 API ──────────────
-const IMAGE_ROUTES = new Set(["/api/og", "/api/story-card", "/api/chat-og"]);
+const IMAGE_ROUTES = new Set(["/api/og", "/api/story-card"]);
 
 // ── Proxy 本体 ────────────────────────────────────────────────
 export function proxy(request: NextRequest): NextResponse {
