@@ -1,149 +1,117 @@
-import { canonical } from "@/lib/site";
-import Image from "next/image";
-import Link from "next/link";
-import { ArrowLeft, Download, AlertTriangle, Copyright } from "lucide-react";
-import { getTypeInfo } from "@/lib/data-provider";
-import { TYPE_INFO } from "@/lib/type-info";
+import type { Metadata } from "next";
+import { Download } from "lucide-react";
+import { SITE_URL, canonical } from "@/lib/site";
+import { TYPE_BASE } from "@/lib/type-base";
+import { TYPE_CODES } from "@/lib/type-codes";
+import { TYPE_NAMES } from "@/lib/type-names";
+import { characterAlt } from "@/lib/type-display";
+import { Heading } from "@/app/components/ui/Heading";
+import { CharacterFigure } from "@/app/components/type/CharacterFigure";
+import { TYPE_CARD_IMAGE_SIZES } from "@/app/components/type/TypeCard";
+import { TypeFrame } from "@/app/components/type/TypeFrame";
+import {
+  ExternalTextLink,
+  InfoPage,
+  InfoSection,
+  X_ACCOUNT_HANDLE,
+  X_ACCOUNT_URL,
+} from "@/app/[lang]/_components/InfoPage";
 
-export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }) {
-  const { lang } = await params;
-  return {
-    alternates: canonical("/ja/downloads"),
-    title: lang === "en" ? "Character Assets Download | CognitiveLens" : "キャラクター素材ダウンロード | CognitiveLens",
-    description: lang === "en" ? "Distributing free character assets for all 16 personality types." : "全16タイプのキャラクター画像をフリー素材として配布しています。",
-  };
-}
+/**
+ * キャラクター素材の配布 /ja/downloads（ステップ 3-20）
+ * 配るのは public/characters/{TYPE}.png の元画像（lib/type-base.ts）。出典は docs/asset-credits.md 1章（作成者・権利は運営者、AI 生成）。
+ * 利用条件は以前のページの内容を変えず、文面だけを整えた。画像を幻獣版に差し替えても、このページのコードは変えない
+ */
 
-// Next.js 14 の場合、オブジェクトのキーを配列として取得
-const ALL_TYPES = Object.keys(TYPE_INFO);
+const UPDATED_AT = "2026-09-16";
 
-export default async function DownloadsPage({ params }: { params: Promise<{ lang: string }> }) {
-  const { lang } = await params;
+/** 利用者に載せてもらうクレジットの一文 */
+const CREDIT = `画像引用元：CognitiveLens（${SITE_URL}）`;
+
+export const metadata: Metadata = {
+  title: "キャラクター素材の配布",
+  description:
+    "16タイプ性格診断 CognitiveLens のキャラクター画像16枚を配布しています。個人の SNS アイコンやブログに使えます。利用条件とクレジットの書き方もこのページにあります。",
+  // openGraph は書かない。書くと [lang]/opengraph-image（トップの OG 画像）を引き継がなくなる（2026-09-16 のビルドで確認）
+  alternates: canonical("/ja/downloads"),
+};
+
+const PROHIBITED = [
+  "商用の利用（グッズの販売、有料のコンテンツ、企業や店のアカウントでの利用など）",
+  "自分で作ったと言うこと",
+  "画像の再配布",
+  "トレス",
+  "公序良俗に反する使い方",
+  "AI の学習に使うこと",
+] as const;
+
+export default function DownloadsPage() {
   return (
-    <main className="min-h-screen bg-slate-50 flex flex-col items-center py-10 px-6">
-      <div className="max-w-4xl w-full">
-        {/* Navigation */}
-        <Link 
-          href={`/${lang}`} 
-          className="inline-flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-cyan-500 transition-colors mb-10"
-        >
-          <ArrowLeft size={16} /> {lang === "en" ? "Back to Home" : "ホームへ戻る"}
-        </Link>
-        
-        {/* Header */}
-        <div className="text-center mb-10">
-          <span className="text-[10px] px-3 py-1 bg-cyan-100 text-cyan-700 rounded-full font-bold tracking-widest uppercase mb-4 inline-block">
-            Free Assets
-          </span>
-          <h1 className="text-3xl md:text-5xl font-extrabold text-slate-800 mb-4 tracking-tighter">
-            {lang === "en" ? "Free Character Assets" : "キャラクター画像"}<br className="sm:hidden"/>
-            {lang === "en" ? "Distribution" : "フリー配布所"}
-          </h1>
-          <p className="text-slate-600 text-sm leading-relaxed max-w-lg mx-auto">
-            {lang === "en" 
-              ? "You can download the original character illustrations of CognitiveLens as free materials. Feel free to use them as SNS icons or in your blogs."
-              : "16タイプ診断「CognitiveLens」のオリジナルキャラクター画像を、フリー素材としてダウンロードできます。SNSアイコンやブログ等にご活用ください。"}
-          </p>
+    <InfoPage
+      title="キャラクター素材の配布"
+      path="/ja/downloads"
+      updatedAt={UPDATED_AT}
+      lead="16タイプのキャラクター画像を、SNS のアイコンやブログで使えるように配布しています。使う前に、利用条件をお読みください。"
+    >
+      <InfoSection id="downloads-terms" title="利用条件">
+        <p>
+          個人の SNS のアイコン、無料のブログ、収益化していない動画に使えます。どの場合も、クレジットの表記が必要です。
+        </p>
+        <div className="rounded-panel bg-surface px-4 py-3">
+          <p className="font-bold">クレジットの書き方</p>
+          <p className="text-muted">プロフィール欄や投稿の説明文などに、次の一文を載せてください。</p>
+          <p className="mt-2 select-all break-words rounded-chip bg-canvas px-3 py-2 font-bold">{CREDIT}</p>
         </div>
-
-        {/* Terms of Service */}
-        <div className="bg-rose-50 border border-rose-200 rounded-3xl p-6 md:p-8 mb-12 shadow-sm relative overflow-hidden">
-          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-rose-400 to-pink-500" />
-          <div className="flex items-center gap-3 mb-5 text-rose-600 font-bold">
-            <AlertTriangle size={24} />
-            <h2 className="text-lg tracking-tight">
-              {lang === "en" ? "Terms of Service (Please read)" : "利用規約（必ずお読みください）"}
-            </h2>
-          </div>
-          <ul className="space-y-4 text-sm text-slate-700 leading-relaxed font-medium">
-            <li className="flex gap-2">
-              <span className="text-rose-500 mt-0.5">✖</span>
-              <span>
-                {lang === "en" 
-                  ? <><strong className="font-extrabold text-rose-700">Commercial use is strictly prohibited.</strong> (Merchandise sales, paid content, corporate accounts, etc.)</>
-                  : <><strong>商用利用は一切禁止</strong>です。（グッズ販売、有料コンテンツ、企業アカウントでの利用など）</>}
-              </span>
-            </li>
-            <li className="flex gap-2">
-              <span className="text-cyan-600 mt-0.5">✔</span>
-              <span>
-                {lang === "en" 
-                  ? <><strong className="font-extrabold text-cyan-800">Credit / Link is required.</strong><br />When using, please clearly state the following in your profile or caption:<br /></>
-                  : <><strong>クレジット表記・リンクが必須</strong>です。<br />使用する際は、プロフィールやキャプション等に必ず<br /></>}
-                <code className="bg-white px-2 py-1 rounded border border-rose-100 text-xs mt-1 inline-block select-all">
-                  {lang === "en" ? "Image source: CognitiveLens (https://cognitive-lens.com)" : "画像引用元：CognitiveLens（https://cognitive-lens.com）"}
-                </code>
-                {lang === "en" ? "" : <><br />を明記してください。</>}
-              </span>
-            </li>
-            <li className="flex gap-2">
-              <span className="text-rose-500 mt-0.5">✖</span>
-              <span>
-                {lang === "en"
-                  ? "Claiming as your own, redistribution, tracing, use against public order and morals, and use for AI training are prohibited."
-                  : "自作発言、二次配布、トレス、公序良俗に反する利用、AIへの学習利用は禁止します。"}
-              </span>
-            </li>
-            <li className="flex gap-2">
-              <span className="text-cyan-600 mt-0.5">✔</span>
-              <span>
-                {lang === "en"
-                  ? "Use for personal SNS icons, free blogs, and non-commercial videos (credit required) is highly welcomed!"
-                  : "個人のSNSアイコン、無料ブログ、非商用の動画（要クレジット）での使用は大歓迎です！"}
-              </span>
-            </li>
+        <div className="rounded-panel border-l-4 border-fg bg-surface px-4 py-3">
+          <Heading level={3} id="downloads-prohibited">
+            禁止していること
+          </Heading>
+          <ul aria-labelledby="downloads-prohibited" className="mt-1 list-disc pl-5 marker:text-muted">
+            {PROHIBITED.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
           </ul>
         </div>
+        <p>
+          条件にない使い方をしたいときは、X のアカウント{" "}
+          <ExternalTextLink href={X_ACCOUNT_URL}>{X_ACCOUNT_HANDLE}</ExternalTextLink>
+          に DM でご相談ください。
+        </p>
+      </InfoSection>
 
-        {/* Gallery */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-          {ALL_TYPES.map((type) => {
-            const info = getTypeInfo(lang)[type];
-            // 画像パスがない場合はスキップ（今回は全タイプある前提）
-            if (!info.imageUrl) return null;
+      <InfoSection id="downloads-about" title="画像について">
+        <p>キャラクターは、運営者が画像生成 AI で作ったオリジナルの画像です。画像の権利は運営者にあります。</p>
+        <p>形式は PNG、大きさは 800×1000 ピクセルで、背景は透明です。</p>
+      </InfoSection>
 
-            return (
-              <div 
-                key={type} 
-                className="glass-card rounded-3xl p-5 flex flex-col items-center justify-center text-center transition-all hover:-translate-y-2 hover:shadow-xl bg-white border border-slate-100 group"
-              >
-                <div 
-                  className={`w-full aspect-square relative mb-4 rounded-2xl bg-gradient-to-br ${info.gradient} flex items-center justify-center overflow-hidden transition-transform duration-300 group-hover:scale-105`}
-                >
-                  <div className="w-[85%] h-[85%] relative drop-shadow-xl z-10 transition-transform duration-300 group-hover:scale-110">
-                    <Image src={info.imageUrl} alt={info.name} fill className="object-contain" sizes="96px" />
-                  </div>
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-white/10 transition-colors z-20 pointer-events-none" />
+      <InfoSection id="downloads-list" title="16タイプのキャラクター" wide>
+        <ul className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-6">
+          {TYPE_CODES.map((type) => (
+            <li key={type}>
+              <TypeFrame type={type} className="h-full [--frame-radius:14px] [--frame:5px]">
+                <p className="px-2 pb-1.5 pt-2 font-display text-[1.375rem] leading-tight tracking-[0.02em] md:text-[1.75rem]">
+                  {type}
+                </p>
+                <CharacterFigure type={type} sizes={TYPE_CARD_IMAGE_SIZES} className="mx-1.5" />
+                <p className="px-2 pt-2 text-lead font-black leading-snug">{TYPE_NAMES[type]}</p>
+                <div className="mt-auto px-1.5 pb-2 pt-2">
+                  <a
+                    href={TYPE_BASE[type].image.src}
+                    download={`CognitiveLens_${type}.png`}
+                    className="inline-flex min-h-11 w-full items-center justify-center gap-1.5 whitespace-nowrap rounded-panel border-2 border-line px-1 font-bold hover:bg-surface-2"
+                  >
+                    <Download aria-hidden="true" className="size-4 shrink-0" />
+                    <span>
+                      <span className="sr-only">{characterAlt(type)}の画像を</span>
+                      ダウンロード
+                    </span>
+                  </a>
                 </div>
-                
-                <h3 className="font-extrabold text-slate-800 text-lg mb-0.5 tracking-wider">{type}</h3>
-                <p className="text-[11px] text-slate-500 font-bold mb-4 px-2 py-0.5 bg-slate-100 rounded-full">{info.name}</p>
-                
-                <a
-                  href={info.imageUrl}
-                  download={`${type}_cognitive_lens.png`}
-                  className="w-full bg-slate-100 text-slate-700 hover:bg-cyan-500 hover:text-white transition-colors py-3 rounded-xl font-bold text-xs flex items-center justify-center gap-2"
-                >
-                  <Download size={14} /> {lang === "en" ? "Download" : "ダウンロード"}
-                </a>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Footer */}
-        <footer className="mt-20 text-center text-xs text-slate-400 flex flex-col items-center justify-center gap-2">
-          <div className="flex items-center gap-1 font-medium">
-            <Copyright size={12} />
-            <span>2026 CognitiveLens.</span>
-          </div>
-          <p className="text-[10px]">
-            {lang === "en" 
-              ? "Unauthorized reproduction of any images or text is prohibited."
-              : "すべての画像・テキストの無断転載（規定外の利用）を禁じます。"}
-          </p>
-        </footer>
-      </div>
-    </main>
+              </TypeFrame>
+            </li>
+          ))}
+        </ul>
+      </InfoSection>
+    </InfoPage>
   );
 }
