@@ -1,12 +1,12 @@
 # CognitiveLens リニューアル仕様書
 
-作成日：2026-09-15　更新日：2026-09-15（`docs/decisions.md` と、N1〜N12 の回答を反映）　状態：実装前のレビュー用
+作成日：2026-09-15　更新日：2026-09-15（`docs/decisions.md` と、N1〜N12 の回答を反映。8章に進捗を追記）　状態：フェーズ1まで本番反映済み、フェーズ2を作業用ブランチで進行中
 
 ## 0. この文書について
 
 `docs/current-site.md`（現状調査）を土台に、コグニティブレンズを作り直す仕様をまとめた。実装はまだ行わない。
 
-初版の質問（Q1〜Q20）には、運営者が `docs/decisions.md` で回答した。この版はその回答を反映したもので、両者が食い違うときは `decisions.md` を正とする。本文の「Q番号」は初版の質問を指し、回答は `decisions.md` 2章にある。この版で新たに出た確認事項は「→ N番号」と書き、9-3 に集めた。N1〜N12 にはすべて運営者がチャットで回答し（2026-09-15）、本文に反映した。
+初版の質問（Q1〜Q20）には、運営者が `docs/decisions.md` で回答した。この版はその回答を反映したもので、両者が食い違うときは `decisions.md` を正とする。本文の「Q番号」は初版の質問を指し、回答は `decisions.md` 2章にある。この版で新たに出た確認事項は「→ N番号」と書き、9-3 に集めた。N1〜N12 には運営者がチャットで回答し（2026-09-15）、本文に反映した。N13 は実装中に出た質問で、未回答。
 
 ### 0-1. 前提
 
@@ -379,7 +379,7 @@ X への投稿に入れる URL にはクエリを付けない。カードは型�
 
 | 変更 | 内容 | 根拠 |
 |---|---|---|
-| 言語の区画を `ja` だけにする | `app/[lang]/layout.tsx`（ルートではないレイアウト）を新設し、`generateStaticParams` が `[{ lang: 'ja' }]` を返すようにして `dynamicParams = false` を指定する。`/foo` や `/foo/test` が 404 になる | `dynamicParams.md` 17行目 |
+| 言語の区画を `ja` だけにする | `app/[lang]/layout.tsx`（ルートではないレイアウト）を新設し、`generateStaticParams` が `[{ lang: 'ja' }]` を返すようにして `dynamicParams = false` を指定する。`/foo` や `/foo/test` が 404 になる。実行時に描画するページ（`/[lang]/result`）には `dynamicParams` が効かなかったので、レイアウトでも `lang` が `ja` 以外なら `notFound()` を呼ぶ（2026-09-15 確認） | `dynamicParams.md` 17行目 |
 | 404 ページ | `app/not-found.tsx` を置く。ルートの `not-found` は一致しない URL 全体を扱い、404 には `noindex` が自動で付く | `not-found.md` 131行目、185行目 |
 | 手書きの `<head>` を Metadata API へ | サイト確認の meta を `verification.google` で出す | `layout.md` 141行目、`generate-metadata.md` 756行目 |
 | Bot 判定とレートリミットの範囲 | `POST /api/romance-ai` だけにする。画像のルートと全ページからは外す。ルート内の `isBotUserAgent` の判定も残す。OG 画像が X などのクローラーに 403 を返していた件は、ステップ 0-3 で直した。0-8 の削除で、proxy の判定を受ける API は `POST /api/romance-ai` だけになっている | `current-site.md` 6-4 |
@@ -498,7 +498,7 @@ Next.js のファイル規約 `opengraph-image.tsx` を使う。`app/[lang]/resu
 
 #### フォント
 
-Noto Sans JP（SIL Open Font License 1.1）の静的ウェイト TTF を使う。`ImageResponse` が読めるのは TTF・OTF・WOFF だけで、WOFF2 は使えない（`image-response.md` 52行目）。
+Noto Sans JP（SIL Open Font License 1.1）の静的ウェイトを使う。`ImageResponse` が読めるのは TTF・OTF・WOFF だけで、WOFF2 は使えない（`image-response.md` 52行目）。実装では notofonts/noto-cjk の `Sans/SubsetOTF/JP` にある静的な OTF（CFF）を使い、3ウェイトとも描画できることを確かめた（2026-09-15、ステップ 1-6）。取得元と版は `docs/asset-credits.md` にある。
 
 - 取得元の URL、版、ライセンスを `docs/asset-credits.md` に記録する
 - `import` で同梱せず `readFile` で読む。`ImageResponse` のバンドル上限 500KB の対象から外すため（同 51行目）
@@ -594,25 +594,41 @@ Instagram ストーリーズでは、画面の上下に操作用の表示が重�
 
 ### 5-1. 置き場所
 
+実装で作ったファイルに合わせて更新した（2026-09-15）。
+
 ```
 lib/
   tuple.ts               長さ固定の配列型 Tuple
   type-codes.ts          16の型コード（アルファベット順）と TypeCode 型
   type-names.ts          呼称16件（6-2）
-  type-base.ts           画像パス、タイプ色、相性の相手の型コード
-  career-jobs.ts         適職の職業名（現行の lib/career-data.ts から値を変えずに移す）
+  type-base.ts           画像パスとタイプ色
+  type-compatibility.ts  相性の相手の型コード（文章を書いたタイプから順に足す）
+  theme.ts               背景・面・文字の色
+  career-jobs.ts         適職の職業名（現行の lib/career-data.ts に 5-2 の書き換え表を当てたもの）
+  site.ts                サイトの URL 定数と canonical()
+  redirects.ts           1-3 の転送の判定
   type-content/
     schema.ts            TypeContent 型
     ENFJ.ts … ISTP.ts    タイプごとの文章（16ファイル）
   diagnosis/
-    items.ts             自己診断の尺度・設問・決定設問
-    score.ts             2-1 の計算（純粋な関数）
+    types.ts             軸・文字・設問・決定設問の型と尺度
+    items.ts             自己診断の設問・決定設問
+    score.ts             2-1〜2-3 の計算（純粋な関数）
   target/
     items.ts             相手診断の設問・決定設問
   romance/
     items.ts             タイプ別の設問（12問以内）と段階別の説明文
   bingo-data-ja.ts       タイプ別の24項目（現行ファイルに型を付けて部分改訂）
+scripts/
+  check-content.mjs          件数・文字数・段落・相性・職業名・フォントの収録・色を検査
+  check-banned-terms.mjs     6-1 の名称とトーンガイドの流行語を検査
+  check-redirects.mjs        実際のサーバーの 301 を検査
+  check-question-similarity.mjs  新旧の設問の類似度
+  build-character-assets.mjs キャラクターの切り詰め版（predev・prebuild で毎回）
+  build-font-subset.mjs      生成画像用フォントのサブセット（npm run build:font）
 ```
+
+Node.js の型除去（`node --test`）で読むファイル（`redirects.ts`・`diagnosis/score.ts`）は、値の import をしない。Next.js は拡張子なしの import を、Node.js は拡張子付きを求めて両立しないためだ。
 
 タイプごとにファイルを分けるのは、1タイプずつ書いてレビューする（ステップ 2-4、2-5）ためだ。置き換えが済んだ現行ファイル（`lib/type-info.ts`、`lib/static-profiles.ts`、`lib/questions.ts` など）は、ステップ 3-22 でまとめて削除する。
 
@@ -857,6 +873,35 @@ decisions 3章の順で行う。
 
 フェーズ2〜3のブランチは、フェーズ1がすべて本番に出てから main で作る。作業中に main へ修正が入ったら（0-2 の連絡先の差し替えなど）、ブランチに main を取り込む。プレビューでの確認では、`check-redirects.mjs` とクロールをプレビューの URL に向けて実行する。R10 はホスト名が違うので対象から外す。プレビューに Vercel の保護がかかっていれば、自動化用のバイパス（Protection Bypass for Automation）を使う。
 
+### 進捗（2026-09-15 時点）
+
+フェーズ0・1 は `main` から本番に出した。フェーズ2〜3 は作業用ブランチ `renewal` で進めていて、Vercel のプレビューのビルドは成功している（コミット `aa48d8b`）。
+
+| ステップ | 状態 | コミット | 確認したこと |
+|---|---|---|---|
+| 0-1 | 完了 | `21df36f` | 下の表のとおり |
+| 0-2 | 共有 URL は完了。連絡先は Q17 待ち | `4d61ac6` | 同上 |
+| 0-3 | 完了 | `bec1a2b` | 同上 |
+| 0-4 | 完了（生成ツール等は Q2 待ち） | `35a214b` | `docs/asset-credits.md` にキャラクター・アイコン・フォント・絵文字を記録 |
+| 0-5 | 完了 | `ff75333` | 単体テストで 1-3 の全例が期待どおり |
+| 0-6〜0-8 | 完了 | `51d0fc3`・`973cbec`・`2d75491` | 下の表のとおり |
+| 1-1 | 完了 | `992c75f` | 公開サイトで `/en/test` などが1回の 301、`/foo`・`/api/result`・`/ads.txt` が 404。sitemap は26件で英語 URL なし。ページの title・h1 は変化なし |
+| 1-2 | 完了 | `e567a9a` | 公開サイトでサイト確認の meta が1つ |
+| 1-3 | 完了 | `ba34e87` | 公開サイトの全ページに www 付きの canonical。sitemap の26件すべて www 付き |
+| 1-4 | コードは完了。**Vercel の設定変更が残っている** | `110146a` | ローカルで www なしが1回の 301。公開サイトでは Vercel が先に 307 を返す（設定変更で解消） |
+| 1-5 | 完了 | `cf9002c` | わざと件数・文字数・禁止語・型を壊すと、検査とビルドが止まる。Vercel のビルドも成功 |
+| 1-6 | 完了 | `f6ce06c` | 16枚の切り詰め版、フォント3ウェイトのサブセット。Vercel のビルドも成功 |
+| 2-1 | 下書き済み。**レビュー待ち** | `renewal`：`cf93695` | `docs/tone-guide.md`。流行語31語を検査に登録 |
+| 2-2 | 禁止語検査とウェブ調査は完了。**J-PlatPat と、呼称を続けるかの判断待ち**（N13） | `renewal`：`966ece7` | `docs/naming-check.md` |
+| 2-3 | 案を作成。**レビュー待ち** | `renewal`：`b13ef8d` | `docs/colors.md`。コントラスト比の最小 5.64、グループの弧 173〜231° |
+| 2-4 | 見本を作成。**レビュー待ち** | `renewal`：`6da6377` | `lib/type-content/INTJ.ts` が長さ・禁止語の検査を通る |
+| 2-5 | 未着手（2-4 のレビュー待ち） | — | — |
+| 2-6・2-7 | 作成 | `renewal`：`87f41f7`・`aa48d8b` | 件数・向き・並び・45字の検査が通る。現行設問との類似度は最大 0.34 |
+| 2-8・2-9 | 未着手（2-1 のレビュー待ち） | — | — |
+| 3-1 | 完了 | `renewal`：`481db77` | T1〜T10 と相手診断のテストが合格 |
+
+AdSense をやめたので、関係する記述と広告枠を 2026-09-15 に削除した（`d1d565f`・`bcd8428`）。旧ステップ 3-23 はなくなり、一括公開は 3-23 に繰り上がった。
+
 ### フェーズ0：着手前の修正と準備
 
 0-1〜0-3 はリニューアルとは別のコミットにし、先に公開サイトへ反映する（decisions 1章）。
@@ -1065,6 +1110,10 @@ OpenAI・GitHub・Supabase・Google のキーやトークンは、どのコミ�
 | GA4 のプロパティ作成と測定 ID（この版で追加） | 3-19 |
 | OpenAI の管理画面で、月の利用上限を設定する。レートリミットに穴が開いても請求額の天井になる | なし（すぐ行う） |
 | 公開リポジトリの履歴に残る Basic 認証のパスワードを、ほかのサービスで使い回していないか確かめ、使い回していれば変更する | なし（すぐ行う） |
+| Vercel の Domains 設定で、`cognitive-lens.com` を「www への転送」から「プロジェクトへ直接割り当て」に切り替える（2026-09-15 追加） | 1-4 の仕上げ。R10 のコードは公開済み |
+| `docs/tone-guide.md` のレビュー。流行語の一覧と、タイプ説明を常体で書く解釈（2026-09-15 追加。`renewal` ブランチ） | 2-1、2-5、2-8、2-9 |
+| `docs/colors.md` のタイプ色のレビュー（2026-09-15 追加。`renewal` ブランチ） | 2-3、3-2 以降のデザイン |
+| `lib/type-content/INTJ.ts` の見本文章と職業名の書き換え表のレビュー（2026-09-15 追加。`renewal` ブランチ） | 2-4、2-5 |
 
 ### 9-3. この版で新たに出た質問
 
@@ -1085,7 +1134,11 @@ OpenAI・GitHub・Supabase・Google のキーやトークンは、どのコミ�
 | N11 | meta description は title と本文のどちらの扱いか | title と同じ扱い。検索結果に出る要素（title・description・h1）は「MBTI」を使わず、本文は1回まで。`/ja/romance-checker` の description は書き直す | 3-4、5-3、7-1、ステップ 3-17 |
 | N12 | `cf-connecting-ip` を信用しない修正を今すぐ出すか | 出す。Vercel が上書きするヘッダーだけを信用する。`/api/chat-script` はリミットを足すより消す方が早いので、同じ理由で `/api/chat-og`・`/api/result` も API だけ先に消す。ページ本体は 301 のステップで消す | ステップ 0-7・0-8（完了）、1-1 |
 
-この時点で、未回答の N番号はない。
+#### 未回答（2026-09-15 追加）
+
+| # | 質問 | この回答で決まること |
+|---|---|---|
+| N13 | 呼称をこのまま幻獣名で続けるか。ウェブ調査で、集英社 SPUR の占い「みみた先生のファンタジーフォーチュン」（2024年）が、生年月日から性格を幻獣などのキャラクターで分けていることが分かった。10種類のうちドラゴン・ピクシー・スフィンクス・ユニコーン・フェニックスの5つが私たちの呼称と同じ名前で、人魚もマーメイドと同じ生き物。個性心理學研究所の「動物キャラナビ」もペガサスを使っている（`docs/naming-check.md`） | 呼称の維持か変更、2-5 以降のすべての文章 |
 
 ### 9-4. ビンゴで保持する見出し
 
