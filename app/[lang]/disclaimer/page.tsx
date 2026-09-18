@@ -58,7 +58,10 @@ export default function DisclaimerPage() {
 
       <InfoSection id="disclaimer-characters" title="キャラクター画像について">
         <p>
-          キャラクターは、運営者が画像生成 AI で作ったオリジナルの画像です。実在の人物とは関係ありません。
+          キャラクターは、運営者が画像生成 AI で作った絵です。実在の人物とは関係ありません。
+        </p>
+        <p>
+          いまの絵柄は仮のものです。幻獣をモチーフにした新しい絵ができ次第、差し替えます。
         </p>
         <p>
           服装や持ち物は、タイプの雰囲気を表すための絵柄です。そのタイプの人の職業や趣味を示すものではありません。
@@ -70,8 +73,11 @@ export default function DisclaimerPage() {
 
       <InfoSection id="disclaimer-official" title="公式の検査との関係">
         <p>
-          当サイトは、MBTI® の公式の検査や、その提供元とは関係ありません。性格診断サイトの 16Personalities
-          とも関係のない、独立したサイトです。16タイプの呼称、設問、文章は、当サイトで独自に作っています。
+          当サイトは、MBTI® の公式の検査や、その提供元とは関係ありません。この名称は The Myers-Briggs Company
+          の登録商標です。
+        </p>
+        <p>
+          性格診断サイトの 16Personalities とも関係のない、独立したサイトです。16タイプの呼称、設問、文章は、当サイトで独自に作っています。
         </p>
       </InfoSection>
 

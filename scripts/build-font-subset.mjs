@@ -30,6 +30,19 @@ async function download(weight) {
   return file;
 }
 
+/**
+ * OFL 1.1 は、フォント（サブセットも含む）を配るときにライセンス文を添えることを条件にしている。
+ * assets/fonts/ をリポジトリに置く＝配布にあたるので、フォントと同じ固定コミットから LICENSE を取る。
+ */
+async function downloadLicense() {
+  const url = `https://raw.githubusercontent.com/notofonts/noto-cjk/${NOTO_COMMIT}/LICENSE`;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`${url} の取得に失敗（${res.status}）`);
+  const text = await res.text();
+  fs.writeFileSync(path.join(outDir, "LICENSE"), text);
+  return Buffer.byteLength(text);
+}
+
 if (import.meta.url === `file://${process.argv[1].replace(/\\/g, "/").replace(/^([A-Za-z]):/, "/$1:")}`) {
   const charset = collectCharset(root);
   fs.writeFileSync(path.join(outDir, "charset.txt"), charset + "\n");
@@ -41,5 +54,7 @@ if (import.meta.url === `file://${process.argv[1].replace(/\\/g, "/").replace(/^
     fs.writeFileSync(out, subset);
     console.log(`${weight}: 元 ${(source.length / 1e6).toFixed(1)}MB（sha256 ${sha(source).slice(0, 12)}…）→ サブセット ${(subset.length / 1e3).toFixed(0)}KB`);
   }
+  const licenseBytes = await downloadLicense();
+  console.log(`ライセンス文: assets/fonts/LICENSE（${licenseBytes} バイト）`);
   console.log(`build-font-subset: ${[...charset].length} 字を収録（assets/fonts/charset.txt）`);
 }

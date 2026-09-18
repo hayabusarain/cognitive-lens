@@ -19,11 +19,18 @@ import {
 
 /**
  * キャラクター素材の配布 /ja/downloads（ステップ 3-20）
- * 配るのは public/characters/{TYPE}.png の元画像（lib/type-base.ts）。出典は docs/asset-credits.md 1章（作成者・権利は運営者、AI 生成）。
+ * 配るのは public/characters/{TYPE}.png の元画像（lib/type-base.ts）。出典は docs/asset-credits.md 1章。
+ *
+ * 2026-09-19：現行の16枚は、ほかの性格診断サイトのキャラクター画像を画像生成 AI に読み込ませて
+ * 変換したものだと分かった（運営者の申告）。権利の整理が済むまで PAUSED で配布を止める。
+ * 幻獣版（asset-credits.md 1-2）に差し替え、出自を台帳に書いてから false に戻す。
  * 利用条件は以前のページの内容を変えず、文面だけを整えた。画像を幻獣版に差し替えても、このページのコードは変えない
  */
 
-const UPDATED_AT = "2026-09-16";
+const UPDATED_AT = "2026-09-19";
+
+/** 配布を止めているあいだは true。絵柄を差し替えたら false に戻すと、下の配布の画面がそのまま出る */
+const PAUSED: boolean = true;
 
 /** 利用者に載せてもらうクレジットの一文 */
 const CREDIT = `画像引用元：CognitiveLens（${SITE_URL}）`;
@@ -31,7 +38,7 @@ const CREDIT = `画像引用元：CognitiveLens（${SITE_URL}）`;
 export const metadata: Metadata = {
   title: "キャラクター素材の配布",
   description:
-    "16タイプ性格診断 CognitiveLens のキャラクター画像16枚を配布しています。個人の SNS アイコンやブログに使えます。利用条件とクレジットの書き方もこのページにあります。",
+    "16タイプ性格診断 CognitiveLens のキャラクター素材について。いまは絵柄を作り直しているため、画像の配布を止めています。",
   // openGraph は書かない。書くと [lang]/opengraph-image（トップの OG 画像）を引き継がなくなる（2026-09-16 のビルドで確認）
   alternates: canonical("/ja/downloads"),
 };
@@ -46,6 +53,27 @@ const PROHIBITED = [
 ] as const;
 
 export default function DownloadsPage() {
+  if (PAUSED) {
+    return (
+      <InfoPage
+        title="キャラクター素材の配布"
+        path="/ja/downloads"
+        updatedAt={UPDATED_AT}
+        lead="いまは画像の配布を止めています。"
+      >
+        <InfoSection id="downloads-paused" title="配布を止めています">
+          <p>
+            キャラクターの絵柄を作り直しているため、画像の配布を止めています。新しい絵柄ができたら、このページで配り直します。
+          </p>
+          <p>
+            再開のお知らせは X（
+            <ExternalTextLink href={X_ACCOUNT_URL}>{X_ACCOUNT_HANDLE}</ExternalTextLink>）に出します。
+          </p>
+        </InfoSection>
+      </InfoPage>
+    );
+  }
+
   return (
     <InfoPage
       title="キャラクター素材の配布"
