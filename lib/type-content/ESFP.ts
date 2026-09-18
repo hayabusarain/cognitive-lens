@@ -57,7 +57,7 @@ export const content: TypeContent = {
       "暗記した答えより、バイトや学園祭で急なトラブルを切り抜けた経験を一つ話す。面接官の反応を見て話を広げられるので、会話になるほど持ち味が出る。「5年後」を聞かれる質問だけは、一文で答えを用意しておく。",
   },
   og: { catch: "場の温度を、いちばん先に上げる" },
-  share: { text: "わたしのタイプは{name}でした。あなたは？ {url}" },
+  share: { text: "{name}でした。誘う側にまわることが多い。あなたは？\n{url}" },
   seo: {
     title: "ESFP（サラマンダー）の性格と特徴・相性・適職 | CognitiveLens",
     description:

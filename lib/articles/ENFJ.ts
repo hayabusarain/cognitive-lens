@@ -5,7 +5,7 @@ import type { ArticleContent } from "@/lib/articles/schema";
  * 特徴全般・相性・適職は結果ページ /ja/result/ENFJ に任せる（仕様書 7-3）。
  */
 export const article: ArticleContent = {
-  title: "ENFJ（フェニックス）の恋愛：応援が恋に変わるときと脈ありサイン",
+  title: "ENFJ（フェニックス）の恋愛と脈ありサイン：応援が恋に変わるとき",
   description:
     "応援したい気持ちが、いつの間にか恋になるENFJ（フェニックス）。誰にでも親身な人の好意は、どこに出るのか。すれ違いやすいところと脈ありサイン5つを、恋愛の場面ごとに書きました。",
   lead:

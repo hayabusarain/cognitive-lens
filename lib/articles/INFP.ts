@@ -5,7 +5,7 @@ import type { ArticleContent } from "@/lib/articles/schema";
  * 書き方の決まりは docs/tone-guide.md。タイプの傾向は lib/type-content/INFP.ts と矛盾させない。
  */
 export const article: ArticleContent = {
-  title: "INFP（ペガサス）の恋愛：頭の中で育つ気持ちと脈ありサイン",
+  title: "INFP（ペガサス）の恋愛と脈ありサイン：頭の中で育つ気持ち",
   description:
     "片思いの相手と、頭の中で何度も会話しているINFP（ペガサス）。恋の始まり方や、好きな人の前で相づちばかりになる理由、脈ありサインを解説します。",
   lead:

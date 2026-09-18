@@ -57,7 +57,7 @@ export const content: TypeContent = {
       "無理に社交的に見せるより、筋道を立てて問題を解いた経験を一つ話す。結論から先に言うと、このタイプの強みがそのまま伝わる。",
   },
   og: { catch: "沈黙は、計算中のしるし" },
-  share: { text: "わたしのタイプは{name}でした。あなたは？ {url}" },
+  share: { text: "{name}でした。黙っているときほど考えている。あなたは？\n{url}" },
   seo: {
     title: "INTJ（スフィンクス）の性格と特徴・相性・適職 | CognitiveLens",
     description:

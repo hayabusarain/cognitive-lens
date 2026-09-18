@@ -57,7 +57,7 @@ export const content: TypeContent = {
       "面接官の表情を読むのが上手な分、答えが相手好みの無難な内容に寄りやすい。整った模範解答より、考え方が変わったきっかけの体験を一つ話すほうが芯が伝わる。",
   },
   og: { catch: "言葉になる前の気持ちまで拾う" },
-  share: { text: "わたしのタイプは{name}でした。あなたは？ {url}" },
+  share: { text: "{name}でした。言われる前に気づいてしまう。あなたは？\n{url}" },
   seo: {
     title: "INFJ（ユニコーン）の性格と特徴・相性・適職 | CognitiveLens",
     description:

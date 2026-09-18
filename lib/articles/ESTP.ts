@@ -5,7 +5,7 @@ import type { ArticleContent } from "@/lib/articles/schema";
  * 特徴全般・相性・適職は結果ページ /ja/result/ESTP に任せる（仕様書 7-3）。
  */
 export const article: ArticleContent = {
-  title: "ESTP（ミノタウロス）の恋愛：読めない相手に惹かれる理由と脈ありサイン",
+  title: "ESTP（ミノタウロス）の恋愛と脈ありサイン：読めない相手に惹かれる",
   description:
     "人の出方を読むのが速いESTP（ミノタウロス）も、恋愛では相手が読めずに本気になる。脈ありサイン5つと、けんかの翌日に起きるすれ違いを解説します。",
   lead:

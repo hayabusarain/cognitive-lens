@@ -57,7 +57,7 @@ export const content: TypeContent = {
       "話したいことが次々に浮かぶので、エピソードは一つに絞っておく。それを始めた理由と心が動いた瞬間を具体的に話すと、熱意に中身が伴う。",
   },
   og: { catch: "話が飛んだ先で、いい案を拾ってくる" },
-  share: { text: "わたしのタイプは{name}でした。あなたは？ {url}" },
+  share: { text: "{name}でした。思いついたら黙っていられない。あなたは？\n{url}" },
   seo: {
     title: "ENFP（ピクシー）の性格と特徴・相性・適職 | CognitiveLens",
     description:

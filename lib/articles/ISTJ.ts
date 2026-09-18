@@ -5,7 +5,7 @@ import type { ArticleContent } from "@/lib/articles/schema";
  * 書き方の決まりは docs/tone-guide.md。タイプの傾向は lib/type-content/ISTJ.ts と矛盾させない。
  */
 export const article: ArticleContent = {
-  title: "ISTJ（ゴーレム）の恋愛：約束の積み重ねで示す誠実さと脈ありサイン",
+  title: "ISTJ（ゴーレム）の恋愛と脈ありサイン：約束の積み重ねで示す",
   description:
     "ISTJ（ゴーレム）の好意は、守られた約束の数で分かる。告白の言葉選びから、言い合いで事実を持ち出してしまう癖、脈ありサインまで紹介します。",
   lead:

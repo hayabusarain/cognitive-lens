@@ -5,7 +5,7 @@ import type { ArticleContent } from "@/lib/articles/schema";
  * 特徴全般・相性・適職は結果ページ /ja/result/ENTP に任せる（仕様書 7-3）。
  */
 export const article: ArticleContent = {
-  title: "ENTP（キマイラ）の恋愛：からかいに隠れた本気と脈ありサイン",
+  title: "ENTP（キマイラ）の恋愛と脈ありサイン：からかいに隠れた本気",
   description:
     "からかいと本気の区別がつきにくいENTP（キマイラ）の恋愛。冗談の「好き」が届かない理由と、見分けやすい脈ありサイン5つを紹介します。",
   lead:

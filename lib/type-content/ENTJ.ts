@@ -57,7 +57,7 @@ export const content: TypeContent = {
       "自信のある話しぶりは強みだが、一人で押し切った話だけだと強引に見える。反対意見を取り入れて結果が良くなった経験を話すと、決める力と聞く耳の両方が伝わる。",
   },
   og: { catch: "結論が出ないまま、解散させない" },
-  share: { text: "わたしのタイプは{name}でした。あなたは？ {url}" },
+  share: { text: "{name}でした。気づいたら仕切っている。あなたは？\n{url}" },
   seo: {
     title: "ENTJ（ドラゴン）の性格と特徴・相性・適職 | CognitiveLens",
     description:

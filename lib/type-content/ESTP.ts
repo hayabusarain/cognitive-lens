@@ -57,7 +57,7 @@ export const content: TypeContent = {
       "用意した志望動機を読み上げるより、予想外の出来事にその場で対応した話をする。面接官の反応を見て、話を縮めたり広げたりできるのも強みだ。",
   },
   og: { catch: "走りながら、次の手を決める" },
-  share: { text: "わたしのタイプは{name}でした。あなたは？ {url}" },
+  share: { text: "{name}でした。考えるより先に足が出る。あなたは？\n{url}" },
   seo: {
     title: "ESTP（ミノタウロス）の性格と特徴・相性・適職 | CognitiveLens",
     description:

@@ -57,7 +57,7 @@ export const content: TypeContent = {
       "目立つ成果がなくても、トラブルを先回りで防いだ経験は立派な話になる。何に気づき、どう備え、周りがどう助かったかの順で話す。地味に見える準備が、仕事で使える力として伝わる。",
   },
   og: { catch: "大事な人の「いつも」を守っている" },
-  share: { text: "わたしのタイプは{name}でした。あなたは？ {url}" },
+  share: { text: "{name}でした。人の予定をなぜか覚えている。あなたは？\n{url}" },
   seo: {
     title: "ISFJ（グリフォン）の性格と特徴・相性・適職 | CognitiveLens",
     description:

@@ -5,7 +5,7 @@ import type { ArticleContent } from "@/lib/articles/schema";
  * 書き方の決まりは docs/tone-guide.md。タイプの傾向は lib/type-content/ISFJ.ts と矛盾させない。
  */
 export const article: ArticleContent = {
-  title: "ISFJ（グリフォン）の恋愛：言えずに空けておく週末と脈ありサイン",
+  title: "ISFJ（グリフォン）の恋愛と脈ありサイン：言えずに空けておく週末",
   description:
     "ISFJ（グリフォン）は、誘われるかもしれない週末を黙って空けておく。準備をしすぎて相手が恐縮する場面や、距離の縮め方、脈ありサインを紹介。",
   lead:

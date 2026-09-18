@@ -57,7 +57,7 @@ export const content: TypeContent = {
       "整った志望動機を並べるより、その仕事に惹かれたきっかけの体験を一つ話す。自分の言葉で語るときの熱が、そのまま説得力になる。",
   },
   og: { catch: "上の空に見えて、頭の中は物語でいっぱい" },
-  share: { text: "わたしのタイプは{name}でした。あなたは？ {url}" },
+  share: { text: "{name}でした。納得できないことはやれない。あなたは？\n{url}" },
   seo: {
     title: "INFP（ペガサス）の性格と特徴・相性・適職 | CognitiveLens",
     description:

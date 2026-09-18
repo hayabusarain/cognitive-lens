@@ -5,7 +5,7 @@ import type { ArticleContent } from "@/lib/articles/schema";
  * 特徴全般・相性・適職は結果ページ /ja/result/ENTJ に任せる（仕様書 7-3）。
  */
 export const article: ArticleContent = {
-  title: "ENTJ（ドラゴン）の恋愛：気づいてからが速い人の脈ありサイン",
+  title: "ENTJ（ドラゴン）の恋愛と脈ありサイン：気づいてからが速い",
   description:
     "気づくまでは遅く、気づいてからは速いのがENTJ（ドラゴン）の恋愛。予定表に表れる本気や「寂しい」が言えないすれ違い、脈ありサイン5つを取り上げます。",
   lead:

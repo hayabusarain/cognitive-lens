@@ -5,7 +5,7 @@ import type { ArticleContent } from "@/lib/articles/schema";
  * 書き方の決まりは docs/tone-guide.md。タイプの傾向は lib/type-content/ISFP.ts と矛盾させない。
  */
 export const article: ArticleContent = {
-  title: "ISFP（マーメイド）の恋愛：言葉より表情に出る好意と脈ありサイン",
+  title: "ISFP（マーメイド）の恋愛と脈ありサイン：言葉より表情に出る好意",
   description:
     "好きな気持ちが、言葉より先に顔に出るISFP（マーメイド）。一瞬で相手を好きになる感覚や、決まった時間の連絡が重くなる理由を解説。脈ありサインも一覧にしました。",
   lead:

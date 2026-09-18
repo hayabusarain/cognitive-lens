@@ -5,7 +5,7 @@ import type { ArticleContent } from "@/lib/articles/schema";
  * 特徴全般・相性・適職は結果ページ /ja/result/ESFJ に任せる（仕様書 7-3）。
  */
 export const article: ArticleContent = {
-  title: "ESFJ（ドライアド）の恋愛：気配りに混ざる特別扱いと脈ありサイン",
+  title: "ESFJ（ドライアド）の恋愛と脈ありサイン：気配りに混ざる特別扱い",
   description:
     "ESFJ（ドライアド）の恋愛では、好意がみんなへの気配りの中に小さく混ざる。お礼をめぐるすれ違いと、席の並びなどで見分ける脈ありサイン5つをまとめました。",
   lead:

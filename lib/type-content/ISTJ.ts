@@ -57,7 +57,7 @@ export const content: TypeContent = {
       "派手な実績より、部活やバイトを長く続けた経験を一つ選ぶ。ミスを防ぐために自分で決めた確認のやり方まで話すと、面接官が入社後の姿を思い描ける。",
   },
   og: { catch: "前と違うところに、一番に気づく" },
-  share: { text: "わたしのタイプは{name}でした。あなたは？ {url}" },
+  share: { text: "{name}でした。決めた手順は変えたくない。あなたは？\n{url}" },
   seo: {
     title: "ISTJ（ゴーレム）の性格と特徴・相性・適職 | CognitiveLens",
     description:

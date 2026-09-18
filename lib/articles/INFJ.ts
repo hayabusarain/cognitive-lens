@@ -5,7 +5,7 @@ import type { ArticleContent } from "@/lib/articles/schema";
  * 書き方の決まりは docs/tone-guide.md。タイプの傾向は lib/type-content/INFJ.ts と矛盾させない。
  */
 export const article: ArticleContent = {
-  title: "INFJ（ユニコーン）の恋愛：本音を見せるまでの時間と脈ありサイン",
+  title: "INFJ（ユニコーン）の恋愛と脈ありサイン：本音を見せるまでの時間",
   description:
     "INFJ（ユニコーン）が好きな人の前でだけ見せる態度と、心配しすぎて起きるすれ違いを紹介。言葉と行動が一致する人に惹かれる理由や、脈ありサイン5つもまとめました。",
   lead:

@@ -57,7 +57,7 @@ export const content: TypeContent = {
       "「人が好き」で終わらせず、場の空気を変えた経験を一つ具体的に話す。自分が何を言い、周りがどう動いたかまで添えれば、面接官にも場面が浮かぶ。",
   },
   og: { catch: "沈んだ空気ほど、燃えてくる" },
-  share: { text: "わたしのタイプは{name}でした。あなたは？ {url}" },
+  share: { text: "{name}でした。人の背中を押す側にまわりがち。あなたは？\n{url}" },
   seo: {
     title: "ENFJ（フェニックス）の性格と特徴・相性・適職 | CognitiveLens",
     description:

@@ -5,7 +5,7 @@ import type { ArticleContent } from "@/lib/articles/schema";
  * 書き方の決まりは docs/tone-guide.md。タイプの傾向は lib/type-content/INTJ.ts と矛盾させない。
  */
 export const article: ArticleContent = {
-  title: "INTJ（スフィンクス）の恋愛：結論が出たら迷わない一途さと脈ありサイン",
+  title: "INTJ（スフィンクス）の恋愛と脈ありサイン：結論が出たら迷わない",
   description:
     "筋の通った反論をする人が気になり、結論が出たら前置きなしに告白する。INTJ（スフィンクス）の恋の進め方と、見逃しやすい脈ありサインを紹介します。",
   lead:

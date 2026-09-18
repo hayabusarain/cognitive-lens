@@ -5,7 +5,7 @@ import type { ArticleContent } from "@/lib/articles/schema";
  * 書き方の決まりは docs/tone-guide.md。タイプの傾向は lib/type-content/INTP.ts と矛盾させない。
  */
 export const article: ArticleContent = {
-  title: "INTP（リヴァイアサン）の恋愛：気持ちに気づくまでの遠回りと脈ありサイン",
+  title: "INTP（リヴァイアサン）の恋愛と脈ありサイン：気づくまでの遠回り",
   description:
     "「好きでしょ」と言われて初めて自覚する、INTP（リヴァイアサン）の恋。関係に名前をつけたがらない理由と、好きな人にだけ見せる脈ありサインを取り上げます。",
   lead:

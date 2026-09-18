@@ -238,6 +238,34 @@ if (ONLY) {
   }
 } else notes.push("lib/type-base.ts はまだない");
 
+// ── 9. app/ に直書きした本文（仕様書 5-3 の長さの決まりは lib/ の外にも当てる） ──────
+// 8 までの検査は lib/ のデータだけを見ていたので、画面に直接書いた文が一度も測られていなかった。
+// タグや式が混ざった段落は読み取れないため、中身が地の文だけの <p> を対象にする。
+if (!ONLY) {
+  const tsxFiles = [];
+  const walk = (dir) => {
+    for (const entry of fs.readdirSync(path.join(root, dir), { withFileTypes: true })) {
+      const child = `${dir}/${entry.name}`;
+      if (entry.isDirectory()) walk(child);
+      else if (entry.name.endsWith(".tsx")) tsxFiles.push(child);
+    }
+  };
+  walk("app");
+  const paragraphTag = new RegExp("<p[^>]*>([^<>{}]+)</p>", "g");
+  let measured = 0;
+  for (const file of tsxFiles) {
+    const source = fs.readFileSync(path.join(root, file), "utf8");
+    for (const match of source.matchAll(paragraphTag)) {
+      // JSX は行頭と行末の空白を落とし、改行を空白1つにして1行につなぐ
+      const text = match[1].split(/\r?\n/).map((line) => line.trim()).join(" ").trim();
+      if (!text) continue;
+      measured++;
+      for (const problem of checkProse(text)) fail(file, problem);
+    }
+  }
+  notes.push(`app/ の地の文 ${measured} 段落を測った（タグや式を含む段落は対象外）`);
+}
+
 // ── 結果 ────────────────────────────────────────────────────────
 for (const n of notes) console.log(`・${n}`);
 if (problems.length) {

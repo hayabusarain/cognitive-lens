@@ -57,7 +57,7 @@ export const content: TypeContent = {
       "リーダーの肩書きより、遅れそうな作業をどう立て直したかを話す。誰に何を頼んだかまで言うと、人を動かす力が具体的に伝わる。",
   },
   og: { catch: "担当が決まるまで、話し合いは終わらない" },
-  share: { text: "わたしのタイプは{name}でした。あなたは？ {url}" },
+  share: { text: "{name}でした。決めごとは先に固めたい。あなたは？\n{url}" },
   seo: {
     title: "ESTJ（ケルベロス）の性格と特徴・相性・適職 | CognitiveLens",
     description:

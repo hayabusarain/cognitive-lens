@@ -57,7 +57,7 @@ export const content: TypeContent = {
       "チームで困っている人に気づき、自分がどう動いたかを一つ話す。気づいたきっかけと相手がどう変わったかまで言うと、気配りが仕事で使える力だと伝わる。",
   },
   og: { catch: "全員分の好みを、ちゃんと覚えている" },
-  share: { text: "わたしのタイプは{name}でした。あなたは？ {url}" },
+  share: { text: "{name}でした。気づけば幹事をやっている。あなたは？\n{url}" },
   seo: {
     title: "ESFJ（ドライアド）の性格と特徴・相性・適職 | CognitiveLens",
     description:

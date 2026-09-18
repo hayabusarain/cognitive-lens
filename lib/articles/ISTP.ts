@@ -5,7 +5,7 @@ import type { ArticleContent } from "@/lib/articles/schema";
  * 書き方の決まりは docs/tone-guide.md。タイプの傾向は lib/type-content/ISTP.ts と矛盾させない。
  */
 export const article: ArticleContent = {
-  title: "ISTP（フェンリル）の恋愛：「ついで」を装う好意と脈ありサイン",
+  title: "ISTP（フェンリル）の恋愛と脈ありサイン：「ついで」を装う好意",
   description:
     "「近くまで来たから」は、たいてい口実。ISTP（フェンリル）の好意の出し方と、脈ありサインを紹介。「今のままでいい」が誤解される理由にも触れます。",
   lead:

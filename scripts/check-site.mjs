@@ -12,7 +12,7 @@
 //   - title に「| CognitiveLens」が2回以上ない
 //   - title・meta description・h1・og:site_name に「MBTI」がない（/ja/bingo だけ例外）
 //   - 本文の見える文字（script・style を除く）の「MBTI」が1ページ1回まで（/ja/bingo は除く）
-//   - og:image があり、https://www.cognitive-lens.com から始まる
+//   - og:image があり、https://www.cognitive-lens.com から始まる。Twitterbot として取ると 200 で画像が返る
 //   - 16Personalities・Keirsey・現行サイトの型名とグループ名が、title・description・本文にない
 //     （一般語と重なる語は警告にとどめる）
 //   - どのページからもリンクされていない sitemap の URL がない。サイト内リンクの行き先が 4xx・5xx でない
@@ -63,6 +63,16 @@ async function get(path) {
   const type = res.headers.get("content-type") ?? "";
   const body = type.includes("text/") || type.includes("xml") ? await res.text() : (await res.arrayBuffer(), "");
   return { status: res.status, location: res.headers.get("location"), body };
+}
+
+/** 画像を X のクローラーとして取りに行く（Bot 判定で 403 になる不具合が 0-3 であったため、その再発も見る） */
+async function getImage(path) {
+  const res = await fetch(new URL(path, base), {
+    headers: { ...headers, "user-agent": "Twitterbot/1.0" },
+    redirect: "manual",
+  });
+  await res.arrayBuffer();
+  return { status: res.status, type: res.headers.get("content-type") ?? "" };
 }
 
 // ── HTML の読み取り（依存パッケージを増やさないため、Next.js が出す HTML の形に合わせた正規表現で読む） ──
@@ -171,6 +181,14 @@ async function checkPage(path) {
   // og:image
   if (!page.ogImages.length) bad(path, "og:image がない");
   for (const img of page.ogImages) if (!img.startsWith(SITE_URL)) bad(path, `og:image「${img}」が ${SITE_URL} から始まらない`);
+  // og:image が実際に取れるか。X や Discord のクローラーは、この URL を Bot 判定で 403 にされると画像を出せない
+  for (const img of page.ogImages) {
+    if (!img.startsWith(SITE_URL)) continue;
+    const imagePath = img.slice(SITE_URL.length);
+    const image = await getImage(imagePath);
+    if (image.status !== 200) bad(path, `og:image ${imagePath} が状態 ${image.status}（Twitterbot として取得）`);
+    else if (!image.type.startsWith("image/")) bad(path, `og:image ${imagePath} の content-type が ${image.type || "なし"}`);
+  }
 
   // 禁止語
   for (const [where, text] of [["title", title], ["meta description", page.descriptions.join(" ")], ["本文", page.text]]) {

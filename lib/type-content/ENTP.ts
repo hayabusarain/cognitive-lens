@@ -57,7 +57,7 @@ export const content: TypeContent = {
       "思いついた案の数より、一つの案を最後まで形にした経験を話す。逆質問で会社の課題に一歩踏み込むと、面接が対話に変わる。",
   },
   og: { catch: "反論するのは、考えを試したいから" },
-  share: { text: "わたしのタイプは{name}でした。あなたは？ {url}" },
+  share: { text: "{name}でした。つい「逆にさ」と言ってしまう。あなたは？\n{url}" },
   seo: {
     title: "ENTP（キマイラ）の性格と特徴・相性・適職 | CognitiveLens",
     description:

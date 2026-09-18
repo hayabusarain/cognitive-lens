@@ -57,7 +57,7 @@ export const content: TypeContent = {
       "話すのが苦手なら、作ったものの写真を一枚用意しておく。どこにこだわり、どこで迷ったかを指さしながら話すと、言葉に詰まりにくい。",
   },
   og: { catch: "おだやかに笑って、好みは譲らない" },
-  share: { text: "わたしのタイプは{name}でした。あなたは？ {url}" },
+  share: { text: "{name}でした。好みだけは譲れない。あなたは？\n{url}" },
   seo: {
     title: "ISFP（マーメイド）の性格と特徴・相性・適職 | CognitiveLens",
     description:

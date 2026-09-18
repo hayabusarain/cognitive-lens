@@ -57,7 +57,7 @@ export const content: TypeContent = {
       "答えが一言で終わりがちなので、結論のあとに理由を一つ足す。独学で直したり作ったりした話なら、自然と言葉が続くはず。",
   },
   og: { catch: "分解すれば、だいたい分かる" },
-  share: { text: "わたしのタイプは{name}でした。あなたは？ {url}" },
+  share: { text: "{name}でした。口より先に手が動く。あなたは？\n{url}" },
   seo: {
     title: "ISTP（フェンリル）の性格と特徴・相性・適職 | CognitiveLens",
     description:

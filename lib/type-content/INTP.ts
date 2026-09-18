@@ -57,7 +57,7 @@ export const content: TypeContent = {
       "調べたり作ったりした経験を話すときは、分かったことで何が変わったかまで言い切る。過程の話だけで終わると、せっかくの面白さが面接官に届かない。",
   },
   og: { catch: "つい「厳密に言うと」と付け足す" },
-  share: { text: "わたしのタイプは{name}でした。あなたは？ {url}" },
+  share: { text: "{name}でした。気になると調べ続けてしまう。あなたは？\n{url}" },
   seo: {
     title: "INTP（リヴァイアサン）の性格と特徴・相性・適職 | CognitiveLens",
     description:

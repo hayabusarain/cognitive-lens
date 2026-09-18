@@ -5,7 +5,7 @@ import type { ArticleContent } from "@/lib/articles/schema";
  * 特徴全般・相性・適職は結果ページ /ja/result/ESFP に任せる（仕様書 7-3）。
  */
 export const article: ArticleContent = {
-  title: "ESFP（サラマンダー）の恋愛：場を盛り上げる人が本気のときの脈ありサイン",
+  title: "ESFP（サラマンダー）の恋愛と脈ありサイン：本気のときだけ静かになる",
   description:
     "場を盛り上げるESFP（サラマンダー）は、好きな人の前でどう変わるのか。一人だけを誘う変化や、落ち込んだ日のすれ違い、脈ありサイン5つがわかります。",
   lead:

@@ -5,7 +5,7 @@ import type { ArticleContent } from "@/lib/articles/schema";
  * 特徴全般・相性・適職は結果ページ /ja/result/ENFP に任せる（仕様書 7-3）。
  */
 export const article: ArticleContent = {
-  title: "ENFP（ピクシー）の恋愛：「今度行こう」の本音と脈ありサイン",
+  title: "ENFP（ピクシー）の恋愛と脈ありサイン：「今度行こう」の本音",
   description:
     "ENFP（ピクシー）が好きな人にだけ見せる変化は何か。計画の話し方に出る脈ありサイン5つと、恋愛での「今度行こう」のすれ違いを紹介します。",
   lead:

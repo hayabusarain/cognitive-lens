@@ -5,7 +5,7 @@ import type { ArticleContent } from "@/lib/articles/schema";
  * 特徴全般・相性・適職は結果ページ /ja/result/ESTJ に任せる（仕様書 7-3）。
  */
 export const article: ArticleContent = {
-  title: "ESTJ（ケルベロス）の恋愛：約束の守り方でわかる脈ありサイン",
+  title: "ESTJ（ケルベロス）の恋愛と脈ありサイン：約束の守り方でわかる",
   description:
     "約束を守る人を、時間をかけて好きになるESTJ（ケルベロス）の恋愛。照れると事務的になる誘いの文面やドタキャンが響く理由と、脈ありサイン5つを挙げます。",
   lead:
