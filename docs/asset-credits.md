@@ -34,6 +34,8 @@
 
 完成したら、この表を埋めてから `public/characters/` を差し替える（`redesign-spec.md` ステップ G-1）。
 
+生成に使うプロンプトは `docs/character-prompts.md` にある。参照画像は上げず、あの文だけで作る。
+
 | 項目 | 内容 |
 |---|---|
 | ファイル | `public/characters/{TYPE}.png` の16枚（現行と同じパス） |
