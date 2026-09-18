@@ -1,22 +1,23 @@
-import Link from "next/link";
 import type { Metadata } from "next";
+import { ButtonLink } from "@/app/components/ui/Button";
+import { Heading } from "@/app/components/ui/Heading";
 
+// title は app/layout.tsx の template で「… | CognitiveLens」になる
 export const metadata: Metadata = {
-  title: "ページが見つかりません | CognitiveLens",
+  title: "ページが見つかりません",
 };
 
 export default function NotFound() {
   return (
-    <main className="min-h-[70vh] flex flex-col items-center justify-center px-6 text-center">
-      <p className="text-xs font-bold tracking-[0.2em] text-slate-400 mb-3">404</p>
-      <h1 className="text-2xl font-bold text-slate-800 mb-3">ページが見つかりません</h1>
-      <p className="text-sm text-slate-500 mb-8">URL が変わったか、ページが削除された可能性があります。</p>
-      <Link
-        href="/ja"
-        className="inline-block px-6 py-3 rounded-full bg-slate-800 text-white text-sm font-bold hover:bg-slate-700 transition-colors"
-      >
+    <main className="mx-auto flex min-h-[60vh] w-full max-w-prose flex-col items-center justify-center px-4 text-center">
+      <p className="font-display text-h1 text-muted">404</p>
+      <Heading level={1} className="mt-2">
+        ページが見つかりません
+      </Heading>
+      <p className="mt-3 text-muted">URL が間違っているか、ページが移動・削除されています。</p>
+      <ButtonLink href="/ja" className="mt-8">
         トップへ戻る
-      </Link>
+      </ButtonLink>
     </main>
   );
 }

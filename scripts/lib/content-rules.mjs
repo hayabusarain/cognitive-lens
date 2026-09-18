@@ -8,6 +8,8 @@ export const LIMITS = {
   ogCatch: 24,
   question: 45,
   romanceQuestionsMax: 12,
+  description: 120, // meta description
+  articleTitle: 40, // コラムの title（サイト名を除く）
 };
 
 /** 文字数（サロゲートペアを1字として数える） */
@@ -72,5 +74,6 @@ export function findBannedTerms(text, terms) {
   }
   // 16Personalities の「INTJ-A」「INTJ-T」の表記
   if (/\b[EI][SN][TF][JP]-[AT]\b/.test(text)) hits.push("-A・-T の表記");
-  return hits;
+  // 「エモい」と「エモ」のように、長い語に含まれる短い語の当たりは省く
+  return hits.filter((term) => !hits.some((other) => other !== term && other.includes(term)));
 }

@@ -1,180 +1,181 @@
 @import "tailwindcss";
 
-@theme {
-  /* ── Aurora Light Design System ─────────────────────────── */
-  --color-base: #FAFBFD;
-  --color-surface: rgba(255,255,255,0.6);
-  --color-surface-hover: rgba(255,255,255,0.85);
-  --color-border: rgba(0,0,0,0.06);
-  --color-border-hover: rgba(0,0,0,0.12);
-  --color-text-primary: #1e293b;
-  --color-text-secondary: #475569;
-  --color-text-muted: #94a3b8;
+/*
+ * CognitiveLens のデザインシステム（暗色・コレクションカード）
+ * 使い方は docs/design-system.md。色の値は lib/theme.ts・lib/type-base.ts と揃える（生成画像はそちらを読む）。
+ */
 
-  /* ── Bright Neon Accent ──────────────────────────────────── */
-  --color-cyan: #00e5ff;
-  --color-acid: #b2ff59;
-  --color-violet: #7c3aed;
-  --color-indigo: #4f46e5;
-  --color-magenta: #e040fb;
+@theme {
+  /* ── 色 ─────────────────────────────────────────── */
+  --color-canvas: #0E1016;    /* ページの背景（THEME.background） */
+  --color-surface: #181B23;   /* カード・パネルの面（THEME.surface） */
+  --color-surface-2: #20242E; /* 面の上に重ねる面 */
+  --color-line: #2E3340;      /* 区切り線・副ボタンの枠 */
+  --color-track: #3A3F4B;     /* 割合バーの負けた側・目立たせない印 */
+  --color-fg: #F1F2F5;        /* 本文（THEME.text） */
+  --color-muted: #A6ABB6;     /* 補足の文字（THEME.textMuted） */
+  --color-ink: #0E1016;       /* タイプ色や明るい面に載せる文字 */
+
+  /* ── 文字サイズの段階（本文は body 以上。label と note は短いラベルと注記だけに使う） ── */
+  --text-label: 0.8125rem;
+  --text-label--line-height: 1.4;
+  --text-note: 0.875rem;
+  --text-note--line-height: 1.6;
+  --text-body: 1rem;
+  --text-body--line-height: 1.85;
+  --text-lead: 1.125rem;
+  --text-lead--line-height: 1.8;
+  --text-h3: 1.125rem;
+  --text-h3--line-height: 1.5;
+  --text-h2: 1.375rem;
+  --text-h2--line-height: 1.35;
+  --text-h1: 1.75rem;
+  --text-h1--line-height: 1.3;
+  --text-title: 2.25rem;
+  --text-title--line-height: 1.35;
+  --text-hero: 4rem;
+  --text-hero--line-height: 0.95;
+
+  /* ── 角丸 ─────────────────────────────────────── */
+  --radius-chip: 6px;
+  --radius-panel: 12px;
+  --radius-card: 20px;
+
+  /* ── ページの幅 ────────────────────────────────── */
+  --container-page: 70rem;
+  --container-prose: 42rem;
+}
+
+/* 書体（app/layout.tsx の next/font が --font-dela-gothic と --font-zen-kaku を定義する）と、
+   その場のタイプ色（--tc。TypeFrame などが style で入れる）を参照するトークン */
+@theme inline {
+  --font-sans: var(--font-zen-kaku), "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", "Meiryo", sans-serif;
+  --font-display: var(--font-dela-gothic), var(--font-zen-kaku), "Hiragino Sans", "Yu Gothic", sans-serif;
+  --color-type: var(--tc);
+}
+
+/* パソコン幅では見出しの段階を大きくする */
+@media (min-width: 64rem) {
+  :root {
+    --text-h2: 1.5rem;
+    --text-h1: 2.5rem;
+    --text-title: 3.5rem;
+    --text-hero: 5.5rem;
+  }
+}
+
+/* 和文の見出しを詰める */
+@utility palt {
+  font-feature-settings: "palt";
+}
+/* 文節の途中で折り返さない（対応ブラウザだけ） */
+@utility text-phrase {
+  word-break: auto-phrase;
 }
 
 @layer base {
-  html, body {
-    background-color: var(--color-base);
-    color: var(--color-text-primary);
+  :root {
+    /* タイプの文脈がない場所では、タイプ色の代わりに本文の色を使う */
+    --tc: var(--color-fg);
+    color-scheme: dark;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-canvas);
+    color: var(--color-fg);
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
     -webkit-font-smoothing: antialiased;
-    font-family: inherit;
-    margin: 0;
-    padding: 0;
+    /* 表示用の書体（Dela Gothic One）は 400 だけ。太字を擬似的に作らせない */
+    font-synthesis-weight: none;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--color-fg);
+    outline-offset: 3px;
+  }
+
+  ::selection {
+    background-color: var(--tc);
+    color: var(--color-ink);
   }
 }
 
 @layer components {
-  /* ── Typography Enhancements ───────────────────────────── */
-  h1, h2, h3, h4, h5, h6 {
-    font-weight: 800; /* extrabold */
-    letter-spacing: -0.04em; /* tracking-tighter */
-  }
-
-  /* ── Layout & Layering ──────────────────────────────────── */
-  .content-layer {
+  /* ── タイプ色の枠（app/components/type/TypeFrame.tsx） ── */
+  .type-frame {
+    --frame: 6px;
+    --frame-radius: 16px;
+    display: block;
     position: relative;
-    z-index: 10;
+    padding: var(--frame);
+    border-radius: var(--frame-radius);
+    background-color: var(--tc);
+    color: var(--color-fg);
+    text-decoration: none;
   }
-
-  .nav-blur {
-    background: rgba(250, 251, 253, 0.7);
-    backdrop-filter: blur(12px) saturate(180%);
-    border-bottom: 1px solid var(--color-border);
+  .type-frame[data-size="sm"] {
+    --frame: 4px;
+    --frame-radius: 12px;
   }
-
-  /* ── Aurora Background (Light Mode) ──────────────────────── */
-  .aurora-bg {
-    position: fixed;
-    inset: 0;
-    z-index: 0;
+  .type-frame[data-size="lg"] {
+    --frame: 8px;
+    --frame-radius: 22px;
+  }
+  .type-frame__inner {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
     overflow: hidden;
-    pointer-events: none;
-    background: linear-gradient(135deg, #f0f9ff 0%, #FAFBFD 50%, #f3e8ff 100%);
+    border-radius: calc(var(--frame-radius) - var(--frame));
+    background-color: var(--color-surface);
   }
 
-  .aurora-mid {
+  /* ── キャラクターの窓：暗い地に縦の細線、下からタイプ色の台座（CharacterFigure.tsx） ── */
+  .type-art {
+    position: relative;
+    isolation: isolate;
+    aspect-ratio: 4 / 5;
+    max-width: 100%;
+    overflow: hidden;
+    border-radius: var(--radius-chip);
+    background:
+      repeating-linear-gradient(90deg, transparent 0 23px, rgb(255 255 255 / 0.035) 23px 24px),
+      #11141b;
+  }
+  .type-art::before {
+    content: "";
     position: absolute;
-    width: 150vw;
-    height: 150vw;
-    top: -25%;
-    left: -25%;
-    background: radial-gradient(circle at 50% 50%, rgba(0, 229, 255, 0.15) 0%, rgba(124, 58, 237, 0.08) 35%, transparent 70%);
-    animation: drift 20s infinite ease-in-out alternate;
-    filter: blur(60px);
+    left: -12%;
+    right: -12%;
+    bottom: -38%;
+    height: 78%;
+    border-radius: 50% 50% 0 0 / 40% 40% 0 0;
+    background-color: var(--tc);
   }
+}
 
-  @keyframes drift {
-    0% { transform: translate(0, 0) scale(1); }
-    100% { transform: translate(-5%, 8%) scale(1.05); }
+/* 動き：動きを減らす設定では出さない */
+@media (prefers-reduced-motion: no-preference) {
+  a.type-frame {
+    transition: transform 0.18s ease-out, box-shadow 0.18s ease-out;
   }
-
-  /* ── Glass Components ────────────────────────────────────── */
-  .glass-card {
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    backdrop-filter: blur(16px) saturate(180%);
-    box-shadow: 0 4px 24px rgba(0,0,0,0.03);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  a.type-frame:hover {
+    transform: translateY(-4px) rotate(-0.6deg);
+    box-shadow: 0 14px 28px -14px var(--tc);
   }
-  
-  .glass-card:hover {
-    background: var(--color-surface-hover);
-    border-color: var(--color-border-hover);
-    box-shadow: 0 8px 32px rgba(0,0,0,0.06);
-  }
-
-  /* ── Bubbles (吹き出し) ─────────────────────────────────── */
-  .bubble {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    padding: 0.6rem 1.25rem;
-    border-radius: 9999px; /* full */
-    background: rgba(255, 255, 255, 0.7);
-    border: 1px solid var(--color-border);
-    backdrop-filter: blur(12px);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-    font-size: 0.875rem; /* text-sm */
-    font-weight: 700;
-    color: var(--color-text-secondary);
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  a.bubble {
-    background: linear-gradient(135deg, rgba(0,229,255,0.1) 0%, rgba(178,255,89,0.1) 100%);
-    border-color: rgba(0,229,255,0.2);
-    color: var(--color-text-primary);
-    box-shadow: 0 4px 12px rgba(0,229,255,0.15);
-  }
-
-  a.bubble:hover {
-    transform: translateY(-2px);
-    background: linear-gradient(135deg, rgba(0,229,255,0.2) 0%, rgba(178,255,89,0.2) 100%);
-    border-color: rgba(0,229,255,0.4);
-    box-shadow: 0 8px 24px rgba(0,229,255,0.25);
-  }
-
-  /* ── Buttons (Primary mapped to bubble for impact) ──────── */
-  .btn-primary {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    padding: 0.6rem 1.25rem;
-    border-radius: 9999px;
-    font-size: 0.875rem;
-    font-weight: 700;
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    background: linear-gradient(135deg, var(--color-cyan) 0%, #10b981 100%) !important;
-    color: #ffffff !important;
-    border: none !important;
-    box-shadow: 0 4px 20px rgba(0,229,255,0.3) !important;
-  }
-  .btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 30px rgba(0,229,255,0.5) !important;
-  }
-  
-  .btn-ghost {
-    background: transparent;
-    color: var(--color-text-secondary);
-    border: 1px solid var(--color-border);
-  }
-  .btn-ghost:hover {
-    background: rgba(0,0,0,0.03);
-    color: var(--color-text-primary);
-  }
-
-  /* ── Input & Form Elements ─────────────────────────────── */
-  .input-dark {
-    background: rgba(255,255,255,0.5);
-    border: 1px solid var(--color-border);
-    color: var(--color-text-primary);
-  }
-  .input-dark:focus {
-    border-color: var(--color-cyan);
-    box-shadow: 0 0 0 2px rgba(0,229,255,0.15);
-  }
-
-  /* ── Badges ────────────────────────────────────────────── */
-  .badge-neon {
-    background: rgba(0, 229, 255, 0.15);
-    color: #00b8d4;
-    border: 1px solid rgba(0, 229, 255, 0.3);
-    box-shadow: 0 0 12px rgba(0, 229, 255, 0.2);
-  }
-
-  .badge-dark {
-    background: rgba(0,0,0,0.04);
-    color: var(--color-text-secondary);
-    border: 1px solid var(--color-border);
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

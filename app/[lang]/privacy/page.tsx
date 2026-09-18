@@ -1,189 +1,211 @@
+import type { Metadata } from "next";
 import { canonical } from "@/lib/site";
-import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { Heading } from "@/app/components/ui/Heading";
+import {
+  ExternalTextLink,
+  InfoPage,
+  InfoSection,
+  X_ACCOUNT_HANDLE,
+  X_ACCOUNT_URL,
+} from "@/app/[lang]/_components/InfoPage";
 
-export const metadata = {
+/**
+ * プライバシーポリシー /ja/privacy（ステップ 3-19）
+ *
+ * GA4 の節は、GA4 を読み込むビルド（NEXT_PUBLIC_GA_MEASUREMENT_ID がある）でだけ出す。
+ * GA4 の配信とポリシーでの公表を同じ公開で始めるため（仕様書 3-7）。値はビルド時に埋め込まれる（environment-variables.md）。
+ *
+ * GA4 の節に書いた「結果ページの URL に入る割合（?p=）を送る前に取り除く」は、app/components/analytics/PageView.tsx が
+ * クエリを外した URL で page_view を送ることで守っている。測定 ID を本番に設定する前に、GA4 の管理画面の拡張計測で
+ * 「ブラウザの履歴イベントに基づくページの変更」を無効にすること（自動の page_view がクエリ付きで送られるのを防ぐ）。
+ */
+
+/** GA4 を読み込むか。app/components/analytics/GoogleAnalytics.tsx と同じ条件（G- で始まる測定 ID）にする */
+function isGa4Enabled(): boolean {
+  const id = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
+  return !!id && /^G-[A-Z0-9]+$/.test(id);
+}
+
+/** GA4 の節がない版の最終更新日 */
+const UPDATED_AT = "2026-09-16";
+/** GA4 の節がある版の最終更新日。本番で GA4 の配信を始める公開の日付に書き換える */
+const UPDATED_AT_WITH_GA4 = "2026-09-16";
+
+const GA4 = isGa4Enabled();
+
+export const metadata: Metadata = {
+  title: "プライバシーポリシー",
+  description: GA4
+    ? "CognitiveLens が扱う情報と使い道です。アクセス解析（Vercel Web Analytics と Google アナリティクス）で送る情報や、脈あり度チェックの AI 文で OpenAI に送る情報を載せています。"
+    : "CognitiveLens が扱う情報と使い道です。アクセス解析（Vercel Web Analytics）で送る情報や、脈あり度チェックの AI 文で OpenAI に送る情報を載せています。",
+  // openGraph は書かない。書くと [lang]/opengraph-image（トップの OG 画像）を引き継がなくなる（2026-09-16 のビルドで確認）
   alternates: canonical("/ja/privacy"),
-  title: "Privacy Policy & Disclaimer | CognitiveLens",
-  description: "CognitiveLens Privacy Policy, Cookie Usage, and Disclaimer",
 };
 
-const LAST_UPDATED = "2026-09-15";
+/** GA4 に送るイベント（lib/analytics.ts の3つ。仕様書 3-7） */
+const GA4_EVENTS = [
+  {
+    name: "診断の完了",
+    when: "自己診断か相手診断を終えて、結果ページへ移るとき",
+    params: "型コード、自己診断か相手診断か",
+  },
+  {
+    name: "共有",
+    when: "結果・ビンゴ・脈あり度チェックで、X への投稿ボタンを押したとき",
+    params: "型コード（脈あり度チェックでは選んだ相手のタイプ）、結果・ビンゴ・脈あり度チェックのどれか",
+  },
+  {
+    name: "画像の保存",
+    when: "結果やビンゴの画像を保存したとき。長押しでの保存を案内したときも含みます",
+    params: "型コード、結果かビンゴか、保存の方法",
+  },
+] as const;
 
-export default async function PrivacyPage({ params }: { params: Promise<{ lang: string }> }) {
-  const { lang } = await params;
+export default function PrivacyPage() {
   return (
-    <main className="min-h-screen">
-      {/* Header */}
-      <nav className="nav-blur flex items-center gap-4 px-6 py-4 sticky top-0 z-10">
-        <Link
-          href={`/${lang}`}
-          className="flex items-center gap-1.5 text-xs font-medium transition-colors"
-        >
-          <ArrowLeft size={14} />
-          {lang === "en" ? "Back to Home" : "ホームに戻る"}
-        </Link>
-        <span className="text-sm font-bold tracking-[0.1em]">
-          cognitive<span>lens</span>
-        </span>
-      </nav>
+    <InfoPage
+      title="プライバシーポリシー"
+      path="/ja/privacy"
+      updatedAt={GA4 ? UPDATED_AT_WITH_GA4 : UPDATED_AT}
+      lead="当サイトが扱う情報と、その使い道を説明します。"
+    >
+      <InfoSection id="privacy-input" title="会員登録と入力欄">
+        <p>当サイトには会員登録がありません。名前やメールアドレスを入力する欄もありません。</p>
+      </InfoSection>
 
-      <div className="max-w-2xl mx-auto px-6 py-12">
-        <h1 className="text-2xl font-bold mb-1">
-          {lang === "en" ? "Privacy Policy & Disclaimer" : "プライバシーポリシー・免責事項"}
-        </h1>
-        <p className="text-xs mb-10">
-          {lang === "en" ? `Last Updated: ${LAST_UPDATED}` : `最終更新日：${LAST_UPDATED}`}
+      <InfoSection id="privacy-diagnosis" title="診断の回答と結果の URL">
+        <p>
+          自己診断と相手診断の回答は、お使いのブラウザの中で計算します。回答を当サイトのサーバーへは送りません。
         </p>
+        <p>
+          途中まで答えた内容は、ブラウザの sessionStorage に保存します。再読み込みしても続きから答えるためのもので、診断を終えるかタブを閉じると消えます。
+        </p>
+        <p>
+          結果ページの URL には、4つの軸の割合が入ります。アドレス欄の URL をそのまま人に送ると、割合も伝わります。X
+          への投稿ボタンで共有する URL には、割合は入りません。
+        </p>
+        <p>
+          結果画像を保存すると、割合を含む画像の URL が当サイトのサーバーに送られます。この URL は、下の「アクセスの記録」に残ります。
+        </p>
+      </InfoSection>
 
-        <div className="space-y-10 text-sm leading-relaxed">
-          {/* 1 */}
-          <section>
-            <h2 className="text-base font-bold mb-3 pb-2 border-b" style={{ color: "#1e293b", borderColor: "rgba(0,0,0,0.06)" }}>
-              {lang === "en" ? "1. Disclaimer Regarding Diagnostic Results" : "1. 診断結果の免責事項"}
-            </h2>
-            <p>
-              {lang === "en" 
-                ? "The 16-type diagnosis, cognitive function analysis, and interpersonal advice provided by our service 'CognitiveLens' are intended as reference information for self-understanding and entertainment purposes. We do not guarantee the accuracy, completeness, or scientific validity of the diagnostic results. They cannot be used as a substitute for medical diagnoses, psychological evaluations, or legal advice."
-                : "当サービス「CognitiveLens」が提供する16タイプ診断・認知機能分析・対人関係アドバイスは、エンターテインメント・自己理解のための参考情報として提供されるものです。診断結果の正確性・完全性・科学的根拠を保証するものではなく、医療的診断・心理的診断・法的アドバイスの代替として使用することはできません。"}
-            </p>
-            <p className="mt-3">
-              {lang === "en"
-                ? "We shall not be held liable for any damages resulting from judgments or actions based on the diagnostic results. For critical life decisions, please consult professionals (doctors, counselors, lawyers, etc.)."
-                : "診断結果に基づいて行われた判断・行動によって生じたいかなる損害についても、当サービスは一切の責任を負いません。重要な人生の決断には、専門家（医師・カウンセラー・弁護士等）にご相談ください。"}
-            </p>
-          </section>
+      <InfoSection id="privacy-ai" title="脈あり度チェックの AI 文">
+        <p>
+          脈あり度チェックでは、選んだタイプと「はい・いいえ」の答えを当サイトのサーバーに送ります。
+        </p>
+        <p>
+          サーバーから OpenAI の API へ送るのは、相手のタイプと脈あり度です。「はい」と答えた設問の文も送ります。返ってきた文章を、結果の下に表示します。
+        </p>
+        <p>
+          OpenAI での扱いは、
+          <ExternalTextLink href="https://openai.com/policies/privacy-policy/">OpenAI のプライバシーポリシー</ExternalTextLink>
+          をご覧ください。
+        </p>
+      </InfoSection>
 
-          {/* 2 */}
-          <section>
-            <h2 className="text-base font-bold mb-3 pb-2 border-b" style={{ color: "#1e293b", borderColor: "rgba(0,0,0,0.06)" }}>
-              {lang === "en" ? "2. Information We Collect" : "2. 収集する情報"}
-            </h2>
-            <p>{lang === "en" ? "This service may collect the following information:" : "当サービスは、以下の情報を収集する場合があります。"}</p>
-            <ul className="mt-3 space-y-2 list-disc list-inside">
-              <li>
-                <strong>{lang === "en" ? "Diagnostic Response Data: " : "診断回答データ："}</strong>
-                {lang === "en" 
-                  ? "Answers to the questions for 16-type determination (E/I, S/N, T/F, J/P choices). This does not include personally identifiable information."
-                  : "16タイプ判定のための設問への回答（E/I, S/N, T/F, J/P の選択結果）。個人を特定する情報は含まれません。"}
+      <InfoSection id="privacy-log" title="アクセスの記録">
+        <p>
+          当サイトは、Vercel Inc. のサービス Vercel の上で動いています。ページを開くと、IP
+          アドレス、ブラウザの種類、見たページの URL、日時が記録されます。
+        </p>
+        <p>IP アドレスは、AI 文を短い時間に何度も作らせないよう、回数を数えるのにも使います。</p>
+      </InfoSection>
+
+      <InfoSection id="privacy-vercel" title="アクセス解析（Vercel Web Analytics）">
+        <p>
+          アクセス数を知るために、Vercel Web Analytics を使っています。送られるのは、見たページの URL、参照元、日時です。ほかに、国や地域、ブラウザと
+          OS、端末の種類も送られます。
+        </p>
+        <p>
+          訪問者の区別に Cookie は使わず、アクセスの情報から作った値を使います。その値は24時間で破棄されます。詳しくは
+          <ExternalTextLink href="https://vercel.com/docs/analytics/privacy-policy">
+            Vercel Web Analytics のデータの扱い（英語）
+          </ExternalTextLink>
+          にあります。
+        </p>
+      </InfoSection>
+
+      {GA4 && (
+        <InfoSection id="privacy-ga4" title="アクセス解析（Google アナリティクス）">
+          <p>
+            サイトの使われ方を知るために、Google アナリティクス 4（GA4）を使っています。GA4 は Cookie を使って、閲覧の情報を
+            Google LLC に送ります。
+          </p>
+          <p>
+            送るのは、見たページの URL とタイトル、参照元、日時です。ほかに、ブラウザや端末の種類、おおよその地域も送ります。よく読まれるページや、診断を終えた人の数を知り、サイトの改善に使います。
+          </p>
+
+          <Heading level={3} id="privacy-ga4-events" className="mt-2">
+            送るイベント
+          </Heading>
+          <p>次の3つの操作をしたときは、そのことも送ります。</p>
+          <ul aria-labelledby="privacy-ga4-events" className="grid gap-3">
+            {GA4_EVENTS.map((event) => (
+              <li key={event.name} className="rounded-panel bg-surface px-4 py-3">
+                <p className="font-bold">{event.name}</p>
+                <dl className="mt-1 grid gap-x-4 gap-y-0.5 sm:grid-cols-[7rem_1fr]">
+                  <dt className="text-note font-bold text-muted sm:text-body">送るとき</dt>
+                  <dd>{event.when}</dd>
+                  <dt className="mt-1 text-note font-bold text-muted sm:mt-0 sm:text-body">送る内容</dt>
+                  <dd>{event.params}</dd>
+                </dl>
               </li>
-              <li>
-                <strong>{lang === "en" ? "Log Data: " : "ログデータ："}</strong>
-                {lang === "en"
-                  ? "IP addresses, browser types, referrer URLs, and access dates/times. Used primarily for rate limiting (preventing excessive requests)."
-                  : "アクセスIPアドレス、ブラウザ種別、参照元URL、アクセス日時。主にレートリミット（過剰リクエスト防止）に使用されます。"}
-              </li>
-              <li>
-                <strong>{lang === "en" ? "Cookies & Local Storage: " : "Cookie・ローカルストレージ："}</strong>
-                {lang === "en"
-                  ? "User settings (such as theme preferences)."
-                  : "テーマ設定等のユーザー設定の保存。"}
-              </li>
-            </ul>
-          </section>
+            ))}
+          </ul>
+          <p>
+            回答の内容、4つの軸の割合、脈あり度の数字は送りません。結果ページの URL に入る割合も、Google に送る前に取り除きます。
+          </p>
 
-          {/* 3 */}
-          <section>
-            <h2 className="text-base font-bold mb-3 pb-2 border-b" style={{ color: "#1e293b", borderColor: "rgba(0,0,0,0.06)" }}>
-              {lang === "en" ? "3. Use of Cookies and Tracking Technologies" : "3. Cookieおよびトラッキング技術の使用"}
-            </h2>
-            <p>
-              {lang === "en" 
-                ? "This service uses cookies and similar technologies for the following purposes:"
-                : "当サービスは、以下の目的でCookieおよびこれに類する技術を使用します。"}
-            </p>
-            <ul className="mt-3 space-y-2 list-disc list-inside">
-              <li><strong>{lang === "en" ? "Essential Cookies: " : "必須Cookie："}</strong>{lang === "en" ? "Required for core service functions (e.g., saving user settings)." : "サービスの基本機能（ユーザー設定の保存等）に必要"}</li>
-              <li><strong>{lang === "en" ? "Analytics Cookies: " : "分析Cookie："}</strong>{lang === "en" ? "Used for access analysis to improve service quality." : "サービス品質の向上のためのアクセス解析"}</li>
-            </ul>
-            <p className="mt-3">
-              {lang === "en"
-                ? "You can disable cookies from your browser settings; however, some features may not function properly if you do so."
-                : "ブラウザの設定からCookieを無効化することができますが、その場合、一部の機能が正常に動作しない可能性があります。"}
-            </p>
-          </section>
+          <Heading level={3} className="mt-2">
+            Google による情報の扱い
+          </Heading>
+          <p>
+            Google に送った情報は Google が管理し、日本以外の国で保存されることがあります。Google での使われ方は、
+            <ExternalTextLink href="https://policies.google.com/technologies/partner-sites?hl=ja">
+              Google のサービスを使うサイトやアプリから収集した情報の Google による使用
+            </ExternalTextLink>
+            と
+            <ExternalTextLink href="https://policies.google.com/privacy?hl=ja">Google プライバシーポリシー</ExternalTextLink>
+            で確かめられます。
+          </p>
 
-          {/* 4 */}
-          <section>
-            <h2 className="text-base font-bold mb-3 pb-2 border-b" style={{ color: "#1e293b", borderColor: "rgba(0,0,0,0.06)" }}>
-              {lang === "en" ? "4. AI-Generated Content" : "4. AIによるコンテンツ生成"}
-            </h2>
-            <p>
-              {lang === "en"
-                ? "This service generates AI content using GPT series models from OpenAI, Inc. Diagnostic responses and texts inputted by users may be sent to OpenAI's servers via API. For OpenAI's privacy policy, please refer "
-                : "当サービスは、OpenAI, Inc. の GPT シリーズモデルを使用してAIコンテンツを生成します。ユーザーが入力した診断回答・テキストは、API経由でOpenAIのサーバーに送信される場合があります。OpenAIのプライバシーポリシーは"}
-              <a
-                href="https://openai.com/policies/privacy-policy"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-teal-500 hover:text-teal-600 underline underline-offset-2"
-              >
-                {lang === "en" ? "here" : "こちら"}
-              </a>
-              {lang === "en" ? "." : "をご参照ください。"}
-            </p>
-            <p className="mt-3">
-              {lang === "en"
-                ? "Content generated by AI is for entertainment purposes, and its accuracy or validity is not guaranteed."
-                : "AIが生成するコンテンツはエンターテインメント目的であり、その内容の正確性・妥当性を保証するものではありません。"}
-            </p>
-          </section>
+          <Heading level={3} className="mt-2">
+            送信を止める方法
+          </Heading>
+          <p>
+            パソコンのブラウザでは、
+            <ExternalTextLink href="https://tools.google.com/dlpage/gaoptout?hl=ja">
+              Google アナリティクス オプトアウト アドオン
+            </ExternalTextLink>
+            で GA4 への送信を止められます。スマートフォンでは、コンテンツブロッカーなどで Google
+            アナリティクスの読み込みを止めてください。
+          </p>
+        </InfoSection>
+      )}
 
-          {/* 5 */}
-          <section>
-            <h2 className="text-base font-bold mb-3 pb-2 border-b" style={{ color: "#1e293b", borderColor: "rgba(0,0,0,0.06)" }}>
-              {lang === "en" ? "5. Third-Party Information Sharing" : "5. 情報の第三者提供"}
-            </h2>
-            <p>
-              {lang === "en"
-                ? "This service does not provide collected information to third parties except in the following cases:"
-                : "当サービスは、以下の場合を除き、収集した情報を第三者に提供しません。"}
-            </p>
-            <ul className="mt-3 space-y-2 list-disc list-inside">
-              <li>{lang === "en" ? "When user consent is obtained." : "ユーザーの同意がある場合"}</li>
-              <li>{lang === "en" ? "When required by law." : "法令に基づく開示要求がある場合"}</li>
-              <li>{lang === "en" ? "When necessary for the protection of human life, body, or property." : "人の生命・身体・財産の保護のために必要な場合"}</li>
-            </ul>
-          </section>
+      <InfoSection id="privacy-third-party" title="第三者への提供">
+        <p>
+          このページに書いた送信先のほかに、集めた情報を第三者へ渡すことはありません。例外は、法令にもとづく場合と、ご本人の同意がある場合です。人の命や体、財産を守るために必要な場合も渡すことがあります。
+        </p>
+      </InfoSection>
 
-          {/* 6 */}
-          <section>
-            <h2 className="text-base font-bold mb-3 pb-2 border-b" style={{ color: "#1e293b", borderColor: "rgba(0,0,0,0.06)" }}>
-              {lang === "en" ? "6. Use by Minors" : "6. 未成年者の利用"}
-            </h2>
-            <p>
-              {lang === "en"
-                ? "This service is not intended for use by individuals under the age of 13. If someone under 13 uses the service, it must be done under the supervision of a parent or guardian."
-                : "当サービスは13歳未満の方の利用を想定していません。13歳未満の方が利用される場合は、保護者の監督のもとでご利用ください。"}
-            </p>
-          </section>
+      <InfoSection id="privacy-minor" title="13歳未満の方へ">
+        <p>13歳未満の方は、保護者の方と一緒にお使いください。</p>
+      </InfoSection>
 
-          {/* 7 */}
-          <section>
-            <h2 className="text-base font-bold mb-3 pb-2 border-b" style={{ color: "#1e293b", borderColor: "rgba(0,0,0,0.06)" }}>
-              {lang === "en" ? "7. Changes to the Privacy Policy" : "7. プライバシーポリシーの変更"}
-            </h2>
-            <p>
-              {lang === "en"
-                ? "This service may change this policy without prior notice due to legal revisions or service updates. The updated content takes effect from the moment it is posted on this page. We recommend checking back periodically."
-                : "当サービスは、法令の変更やサービス内容の更新に伴い、本ポリシーを予告なく変更する場合があります。変更後の内容は本ページに掲載した時点から効力を生じます。定期的にご確認いただくことをお勧めします。"}
-            </p>
-          </section>
+      <InfoSection id="privacy-change" title="このポリシーの変更">
+        <p>
+          このポリシーは、サイトの変更に合わせて改めることがあります。改めたときは、このページの最終更新日を書き換えます。
+        </p>
+      </InfoSection>
 
-          {/* 8 */}
-          <section>
-            <h2 className="text-base font-bold mb-3 pb-2 border-b" style={{ color: "#1e293b", borderColor: "rgba(0,0,0,0.06)" }}>
-              {lang === "en" ? "8. Contact Us" : "8. お問い合わせ"}
-            </h2>
-            <p>
-              {lang === "en"
-                ? "If you have any questions or opinions regarding this policy, please reach out via the feedback feature in the service or our public contact information."
-                : "本ポリシーに関するご質問・ご意見は、サービス内のフィードバック機能または公開されている連絡先までお寄せください。"}
-            </p>
-          </section>
-
-        </div>
-      </div>
-    </main>
+      <InfoSection id="privacy-contact" title="お問い合わせ">
+        <p>
+          このポリシーについてのご質問は、X のアカウント{" "}
+          <ExternalTextLink href={X_ACCOUNT_URL}>{X_ACCOUNT_HANDLE}</ExternalTextLink>
+          への DM でお送りください。
+        </p>
+      </InfoSection>
+    </InfoPage>
   );
 }

@@ -12,6 +12,14 @@ const nextConfig: NextConfig = {
   // Turbopack を明示的に有効化（Next.js 16 デフォルト）
   turbopack: {},
 
+  // 実行時に画像を作るルートへ、readFile で読むフォントと切り詰め版のキャラクター画像を含める（仕様書 4-2「フォント」、output.md の outputFileTracingIncludes）。
+  // キーはルートのパスに当てる picomatch の glob（contains 一致）なので、[ ] はエスケープする
+  outputFileTracingIncludes: {
+    // 9:16 結果画像（share-image と、スコアありの share-image/[scores]。仕様書 4-3）
+    "/\\[lang\\]/result/\\[type\\]/share-image": ["./assets/fonts/*.otf", "./assets/characters/trimmed/*.png"],
+    // ビンゴカード画像（仕様書 4-5）
+    "/\\[lang\\]/bingo/\\[type\\]/card/\\[mask\\]": ["./assets/fonts/*.otf", "./assets/characters/trimmed/*.png"],
+  },
 };
 
 export default nextConfig;

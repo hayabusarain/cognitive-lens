@@ -6,10 +6,10 @@
  *
  * 役割:
  *   0. 旧 URL の 301 転送（全ページ宛て。判定は lib/redirects.ts）
- *   1. IPレートリミット（/api/* 宛て: 1分間に10リクエスト上限）
- *   2. Bot User-Agent の遮断（/api/* 宛て）
- *   画像を返す GET の API（IMAGE_ROUTES）は、どちらの対象からも外す。
- *   X や Discord などのクローラーが OG 画像を取得できるようにするため。
+ *   1. Bot User-Agent の遮断（/api/romance-ai 宛てだけ）
+ *   2. IPレートリミット（/api/romance-ai 宛てだけ: 1分間に10リクエスト上限）
+ *   ページと画像（OG 画像など）は対象にしない。X や Discord などのクローラーが取得できるようにするため（仕様書 3-6）。
+ *   旧 API の /api/og と /api/story-card は、⓪ の転送（R8・R9）で画像のルートへ送る。
  *
  * ※ proxy は Node.js ランタイムで動作する（Next.js 16 の既定）。
  *    インメモリ状態はサーバーレスインスタンス間で共有されないが、
@@ -94,8 +94,8 @@ function isBot(ua: string | null): boolean {
   return BOT_PATTERNS.some((p) => p.test(ua));
 }
 
-// ── Bot 判定とレートリミットの対象外にする画像 API ──────────────
-const IMAGE_ROUTES = new Set(["/api/og", "/api/story-card"]);
+// ── Bot 判定とレートリミットをかける API（AI 文を生成する1本だけ） ──
+const GUARDED_API = "/api/romance-ai";
 
 // ── Proxy 本体 ────────────────────────────────────────────────
 export function proxy(request: NextRequest): NextResponse {
@@ -107,21 +107,24 @@ export function proxy(request: NextRequest): NextResponse {
   const current = new URL(request.nextUrl.href);
   const host = request.headers.get("host");
   if (host) {
-    // host に値だけを入れると元のポートが残るので、ホスト名とポートを別々に設定する
-    const parsed = new URL(`http://${host}`);
-    current.hostname = parsed.hostname;
-    current.port = parsed.port;
+    // host に値だけを入れると元のポートが残るので、ホスト名とポートを別々に設定する。
+    // 壊れた Host ヘッダー（"[[[" や "a b c"、範囲外のポートなど）では URL が例外を投げて
+    // 全ページが 500 になるため、読めなければ Host を使わず nextUrl のホストのまま進める
+    try {
+      const parsed = new URL(`http://${host}`);
+      current.hostname = parsed.hostname;
+      current.port = parsed.port;
+    } catch {
+      // Host が読めないときは、転送の判定を nextUrl のホストで行う
+    }
   }
   const redirectTo = resolveRedirect(current);
   if (redirectTo) {
     return NextResponse.redirect(redirectTo, 301);
   }
 
-  // API ルート以外と、画像を返す GET の API はスルー
-  if (!pathname.startsWith("/api/")) {
-    return NextResponse.next();
-  }
-  if ((request.method === "GET" || request.method === "HEAD") && IMAGE_ROUTES.has(pathname)) {
+  // AI 文の API 以外はスルー
+  if (pathname !== GUARDED_API) {
     return NextResponse.next();
   }
 

@@ -13,6 +13,8 @@ export function collectCharset(rootDir) {
   texts.push("、。，．・：；？！「」『』（）【】〜ー…―％＆＋－＝×÷→←↑↓　");
   // サイト名と画像に入る固定文言（仕様書 4-2・4-3）
   texts.push("CognitiveLens www.cognitive-lens.com 外向・内向 感覚・直観 思考・感情 判断・知覚 偏見だらけのビンゴ 僅差 16タイプ");
+  // 共通デザインの OG 画像に入れるページ名（仕様書 4-2。lib/og/page-image.tsx）
+  texts.push("16タイプ性格診断 自己診断 相手診断 16タイプ一覧 偏見だらけのMBTIビンゴ 恋愛コラム一覧 脈あり度チェック");
   const files = [
     ["lib/type-names.ts", "TYPE_NAMES"],
     ["lib/bingo-data-ja.ts", "BINGO_DATA"],
@@ -26,6 +28,13 @@ export function collectCharset(rootDir) {
   if (fs.existsSync(contentDir)) {
     for (const f of fs.readdirSync(contentDir).filter((f) => /^[EI][SN][TF][JP]\.ts$/.test(f))) {
       texts.push(...collectStrings(loadTs(rootDir, `lib/type-content/${f}`).content ?? {}).map((s) => s.value));
+    }
+  }
+  // コラムの OG 画像に title を入れる（仕様書 4-2）
+  const articleDir = path.join(rootDir, "lib/articles");
+  if (fs.existsSync(articleDir)) {
+    for (const f of fs.readdirSync(articleDir).filter((f) => /^[EI][SN][TF][JP]\.ts$/.test(f))) {
+      texts.push(loadTs(rootDir, `lib/articles/${f}`).article?.title ?? "");
     }
   }
   return [...new Set([...texts.join("")])].filter((ch) => ch !== "\n" && ch !== "\r").sort().join("");

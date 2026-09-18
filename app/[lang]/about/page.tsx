@@ -1,71 +1,71 @@
-import { canonical } from "@/lib/site";
-import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import type { Metadata } from "next";
+import { SITE_URL, canonical } from "@/lib/site";
+import { ButtonLink } from "@/app/components/ui/Button";
+import {
+  ExternalTextLink,
+  InfoPage,
+  InfoSection,
+  TextLink,
+  X_ACCOUNT_HANDLE,
+  X_ACCOUNT_URL,
+} from "@/app/[lang]/_components/InfoPage";
 
-export const metadata = {
+/**
+ * 運営者情報 /ja/about（ステップ 3-20）
+ * 連絡先は X の DM（フッターと同じ）。以前の contact@cognitivelens.com は他人のドメインで届かないので載せない（decisions Q17）
+ */
+
+const UPDATED_AT = "2026-09-16";
+
+export const metadata: Metadata = {
+  title: "運営者情報",
+  description: "16タイプ性格診断サイト CognitiveLens の運営者と、お問い合わせの方法（X の DM）を載せています。",
+  // openGraph は書かない。書くと [lang]/opengraph-image（トップの OG 画像）を引き継がなくなる（2026-09-16 のビルドで確認）
   alternates: canonical("/ja/about"),
-  title: "運営者情報 | CognitiveLens",
-  description: "CognitiveLensの運営者について",
 };
 
-export default async function AboutPage({ params }: { params: Promise<{ lang: string }> }) {
-  const { lang } = await params;
+const ROWS = [
+  { term: "サイト名", detail: "CognitiveLens（コグニティブレンズ）" },
+  { term: "URL", detail: SITE_URL },
+  { term: "運営者", detail: "CognitiveLens 開発プロジェクトチーム" },
+  { term: "内容", detail: "16タイプ性格診断、相手診断、脈あり度チェック、タイプ別のビンゴと恋愛コラム" },
+  { term: "お問い合わせ", detail: `X のアカウント ${X_ACCOUNT_HANDLE} への DM` },
+] as const;
+
+export default function AboutPage() {
   return (
-    <main className="min-h-screen content-layer">
-      <nav className="nav-blur flex items-center gap-4 px-6 py-4 sticky top-0 z-10">
-        <Link href={`/${lang}`} className="flex items-center gap-1.5 text-xs font-medium transition-colors">
-          <ArrowLeft size={14} /> {lang === "en" ? "Back to Home" : "ホームに戻る"}
-        </Link>
-        <span className="text-sm font-bold tracking-[0.1em]" >cognitive<span>lens</span></span>
-      </nav>
+    <InfoPage title="運営者情報" path="/ja/about" updatedAt={UPDATED_AT}>
+      <InfoSection id="about-operator" title="サイトと運営者">
+        <dl className="divide-y divide-line rounded-panel bg-surface px-4">
+          {ROWS.map((row) => (
+            <div key={row.term} className="grid gap-0.5 py-3 sm:grid-cols-[8rem_1fr] sm:gap-4">
+              <dt className="text-note font-bold text-muted sm:text-body">{row.term}</dt>
+              <dd className="break-words">{row.detail}</dd>
+            </div>
+          ))}
+        </dl>
+      </InfoSection>
 
-      <div className="max-w-2xl mx-auto px-6 py-12">
-        <h1 className="text-2xl font-bold mb-10 text-slate-800">
-          {lang === "en" ? "About Us" : "運営者情報"}
-        </h1>
-        
-        <div className="space-y-6 text-sm text-slate-700">
-          <div className="border border-slate-100 rounded-2xl p-6 bg-slate-50/50">
-            <dl className="grid grid-cols-[100px_1fr] gap-y-4">
-              <dt className="text-slate-500 font-semibold">{lang === "en" ? "Service" : "サービス名"}</dt>
-              <dd className="font-medium text-slate-800">CognitiveLens</dd>
-
-              <dt className="text-slate-500 font-semibold">{lang === "en" ? "Operator" : "運営者"}</dt>
-              <dd>{lang === "en" ? "CognitiveLens Development Team" : "CognitiveLens 開発プロジェクトチーム"}</dd>
-
-              <dt className="text-slate-500 font-semibold">{lang === "en" ? "Official SNS" : "公式SNS"}</dt>
-              <dd>
-                <a 
-                  href="https://x.com/CognitiveLens_" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="text-cyan-600 font-bold hover:text-cyan-700 underline underline-offset-2 flex items-center gap-1"
-                >
-                  <svg viewBox="0 0 24 24" aria-hidden="true" className="w-3.5 h-3.5 fill-current"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 22.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>
-                  {lang === "en" ? "Follow us on X" : "X（旧Twitter）公式アカウント"}
-                </a>
-              </dd>
-
-              <dt className="text-slate-500 font-semibold">{lang === "en" ? "Contact" : "お問い合わせ"}</dt>
-              <dd>
-                {lang === "en" 
-                  ? "For inquiries regarding the service, advertising placements, or other matters, please contact us via the feedback feature within the app, DM us on our official social media accounts, or email us at contact@cognitivelens.com."
-                  : "サービスに関するお問い合わせ、広告掲載のご相談等は、サービス内のフィードバック機能、公式SNSアカウントへのDM、または下記メールアドレスまでお願いいたします。"}
-                <br />
-                <a href="mailto:contact@cognitivelens.com" className="text-cyan-600 font-bold hover:text-cyan-700 underline mt-1 inline-block">
-                  contact@cognitivelens.com
-                </a>
-              </dd>
-            </dl>
-          </div>
-
-          <p className="pt-4 leading-relaxed">
-            {lang === "en" 
-              ? "We are developing this service with the aim of promoting mutual understanding by verbalizing the 'unconscious friction in interpersonal relationships.' By combining the latest AI technology with cognitive function models, we hope to help you find hints that will make your life a little bit easier."
-              : "私たちは「対人関係における無意識の摩擦」を言語化し、相互理解を促進することを目指して本サービスを開発しています。最新のAI技術と認知機能モデルを組み合わせ、少しでもあなたの人生がラクになるヒントを見つけるお手伝いができれば幸いです。"}
-          </p>
+      <InfoSection id="about-contact" title="お問い合わせ">
+        <p>
+          ご質問や不具合の報告は、X のアカウント{" "}
+          <ExternalTextLink href={X_ACCOUNT_URL}>{X_ACCOUNT_HANDLE}</ExternalTextLink>
+          に DM でお送りください。メールでの受け付けはしていません。
+        </p>
+        <p>
+          以前このページに載せていたメールアドレスは、当サイトが管理するアドレスではありません。そちらには送らないでください。
+        </p>
+        <p>
+          キャラクター画像の使い方は、
+          <TextLink href="/ja/downloads">キャラクター素材の配布</TextLink>
+          のページにまとめています。
+        </p>
+        <div>
+          <ButtonLink href={X_ACCOUNT_URL} external variant="secondary">
+            X のアカウントを開く
+          </ButtonLink>
         </div>
-      </div>
-    </main>
+      </InfoSection>
+    </InfoPage>
   );
 }

@@ -1,36 +1,55 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# CognitiveLens
 
-## Getting Started
+16タイプの性格診断サイト（[www.cognitive-lens.com](https://www.cognitive-lens.com)）のリポジトリ。
+24問の自己診断、気になる相手の診断、タイプ別のビンゴと恋愛コラム、脈あり度チェックを載せている。
+Next.js 16 の App Router と Tailwind CSS 4 で作り、Vercel に置いている。
 
-First, run the development server:
+このサイトは MBTI® の公式の検査とは関係がない。16タイプの呼称・設問・文章は独自に作っている。
+
+## 動かす
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev     # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+見た目や転送を確かめるときは、開発サーバーではなく本番ビルドを使う。
+開発サーバーは、多くのページを同時にコンパイルすると 500 を返すことがある。
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run build
+npx next start -p 3200
+npm run check:redirects -- http://localhost:3200
+npm run check:site -- http://localhost:3200
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## npm スクリプト
 
-## Learn More
+| コマンド | 何をするか |
+|---|---|
+| `npm run check` | 型・コンテンツ・禁止語・単体テストをまとめて実行する（コミット前に通す） |
+| `npm run build` | 本番ビルド。前に内容と禁止語の検査が走る |
+| `npm run lint` | ESLint |
+| `npm run check:redirects -- <URL>` | 旧 URL の 301 転送を1件ずつ確かめる |
+| `npm run check:site -- <URL>` | sitemap から全ページをたどり、title・canonical・OG 画像・禁止語・リンク切れを見る |
+| `npm run build:font` | 生成画像用のフォントのサブセットを作り直す（収録文字が増えたとき） |
 
-To learn more about Next.js, take a look at the following resources:
+## 環境変数（`.env.local`）
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+| 名前 | 用途 |
+|---|---|
+| `OPENAI_API_KEY` | 脈あり度チェックの AI 文（`/api/romance-ai`）。なければ AI 文だけ出ない |
+| `NEXT_PUBLIC_GA_MEASUREMENT_ID` | GA4 の測定 ID（`G-` で始まる）。設定したビルドだけ GA4 を読み込む |
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## ドキュメント
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+| ファイル | 中身 |
+|---|---|
+| `AGENTS.md` | このリポジトリで作業するときの決まり。**コードを書く前に必ず読む** |
+| `docs/redesign-spec.md` | 仕様書。8章に実装順序と進捗、9章に決めたことと未解決の質問 |
+| `docs/renewal-handoff.md` | 引き継ぎメモ。今の状態と残作業 |
+| `docs/decisions.md` | 運営者が決めたこと |
+| `docs/tone-guide.md` | 文章のトーン。字数の決まりは検査で守る |
+| `docs/design-system.md` / `docs/colors.md` | 画面の作りとタイプ色 |
+| `docs/asset-credits.md` | 画像・フォント・アイコンの出典（ここに記録がない素材は載せない） |
+| `docs/current-site.md` | リニューアル前のサイトの調査 |
