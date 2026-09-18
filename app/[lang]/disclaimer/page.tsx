@@ -58,16 +58,11 @@ export default function DisclaimerPage() {
 
       <InfoSection id="disclaimer-characters" title="キャラクター画像について">
         <p>
-          キャラクターは、運営者が画像生成 AI で作った絵です。実在の人物とは関係ありません。
+          タイプのキャラクター画像は、いまは出していません。作り直しているところです。
         </p>
         <p>
-          いまの絵柄は仮のものです。幻獣をモチーフにした新しい絵ができ次第、差し替えます。
-        </p>
-        <p>
-          服装や持ち物は、タイプの雰囲気を表すための絵柄です。そのタイプの人の職業や趣味を示すものではありません。
-        </p>
-        <p>
-          画像を使うときの条件は、<TextLink href="/ja/downloads">キャラクター素材の配布</TextLink>のページにあります。
+          新しい絵は、幻獣をモチーフにした描き下ろしになります。できあがったら、
+          <TextLink href="/ja/downloads">キャラクター素材の配布</TextLink>のページで配り直します。
         </p>
       </InfoSection>
 

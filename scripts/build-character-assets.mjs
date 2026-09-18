@@ -16,6 +16,13 @@ const outDir = path.join(root, "assets/characters/trimmed");
 const ALPHA_MIN = 8;
 fs.mkdirSync(outDir, { recursive: true });
 
+// 2026-09-19：キャラクター画像16枚をサイトから外した（docs/asset-credits.md 1-1）。
+// 入力が1枚もないときは、何もせずに終える。幻獣版を public/characters/ に置けば、そのまま元の動きに戻る。
+if (!TYPES.some((type) => fs.existsSync(path.join(srcDir, `${type}.png`)))) {
+  console.log("build-character-assets: public/characters に画像がないので何もしない");
+  process.exit(0);
+}
+
 const problems = [];
 for (const type of TYPES) {
   const src = path.join(srcDir, `${type}.png`);

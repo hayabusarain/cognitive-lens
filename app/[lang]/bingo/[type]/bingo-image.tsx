@@ -11,7 +11,8 @@ import {
   titleLevel,
 } from "@/lib/bingo/board";
 import type { TypeCode } from "@/lib/type-codes";
-import { OG_FONT_FAMILY, fitInBox, loadOgFonts, loadTrimmedCharacter, type OgImageSource } from "@/lib/og/assets";
+import { OG_FONT_FAMILY, loadOgFonts } from "@/lib/og/assets";
+import { TypeArtText } from "@/lib/og/type-art";
 import { OG_COLORS, OG_SITE_LABEL, OG_SIZE, ogTypeColor } from "@/lib/og/theme";
 
 /**
@@ -32,8 +33,7 @@ function mix(a: string, b: string, t: number): string {
 }
 
 /** キャラクターの窓（画面の CharacterFigure と同じ、暗い地に下からタイプ色の台座） */
-function CharacterArt({ image, color, width, height, radius }: { image: OgImageSource; color: string; width: number; height: number; radius: number }) {
-  const fitted = fitInBox(image, width * 0.96, height * 0.96);
+function CharacterArt({ type, color, width, height, radius }: { type: TypeCode; color: string; width: number; height: number; radius: number }) {
   return (
     <div
       style={{
@@ -61,8 +61,7 @@ function CharacterArt({ image, color, width, height, radius }: { image: OgImageS
           backgroundColor: color,
         }}
       />
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={image.src} width={fitted.width} height={fitted.height} alt="" />
+      <TypeArtText type={type} width={width} height={height} />
     </div>
   );
 }
@@ -96,10 +95,9 @@ function BoardGlyph({ color, cell, gap }: { color: string; cell: number; gap: nu
  * 左 45% はタイプ色の面にキャラクター、右に「偏見だらけの」「{TYPE}」「ビンゴ」
  */
 export async function renderBingoOgImage(type: TypeCode): Promise<ImageResponse> {
-  const [fonts, image] = await Promise.all([loadOgFonts(), loadTrimmedCharacter(type)]);
+  const fonts = await loadOgFonts();
   const color = ogTypeColor(type);
   const panelWidth = Math.round(OG_SIZE.width * 0.45);
-  const fitted = fitInBox(image, 540, 560);
 
   return new ImageResponse(
     (
@@ -113,9 +111,8 @@ export async function renderBingoOgImage(type: TypeCode): Promise<ImageResponse>
           fontFamily: OG_FONT_FAMILY,
         }}
       >
-        <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "center", width: panelWidth, height: "100%", backgroundColor: color }}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={image.src} width={fitted.width} height={fitted.height} alt="" />
+        <div style={{ position: "relative", display: "flex", width: panelWidth, height: "100%", backgroundColor: color }}>
+          <TypeArtText type={type} width={panelWidth} height={OG_SIZE.height} />
         </div>
         <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", flex: 1, padding: 60 }}>
           <SiteName fontSize={36} />
@@ -160,7 +157,7 @@ function cellFontSize(text: string): number {
  * 上から、キャラクターと見出し、ライン数と称号、盤面、サイト名と URL
  */
 export async function renderBingoCardImage(type: TypeCode, mask: number): Promise<ImageResponse> {
-  const [fonts, image] = await Promise.all([loadOgFonts(), loadTrimmedCharacter(type)]);
+  const fonts = await loadOgFonts();
   const color = ogTypeColor(type);
   const items = BINGO_DATA[type];
   const lines = countLines(mask);
@@ -221,7 +218,7 @@ export async function renderBingoCardImage(type: TypeCode, mask: number): Promis
           >
             {/* キャラクターと見出し */}
             <div style={{ display: "flex", alignItems: "center", gap: 32 }}>
-              <CharacterArt image={image} color={color} width={ART_WIDTH} height={ART_HEIGHT} radius={12} />
+              <CharacterArt type={type} color={color} width={ART_WIDTH} height={ART_HEIGHT} radius={12} />
               <div style={{ display: "flex", flexDirection: "column" }}>
                 <div style={{ fontSize: 52, fontWeight: 900, lineHeight: 1.2 }}>偏見だらけの</div>
                 <div style={{ display: "flex", alignItems: "baseline", gap: 20 }}>

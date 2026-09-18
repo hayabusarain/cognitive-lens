@@ -4,7 +4,8 @@ import type { TypeCode } from "@/lib/type-codes";
 import { TYPE_NAMES } from "@/lib/type-names";
 import { TYPE_CONTENT } from "@/lib/type-content";
 import { typeNumber } from "@/lib/type-display";
-import { OG_FONT_FAMILY, fitInBox, loadOgFonts, loadTrimmedCharacter } from "@/lib/og/assets";
+import { OG_FONT_FAMILY, loadOgFonts } from "@/lib/og/assets";
+import { TypeArtText } from "@/lib/og/type-art";
 import { OG_COLORS, OG_SITE_LABEL, OG_SIZE, ogTypeColor } from "@/lib/og/theme";
 
 /**
@@ -86,11 +87,9 @@ const OG_CATCH_WIDTH = 524;
 const OG_CATCH_FONT_SIZE = 34;
 
 export async function renderResultOgImage(type: TypeCode): Promise<ImageResponse> {
-  const [fonts, image] = await Promise.all([loadOgFonts(), loadTrimmedCharacter(type)]);
+  const fonts = await loadOgFonts();
   const color = ogTypeColor(type);
   const content = TYPE_CONTENT[type];
-  // キャラクターは高さ 560px・幅 540px の枠に、縦横比を保って下揃え（仕様書 4-1）
-  const fitted = fitInBox(image, OG_PANEL_WIDTH, 560);
   // 短文は24字以内で2行まで。Satori は句の途中でも折り返すので「、」の後ろで行を分け、「、」のない長い1行は文字を少し小さくして収める
   const catchLines = phraseLines(content.og.catch, Math.floor(OG_CATCH_WIDTH / OG_CATCH_FONT_SIZE));
   const catchFontSize = Math.min(OG_CATCH_FONT_SIZE, Math.floor(OG_CATCH_WIDTH / Math.max(...catchLines.map(textUnits))));
@@ -120,14 +119,7 @@ export async function renderResultOgImage(type: TypeCode): Promise<ImageResponse
             backgroundColor: "rgba(14, 16, 22, 0.16)",
           }}
         />
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={image.src}
-          width={fitted.width}
-          height={fitted.height}
-          alt=""
-          style={{ position: "absolute", left: Math.round((OG_PANEL_WIDTH - fitted.width) / 2), bottom: 0 }}
-        />
+        <TypeArtText type={type} width={OG_PANEL_WIDTH} height={560} />
         <div
           style={{
             position: "absolute",
@@ -273,13 +265,12 @@ function ScoreRows({ type, scores, top, color }: { type: TypeCode; scores: reado
  * scores は parseScores で検証した値を渡す（前の文字 E・S・T・J の割合）
  */
 export async function renderResultStoryImage(type: TypeCode, scores?: readonly number[] | null): Promise<ImageResponse> {
-  const [fonts, image] = await Promise.all([loadOgFonts(), loadTrimmedCharacter(type)]);
+  const fonts = await loadOgFonts();
   const color = ogTypeColor(type);
   const content = TYPE_CONTENT[type];
   const name = TYPE_NAMES[type];
   const layout = scores ? STORY_LAYOUT.scored : STORY_LAYOUT.plain;
   const artHeight = layout.art[1] - layout.art[0];
-  const fitted = fitInBox(image, STORY_WIDTH * 0.94, artHeight * 0.95);
 
   return new ImageResponse(
     (
@@ -358,8 +349,7 @@ export async function renderResultStoryImage(type: TypeCode, scores?: readonly n
           }}
         >
           <Pedestal width={STORY_WIDTH} height={artHeight} color={color} visible={0.26} />
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={image.src} width={fitted.width} height={fitted.height} alt="" />
+          <TypeArtText type={type} width={STORY_WIDTH} height={artHeight} />
         </div>
 
         {/* 呼称が主役。型コードは下に小さく（OG 画像とは大小が逆） */}

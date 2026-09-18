@@ -2,7 +2,8 @@ import { ImageResponse } from "next/og";
 import { notFound } from "next/navigation";
 import { TYPE_CODES, isTypeCode } from "@/lib/type-codes";
 import { splitArticleTitle } from "@/lib/articles";
-import { OG_FONT_FAMILY, fitInBox, loadOgFonts, loadTrimmedCharacter } from "@/lib/og/assets";
+import { OG_FONT_FAMILY, loadOgFonts } from "@/lib/og/assets";
+import { TypeArtText } from "@/lib/og/type-art";
 import { OG_COLORS, OG_SITE_LABEL, OG_SIZE, ogTypeColor } from "@/lib/og/theme";
 
 /**
@@ -52,9 +53,9 @@ export default async function Image({ params }: { params: Promise<{ lang: string
   const { lang, type } = await params;
   if (lang !== "ja" || !isTypeCode(type)) notFound();
 
-  const [fonts, character] = await Promise.all([loadOgFonts(), loadTrimmedCharacter(type)]);
+  const fonts = await loadOgFonts();
   const color = ogTypeColor(type);
-  const fitted = fitInBox(character, ART_WIDTH * 0.96, ART_HEIGHT * 0.96);
+
   const { prefix, subtitle } = splitArticleTitle(type);
   const lines = subtitleLines(subtitle);
   // 長い行が枠の幅に収まる大きさ（44〜64px）
@@ -138,8 +139,7 @@ export default async function Image({ params }: { params: Promise<{ lang: string
                   backgroundColor: color,
                 }}
               />
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={character.src} width={fitted.width} height={fitted.height} alt="" />
+              <TypeArtText type={type} width={ART_WIDTH} height={ART_HEIGHT} />
             </div>
           </div>
         </div>

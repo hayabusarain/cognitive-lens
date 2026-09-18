@@ -139,6 +139,8 @@
   .type-art {
     position: relative;
     isolation: isolate;
+    /* 中の文字を窓の幅に対する割合（cqw）で組むため */
+    container-type: inline-size;
     aspect-ratio: 4 / 5;
     max-width: 100%;
     overflow: hidden;

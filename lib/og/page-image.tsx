@@ -1,7 +1,8 @@
 import { ImageResponse } from "next/og";
 import type { TypeCode } from "@/lib/type-codes";
 import { TYPE_NAMES } from "@/lib/type-names";
-import { OG_FONT_FAMILY, fitInBox, loadOgFonts, loadTrimmedCharacter, type OgImageSource } from "@/lib/og/assets";
+import { OG_FONT_FAMILY, loadOgFonts } from "@/lib/og/assets";
+import { TypeArtText } from "@/lib/og/type-art";
 import { OG_COLORS, OG_SITE_LABEL, OG_SIZE, ogTypeColor } from "@/lib/og/theme";
 
 /**
@@ -49,10 +50,9 @@ function titleFontSize(lines: readonly string[]): number {
   return Math.max(52, Math.min(88, Math.floor(TITLE_MAX_WIDTH / units)));
 }
 
-function Card({ type, image, index }: { type: TypeCode; image: OgImageSource; index: number }) {
+function Card({ type, index }: { type: TypeCode; index: number }) {
   const pose = CARD_POSES[index];
   const color = ogTypeColor(type);
-  const fitted = fitInBox(image, ART_WIDTH * 0.96, ART_HEIGHT * 0.96);
   return (
     <div
       style={{
@@ -105,8 +105,7 @@ function Card({ type, image, index }: { type: TypeCode; image: OgImageSource; in
               backgroundColor: color,
             }}
           />
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={image.src} width={fitted.width} height={fitted.height} alt="" />
+          <TypeArtText type={type} width={ART_WIDTH} height={ART_HEIGHT} />
         </div>
         <div style={{ fontSize: 20, fontWeight: 900, padding: "8px 12px 0" }}>{TYPE_NAMES[type]}</div>
       </div>
@@ -123,7 +122,7 @@ export async function renderPageOgImage({
   /** 並べる4体 */
   types?: readonly [TypeCode, TypeCode, TypeCode, TypeCode];
 }): Promise<ImageResponse> {
-  const [fonts, images] = await Promise.all([loadOgFonts(), Promise.all(types.map(loadTrimmedCharacter))]);
+  const fonts = await loadOgFonts();
   const lines = title.split("\n");
   const fontSize = titleFontSize(lines);
 
@@ -164,7 +163,7 @@ export async function renderPageOgImage({
           <div style={{ fontSize: 26, fontWeight: 700, color: OG_COLORS.textMuted }}>{OG_SITE_LABEL}</div>
         </div>
         {types.map((type, i) => (
-          <Card key={type} type={type} image={images[i]} index={i} />
+          <Card key={type} type={type} index={i} />
         ))}
       </div>
     ),
