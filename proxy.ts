@@ -107,10 +107,16 @@ export function proxy(request: NextRequest): NextResponse {
   const current = new URL(request.nextUrl.href);
   const host = request.headers.get("host");
   if (host) {
-    // host に値だけを入れると元のポートが残るので、ホスト名とポートを別々に設定する
-    const parsed = new URL(`http://${host}`);
-    current.hostname = parsed.hostname;
-    current.port = parsed.port;
+    // host に値だけを入れると元のポートが残るので、ホスト名とポートを別々に設定する。
+    // 壊れた Host ヘッダー（"[[[" や "a b c"、範囲外のポートなど）では URL が例外を投げて
+    // 全ページが 500 になるため、読めなければ Host を使わず nextUrl のホストのまま進める
+    try {
+      const parsed = new URL(`http://${host}`);
+      current.hostname = parsed.hostname;
+      current.port = parsed.port;
+    } catch {
+      // Host が読めないときは、転送の判定を nextUrl のホストで行う
+    }
   }
   const redirectTo = resolveRedirect(current);
   if (redirectTo) {

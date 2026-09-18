@@ -4,15 +4,16 @@ import { useEffect, useId, useRef, useState } from "react";
 import type { TypeCode } from "@/lib/type-codes";
 import { trackSaveImage, type ShareContentType } from "@/lib/analytics";
 import { Button, type ButtonVariant } from "@/app/components/ui/Button";
+import { Notice } from "@/app/components/ui/Notice";
 
 /**
  * 生成画像を保存するボタン（仕様書 4-3「保存の流れ」、4-5 でも共用）
- *   1. 画像を取得して File にする
+ *   1. 画像を取得して File にする。取れなければ、そこで案内を出して終わる
  *   2. navigator.canShare({ files }) が真なら、共有シートを開く
  *   3. 共有シートが使えず、パソコンのブラウザ（マウスなどの細かいポインター）なら、a[download] でダウンロードする
  *   4. どれも失敗したら、画像を全画面で出して「長押しで保存」と案内する
  * ブラウザ名の文字列では判定せず、機能の有無と例外で分岐する（アプリ内ブラウザは独自に制限していることがある）。
- * 各分岐の終わりで GA4 の save_image を送る。
+ * 各分岐の終わりで GA4 の save_image を送る。取得に失敗した回は送らない（保存の試みとして数えないため）。
  *   imageUrl …… サイト内の画像の URL（例：/ja/result/INTJ/share-image/61-33-78-50）
  *   fileName …… 保存するファイル名（例：cognitivelens-INTJ.png）
  */
@@ -48,7 +49,10 @@ export function ShareImageButton({
   className,
 }: ShareImageButtonProps) {
   const [working, setWorking] = useState(false);
-  const [previewOpen, setPreviewOpen] = useState(false);
+  const [failed, setFailed] = useState(false);
+  // 長押しの案内に出す画像。取得済みの File をそのまま見せる（同じ URL をもう一度読みにいかない）
+  const [previewFile, setPreviewFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const dialogRef = useRef<HTMLDialogElement>(null);
   const titleId = useId();
   // 共有シートは、押した操作から時間が空くと開けないことがある。押す直前（触れた・フォーカスした時点）から取得を始めておく
@@ -67,22 +71,41 @@ export function ShareImageButton({
 
   useEffect(() => {
     filePromise.current = null;
+    setFailed(false);
   }, [imageUrl, fileName]);
 
   useEffect(() => {
+    if (!previewFile) {
+      setPreviewUrl(null);
+      return;
+    }
+    const url = URL.createObjectURL(previewFile);
+    setPreviewUrl(url);
+    return () => URL.revokeObjectURL(url);
+  }, [previewFile]);
+
+  useEffect(() => {
     const dialog = dialogRef.current;
-    if (previewOpen && dialog && !dialog.open) dialog.showModal();
-  }, [previewOpen]);
+    if (previewUrl && dialog && !dialog.open) dialog.showModal();
+  }, [previewUrl]);
 
   async function save() {
     if (working) return;
     setWorking(true);
+    setFailed(false);
     try {
       // 1. 取得
       const file = await warmUp().catch(() => null);
 
+      // 取れていないときに長押しの案内を出しても、同じ URL をもう一度読むだけで中身のない画面になる。
+      // GA4 も送らず、やり直せることだけ伝える
+      if (!file) {
+        setFailed(true);
+        return;
+      }
+
       // 2. 共有シート
-      if (file && typeof navigator.canShare === "function" && navigator.canShare({ files: [file] })) {
+      if (typeof navigator.canShare === "function" && navigator.canShare({ files: [file] })) {
         try {
           await navigator.share({ files: [file] });
           trackSaveImage("share_sheet", contentType, itemId);
@@ -94,7 +117,7 @@ export function ShareImageButton({
       }
 
       // 3. パソコンのダウンロード
-      if (file && canDownloadHere()) {
+      if (canDownloadHere()) {
         const objectUrl = URL.createObjectURL(file);
         try {
           const a = document.createElement("a");
@@ -113,7 +136,7 @@ export function ShareImageButton({
       }
 
       // 4. 長押しの案内
-      setPreviewOpen(true);
+      setPreviewFile(file);
       trackSaveImage("long_press", contentType, itemId);
     } finally {
       setWorking(false);
@@ -136,13 +159,19 @@ export function ShareImageButton({
         {working ? "画像を用意しています…" : label}
       </Button>
 
+      {failed && (
+        <Notice className="col-span-full" title="画像を用意できませんでした">
+          通信を確かめて、もう一度お試しください。
+        </Notice>
+      )}
+
       <dialog
         ref={dialogRef}
         aria-labelledby={titleId}
-        onClose={() => setPreviewOpen(false)}
+        onClose={() => setPreviewFile(null)}
         className="m-0 h-dvh max-h-none w-full max-w-none bg-canvas p-4 text-fg backdrop:bg-black/80"
       >
-        {previewOpen && (
+        {previewUrl && (
           <div className="mx-auto flex h-full max-w-prose flex-col gap-3">
             <div className="flex items-center justify-between gap-3">
               <p id={titleId} className="font-bold">
@@ -153,9 +182,9 @@ export function ShareImageButton({
               </Button>
             </div>
             <div className="flex min-h-0 flex-1 items-center justify-center">
-              {/* 長押しで端末に保存できるよう、最適化しない元の PNG をそのまま出す */}
+              {/* 長押しで端末に保存できるよう、取得済みの PNG をそのまま出す（最適化を通さない） */}
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={imageUrl} alt="保存する画像" className="max-h-full w-auto max-w-full rounded-panel object-contain" />
+              <img src={previewUrl} alt="保存する画像" className="max-h-full w-auto max-w-full rounded-panel object-contain" />
             </div>
           </div>
         )}

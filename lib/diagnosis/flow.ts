@@ -322,6 +322,8 @@ export function restoreFlow(raw: string | null | undefined, config: FlowConfig):
   // 設問は先頭から順に答えている。決定設問は全問のあとで、軸ごとに1つ、要る軸だけ
   const itemSteps = steps.filter((s) => s.kind === "item");
   const tiebreakerSteps = steps.filter((s) => s.kind === "tiebreaker");
+  // 設問の数より多い履歴は、壊れているか別の版のもの。先に弾かないと config.items[i] が undefined になる
+  if (itemSteps.length > config.items.length) return null;
   if (!itemSteps.every((s, i) => s.id === config.items[i].id)) return null;
   if (tiebreakerSteps.length > 0) {
     if (itemSteps.length !== config.items.length) return null;

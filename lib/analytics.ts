@@ -11,6 +11,9 @@ import type { TypeCode } from "@/lib/type-codes";
 /** 共有・保存の対象（content_type）。romance は脈あり度チェックの共有で、item_id は相手のタイプ（脈あり度の数字は送らない） */
 export type ShareContentType = "result" | "bingo" | "romance";
 
+/** リンクを共有した経路（ShareOnX と ShareLink の分岐） */
+export type ShareMethod = "x" | "share_sheet" | "clipboard";
+
 /** 画像保存の経路（ShareImageButton の分岐） */
 export type SaveImageMethod = "share_sheet" | "download" | "long_press";
 
@@ -22,7 +25,11 @@ declare global {
 
 function send(eventName: string, params: Record<string, string>): void {
   if (typeof window === "undefined" || typeof window.gtag !== "function") return;
-  window.gtag("event", eventName, params);
+  // page_location を指定しないと、gtag はそのときの URL をそのまま送る。結果ページの URL には
+  // 各軸の割合（?p=）が入るので、PageView と同じくクエリを外した URL を明示する
+  // （プライバシーポリシーの「結果ページの URL に入る割合も、Google に送る前に取り除きます」）
+  const pageLocation = `${window.location.origin}${window.location.pathname}`;
+  window.gtag("event", eventName, { ...params, page_location: pageLocation });
 }
 
 /** 自己診断か相手診断で、結果ページへ遷移する直前に送る */
@@ -30,9 +37,9 @@ export function trackDiagnosisComplete(type: TypeCode, mode: "self" | "target"):
   send("diagnosis_complete", { type, mode });
 }
 
-/** X への投稿ボタンを押したときに送る */
-export function trackShare(contentType: ShareContentType, itemId: TypeCode): void {
-  send("share", { method: "x", content_type: contentType, item_id: itemId });
+/** リンクの共有（X への投稿、端末の共有シート、URL の複製）を行ったときに送る */
+export function trackShare(method: ShareMethod, contentType: ShareContentType, itemId: TypeCode): void {
+  send("share", { method, content_type: contentType, item_id: itemId });
 }
 
 /** 共有シートかダウンロードが成功したとき、または長押しの案内を表示したときに送る */

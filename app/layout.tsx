@@ -4,7 +4,7 @@ import "./globals.css";
 import SiteHeader from "@/app/components/layout/SiteHeader";
 import Footer from "@/app/components/layout/Footer";
 import GoogleAnalytics from "@/app/components/analytics/GoogleAnalytics";
-import { Analytics } from "@vercel/analytics/react";
+import VercelAnalytics from "@/app/components/analytics/VercelAnalytics";
 import { BASE_OPEN_GRAPH, SITE_NAME, SITE_URL } from "@/lib/site";
 
 // 書体（SIL Open Font License 1.1。docs/asset-credits.md 3-1）。ビルド時に取得して自サイトから配信する（font.md）
@@ -49,7 +49,7 @@ export default function RootLayout({
         <SiteHeader />
         <div className="flex-1">{children}</div>
         <Footer />
-        <Analytics />
+        <VercelAnalytics />
         <GoogleAnalytics />
       </body>
     </html>
