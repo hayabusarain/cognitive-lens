@@ -67,6 +67,7 @@ function RelatedLinks({ type }: { type: TypeCode }) {
     { href: `/ja/result/${type}#career`, label: `${type}の適職`, note: "向く仕事と向かない仕事" },
     { href: `/ja/bingo/${type}`, label: `偏見だらけの${type}ビンゴ`, note: "あるある24マスで、何ライン揃うか試す" },
     { href: "/ja/romance-checker", label: "脈あり度チェック", note: "相手のタイプを選んで、はい・いいえで答える" },
+    { href: "/ja/test", label: "16タイプ診断", note: "24問で、自分に近いタイプと4つの軸の割合を出す" },
   ];
   return (
     <ul className="mt-3 divide-y divide-line border-y border-line">

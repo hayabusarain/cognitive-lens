@@ -34,6 +34,11 @@ export default function RomanceCheckerPage() {
       <Heading level={1} className="mt-2">
         脈あり度チェック
       </Heading>
+      <noscript>
+        <p className="mt-4 rounded-panel border-l-4 border-muted bg-surface px-4 py-3 text-body">
+          この診断には JavaScript が必要です。ブラウザの設定で JavaScript を有効にしてから、もう一度開いてください。
+        </p>
+      </noscript>
       <RomanceChecker />
     </main>
   );

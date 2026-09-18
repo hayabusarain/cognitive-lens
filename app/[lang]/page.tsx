@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
-import { BASE_OPEN_GRAPH, canonical } from "@/lib/site";
+import { BASE_OPEN_GRAPH, canonical, SITE_NAME, SITE_URL, X_ACCOUNT_URL } from "@/lib/site";
 import { TYPE_BASE } from "@/lib/type-base";
 import { TYPE_CODES, type TypeCode } from "@/lib/type-codes";
 import { TYPE_NAMES } from "@/lib/type-names";
@@ -113,9 +113,39 @@ const ENTRIES: readonly { href: string; title: string; description: string; glyp
   },
 ];
 
+/**
+ * トップだけに置く構造化データ（json-ld.md）。
+ * 検索結果に出すサイト名の判断材料になり、sameAs で X のアカウントと結び付く。
+ * 下の階層のページには、パンくずの BreadcrumbList が別に入る。
+ */
+const SITE_JSON_LD = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": `${SITE_URL}/ja#website`,
+      name: SITE_NAME,
+      url: `${SITE_URL}/ja`,
+      inLanguage: "ja",
+      publisher: { "@id": `${SITE_URL}/ja#publisher` },
+    },
+    {
+      "@type": "Organization",
+      "@id": `${SITE_URL}/ja#publisher`,
+      name: SITE_NAME,
+      url: `${SITE_URL}/ja`,
+      sameAs: [X_ACCOUNT_URL],
+    },
+  ],
+};
+
 export default function HomePage() {
   return (
     <main className="mx-auto w-full max-w-page px-4 pt-4 md:px-10">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(SITE_JSON_LD).replace(/</g, "\\u003c") }}
+      />
       {/* 最初の画面：何のサイトか → 診断の入口 → カードの扇 */}
       <section className="grid gap-6 pt-6 lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:gap-12 lg:pt-12">
         <div>

@@ -19,7 +19,7 @@ import {
 } from "@/lib/diagnosis/flow";
 import { isTypeCode, type TypeCode } from "@/lib/type-codes";
 import { trackDiagnosisComplete } from "@/lib/analytics";
-import { useStoredString } from "./stored-string";
+import { useStoredString } from "@/app/components/use-stored-string";
 import { QuestionScreen, type ChoiceOption } from "./QuestionScreen";
 import { TargetOutcome } from "./TargetOutcome";
 
@@ -65,7 +65,14 @@ export function DiagnosisFlow({ mode, items, tiebreakers, taglines }: DiagnosisF
     [items, mode],
   );
   const [raw, setRaw] = useStoredString(STORAGE_KEYS[mode]);
-  const state = useMemo(() => restoreFlow(raw, config) ?? INITIAL_FLOW, [raw, config]);
+  // 保存が壊れていても1問目から始められるようにする（restoreFlow は形が違えば null を返すが、念のため）
+  const state = useMemo(() => {
+    try {
+      return restoreFlow(raw, config) ?? INITIAL_FLOW;
+    } catch {
+      return INITIAL_FLOW;
+    }
+  }, [raw, config]);
   const view = flowView(state, config);
 
   const [pendingKey, setPendingKey] = useState<string | null>(null);
@@ -205,6 +212,7 @@ export function DiagnosisFlow({ mode, items, tiebreakers, taglines }: DiagnosisF
       progress={{ current, total, label: progressLabel, percent, valueText }}
       canGoBack={canGoBack(state)}
       onBack={back}
+      onReset={() => dispatch({ type: "reset" })}
       headingRef={headingRef}
       busy={pendingKey !== null}
     />

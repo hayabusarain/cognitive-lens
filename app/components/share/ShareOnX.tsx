@@ -26,11 +26,11 @@ export function ShareOnX({ text, url, contentType, itemId, label = "Xに投稿",
 
   return (
     <ButtonLink
-      href={`https://twitter.com/intent/tweet?${query}`}
+      href={`https://x.com/intent/post?${query}`}
       external
       variant={variant}
       className={className}
-      onClick={() => trackShare(contentType, itemId)}
+      onClick={() => trackShare("x", contentType, itemId)}
     >
       {label}
     </ButtonLink>

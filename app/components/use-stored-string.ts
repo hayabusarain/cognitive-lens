@@ -1,7 +1,7 @@
 import { useCallback, useSyncExternalStore } from "react";
 
 /**
- * sessionStorage の1つのキーを、React から読み書きする（途中経過の保存。仕様書 2-1）
+ * sessionStorage の1つのキーを、React から読み書きする（診断の途中経過と、ビンゴの盤面）
  *
  * サーバーと最初の描画では null（1問目）を返し、ハイドレーションのあとで保存した値に切り替わる。
  * sessionStorage が使えない環境（プライベートブラウズの一部など）でも進められるよう、値はメモリにも持つ。

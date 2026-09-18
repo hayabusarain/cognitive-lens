@@ -108,6 +108,7 @@ export default async function ResultTypePage({ params }: Props) {
     { href: `/ja/article/${type}`, title: `${type}の恋愛コラム`, note: "好きになったときの変化と、脈ありサインをまとめています。" },
     { href: "/ja/target-diagnosis", title: "気になる相手を診断する", note: "あの人について24問に答えると、近いタイプが分かります。" },
     { href: "/ja/result", title: "16タイプ一覧", note: "ほかの15タイプの呼称と特徴を見比べられます。" },
+    { href: "/ja/test", title: "16タイプ診断をはじめる", note: "24問で、自分に近いタイプと4つの軸の割合が出ます。" },
   ];
 
   return (

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { TARGET_ITEMS, TARGET_TIEBREAKERS } from "@/lib/target/items";
 import { TYPE_TAGLINES } from "@/lib/type-content";
 import { BASE_OPEN_GRAPH, canonical } from "@/lib/site";
+import { Breadcrumbs } from "@/app/components/ui/Breadcrumbs";
 import { Heading } from "@/app/components/ui/Heading";
 import { DiagnosisFlow } from "../_diagnosis/DiagnosisFlow";
 
@@ -24,8 +25,21 @@ export const metadata: Metadata = {
 export default function TargetDiagnosisPage() {
   return (
     <main className="mx-auto w-full max-w-[37.5rem] px-4 pb-12 pt-2">
-      <Heading level={1}>気になる相手の16タイプ診断</Heading>
+      <Breadcrumbs
+        items={[
+          { name: "トップ", href: "/ja" },
+          { name: "気になる相手の性格タイプ診断", href: "/ja/target-diagnosis" },
+        ]}
+      />
+      <Heading level={1} className="mt-2">
+        気になる相手の16タイプ診断
+      </Heading>
       <p className="mt-1 text-note text-muted">「あの人」の最近の様子を思い出して選んでください。</p>
+      <noscript>
+        <p className="mt-4 rounded-panel border-l-4 border-muted bg-surface px-4 py-3 text-body">
+          この診断には JavaScript が必要です。ブラウザの設定で JavaScript を有効にしてから、もう一度開いてください。
+        </p>
+      </noscript>
       <div className="mt-5">
         <DiagnosisFlow mode="target" items={TARGET_ITEMS} tiebreakers={TARGET_TIEBREAKERS} taglines={TYPE_TAGLINES} />
       </div>

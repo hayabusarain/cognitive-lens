@@ -137,6 +137,7 @@ export function RomanceChecker() {
           answers={finalAnswers}
           ai={ai}
           onRetry={() => void requestAiText(type, finalAnswers)}
+          onBack={() => setIndex(total - 1)}
           onReset={reset}
         />
       )}

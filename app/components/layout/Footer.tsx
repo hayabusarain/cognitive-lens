@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { X_ACCOUNT_URL } from "@/lib/site";
 
 /**
  * 全ページ共通のフッター（app/layout.tsx から出す）
@@ -30,7 +31,7 @@ export default function Footer() {
               </li>
             ))}
             <li>
-              <a href="https://x.com/CognitiveLens_" target="_blank" rel="noopener noreferrer" className={LINK_CLASS}>
+              <a href={X_ACCOUNT_URL} target="_blank" rel="noopener noreferrer" className={LINK_CLASS}>
                 お問い合わせ
                 <span className="sr-only">（X のアカウントを新しいタブで開きます）</span>
               </a>

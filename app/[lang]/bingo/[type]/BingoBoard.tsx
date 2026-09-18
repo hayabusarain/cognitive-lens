@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import type { TypeCode } from "@/lib/type-codes";
 import {
   CELL_COUNT,
@@ -10,6 +9,7 @@ import {
   formatMask,
   formatTitle,
   isItemPressed,
+  parseMask,
   splitTitle,
   titleLevel,
   toggleItem,
@@ -17,7 +17,9 @@ import {
 import { Card } from "@/app/components/ui/Card";
 import { TypeFrame } from "@/app/components/type/TypeFrame";
 import { ShareOnX } from "@/app/components/share/ShareOnX";
+import { ShareLink } from "@/app/components/share/ShareLink";
 import { ShareImageButton } from "@/app/components/share/ShareImageButton";
+import { useStoredString } from "@/app/components/use-stored-string";
 
 /**
  * ビンゴの盤面と、揃ったライン数・称号・共有（仕様書 2-5、4-5。デザイン案「コレクションカード」の画面5）
@@ -41,14 +43,20 @@ const CELL_BASE =
   "relative flex min-h-[68px] w-full items-center justify-center rounded-lg px-[3px] py-1 text-center text-[12px] leading-tight text-balance [overflow-wrap:anywhere] focus-visible:outline-offset-0 md:aspect-square md:min-h-0 md:p-2 md:text-[15px] md:leading-snug md:text-phrase";
 
 export function BingoBoard({ type, items, titles, shareUrl, className = "" }: BingoBoardProps) {
-  const [mask, setMask] = useState(0);
+  // 押した状態は sessionStorage に残す。カード画像を保存する前に、再読み込みや
+  // 別アプリからの復帰で24マスの操作が消えないようにする（値は URL と同じ6桁の16進数）
+  const [stored, setStored] = useStoredString(`cl:bingo:${type}:v1`);
+  const mask = stored ? (parseMask(stored) ?? 0) : 0;
+  const setMask = (next: number) => setStored(formatMask(next));
 
   const lines = countLines(mask);
   const lineCells = cellsInCompletedLines(mask);
   const title = formatTitle(titles[titleLevel(lines)], type);
   const { tag, name } = splitTitle(title);
   const maskText = formatMask(mask);
-  const shareText = `偏見だらけの${type}ビンゴは${lines}ライン。称号は「${title}」でした。あなたは何ライン揃う？\n{url}\n#${type} #CognitiveLens`;
+  // 共有シートには URL を別に渡すので、本文だけを分けて持つ
+  const shareBody = `偏見だらけの${type}ビンゴは${lines}ライン。称号は「${title}」でした。あなたは何ライン揃う？`;
+  const shareText = `${shareBody}\n{url}\n#${type} #CognitiveLens`;
 
   return (
     <div className={`grid gap-6 lg:grid-cols-[minmax(0,600px)_1fr] lg:items-start lg:gap-x-12 ${className}`}>
@@ -76,7 +84,7 @@ export function BingoBoard({ type, items, titles, shareUrl, className = "" }: Bi
                 key={cell}
                 type="button"
                 aria-pressed={pressed}
-                onClick={() => setMask((prev) => toggleItem(prev, item))}
+                onClick={() => setMask(toggleItem(mask, item))}
                 className={`${CELL_BASE} cursor-pointer font-bold motion-safe:transition motion-safe:active:scale-95 ${state}`}
               >
                 {items[item]}
@@ -113,7 +121,9 @@ export function BingoBoard({ type, items, titles, shareUrl, className = "" }: Bi
         </Card>
         <div className="grid grid-cols-2 gap-3">
           <ShareOnX text={shareText} url={shareUrl} contentType="bingo" itemId={type} />
+          <ShareLink title={`偏見だらけの${type}ビンゴ`} text={shareBody} url={shareUrl} contentType="bingo" itemId={type} />
           <ShareImageButton
+            className="col-span-2"
             imageUrl={`/ja/bingo/${type}/card/${maskText}`}
             fileName={`cognitivelens-bingo-${type}-${maskText}.png`}
             contentType="bingo"
@@ -121,6 +131,17 @@ export function BingoBoard({ type, items, titles, shareUrl, className = "" }: Bi
             label="カード画像を保存"
           />
         </div>
+        {mask !== 0 && (
+          <p className="mt-2 text-center">
+            <button
+              type="button"
+              onClick={() => setStored(null)}
+              className="inline-flex min-h-11 cursor-pointer items-center px-2 text-note text-muted underline underline-offset-4 hover:text-fg"
+            >
+              盤面を消す
+            </button>
+          </p>
+        )}
       </div>
     </div>
   );

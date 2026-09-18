@@ -3,6 +3,9 @@ import type { Metadata } from "next";
 /** サイトの正規の URL。metadataBase と sitemap の両方がこの値を読む（仕様書 1-5） */
 export const SITE_URL = "https://www.cognitive-lens.com";
 
+/** 問い合わせ先の X のアカウント。フッターと、トップの構造化データの sameAs で使う */
+export const X_ACCOUNT_URL = "https://x.com/CognitiveLens_";
+
 /** サイト名。title.template・openGraph.siteName・生成画像で使う */
 export const SITE_NAME = "CognitiveLens";
 

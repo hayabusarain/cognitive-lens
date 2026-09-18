@@ -74,6 +74,11 @@ export default async function BingoTypePage({ params }: PageProps) {
         当てはまるマスを押してください。縦・横・斜めのどれかで5マス揃うと1ライン。揃ったラインが多いほど、称号が上がります。
       </p>
 
+      <noscript>
+        <p className="mt-4 rounded-panel border-l-4 border-muted bg-surface px-4 py-3 text-body">
+          このビンゴには JavaScript が必要です。ブラウザの設定で JavaScript を有効にしてから、もう一度開いてください。
+        </p>
+      </noscript>
       <BingoBoard
         type={type}
         items={BINGO_DATA[type]}
@@ -99,6 +104,12 @@ export default async function BingoTypePage({ params }: PageProps) {
             <Card href="/ja/bingo" className="h-full">
               <span className="block text-lead font-black">ほかのタイプのビンゴ</span>
               <span className="block text-muted">16タイプから選べる。友達のタイプで試すのもおすすめです</span>
+            </Card>
+          </li>
+          <li>
+            <Card href="/ja/test" className="h-full">
+              <span className="block text-lead font-black">16タイプ診断をはじめる</span>
+              <span className="block text-muted">24問で、自分に近いタイプと4つの軸の割合が出ます</span>
             </Card>
           </li>
         </ul>

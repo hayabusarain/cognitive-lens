@@ -45,7 +45,7 @@ export default function ResultListPage() {
         <p className="max-w-prose">24問に答えると、近いタイプと4つの軸の割合が出ます。</p>
         <div className="mt-4 grid gap-3 md:grid-cols-2">
           <ButtonLink href="/ja/test" size="lg" meta="24問">
-            自己診断をはじめる
+            16タイプ診断をはじめる
           </ButtonLink>
           <ButtonLink href="/ja/target-diagnosis" size="lg" variant="secondary" meta="24問">
             気になる相手を診断する

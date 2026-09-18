@@ -12,6 +12,7 @@ import { Notice } from "@/app/components/ui/Notice";
 import { TypeFrame } from "@/app/components/type/TypeFrame";
 import { CharacterFigure } from "@/app/components/type/CharacterFigure";
 import { ShareOnX } from "@/app/components/share/ShareOnX";
+import { ShareLink } from "@/app/components/share/ShareLink";
 
 /**
  * 脈あり度チェックの3段目：脈あり度・段階・AI 文・次の操作。
@@ -37,6 +38,8 @@ interface ResultStepProps {
   answers: readonly boolean[];
   ai: AiState;
   onRetry: () => void;
+  /** 最後の設問へ戻る。押し間違えた1問だけを直せるようにする */
+  onBack: () => void;
   onReset: () => void;
 }
 
@@ -99,7 +102,7 @@ function AiText({ ai, onRetry }: { ai: AiState; onRetry: () => void }) {
   );
 }
 
-export function ResultStep({ headingRef, type, answers, ai, onRetry, onReset }: ResultStepProps) {
+export function ResultStep({ headingRef, type, answers, ai, onRetry, onBack, onReset }: ResultStepProps) {
   const total = answers.length;
   const yes = answers.filter(Boolean).length;
   const score = romanceScore(yes, total);
@@ -155,10 +158,26 @@ export function ResultStep({ headingRef, type, answers, ai, onRetry, onReset }: 
               label="Xに投稿"
               variant="primary"
             />
-            <Button variant="secondary" onClick={onReset}>
-              最初からやり直す
+            <ShareLink
+              title={`${type}（${name}）の脈あり度`}
+              text={romanceShareText(score, total).replace("\n{url}", "")}
+              url={`${SITE_URL}/ja/romance-checker`}
+              contentType="romance"
+              itemId={type}
+            />
+            <Button variant="secondary" onClick={onBack} className="sm:col-span-2">
+              最後の設問に戻る
             </Button>
           </div>
+          <p className="mt-2 text-center">
+            <button
+              type="button"
+              onClick={onReset}
+              className="inline-flex min-h-11 cursor-pointer items-center px-2 text-note text-muted underline underline-offset-4 hover:text-fg"
+            >
+              最初からやり直す
+            </button>
+          </p>
 
           <ul className="mt-6 grid gap-3 sm:grid-cols-2">
             <li>

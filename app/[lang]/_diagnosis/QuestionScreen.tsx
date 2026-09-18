@@ -29,6 +29,8 @@ interface QuestionScreenProps {
   progress: { current: number; total: number; label?: string; percent: number; valueText: string };
   canGoBack: boolean;
   onBack: () => void;
+  /** 全部の答えを捨てて1問目へ。途中から再開したときに、戻るを何回も押さずに済ませる */
+  onReset: () => void;
   /** 設問が変わったときにフォーカスを移す先 */
   headingRef: Ref<HTMLHeadingElement>;
   /** 選んでから次へ進むまでの間。重ねて押せないようにする */
@@ -44,6 +46,7 @@ export function QuestionScreen({
   progress,
   canGoBack,
   onBack,
+  onReset,
   headingRef,
   busy,
 }: QuestionScreenProps) {
@@ -123,6 +126,19 @@ export function QuestionScreen({
         </Button>
         <p className="text-right text-note text-muted">選ぶと次の設問に進みます</p>
       </div>
+
+      {/* 同じタブで開き直すと途中から再開する。1問目まで「戻る」を押し続けなくて済むように、控えめな口を置く */}
+      {canGoBack && (
+        <p className="mt-2 text-center">
+          <button
+            type="button"
+            onClick={onReset}
+            className="inline-flex min-h-11 cursor-pointer items-center px-2 text-note text-muted underline underline-offset-4 hover:text-fg"
+          >
+            最初からやり直す
+          </button>
+        </p>
+      )}
     </div>
   );
 }
